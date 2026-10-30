@@ -12,6 +12,7 @@ import { requireAdmin } from "@/lib/auth/guard";
 import { allowed } from "@/lib/auth/rbac";
 import { requireDb } from "@/lib/db";
 import { STATUS_LABEL, STATUS_TONE } from "@/lib/quote/status-labels";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const metadata = { title: "Teklif talepleri" };
 export const dynamic = "force-dynamic";
@@ -100,6 +101,7 @@ export default async function QuotesPage({ searchParams }: PageProps<"/admin/quo
           { key: "a", header: "Sorumlu", cell: (r) => r.assignedTo?.name ?? <span className="text-steel">—</span> },
           { key: "f", header: "Takip", cell: (r) => (r.followUpAt ? <span className={r.followUpAt < new Date() && !["CLOSED", "SPAM"].includes(r.status) ? "font-semibold text-signal" : ""}>{fmtDate(r.followUpAt)}</span> : "—") },
           { key: "o", header: "Kaynak / dil", cell: (r) => `${r.source === "QUOTE_LIST" ? "Liste" : "Ürün"} · ${r.locale.toUpperCase()}` },
+          { key: "x", header: "İşlemler", align: "end", cell: (r) => <RowActions id={String(r.id)} editHref={`/admin/quotes/${r.id}`} editLabel="Görüntüle" /> },
         ]}
       />
       <Pagination page={Math.min(page, pages)} pages={pages} total={total} href={(p) => `/admin/quotes?${new URLSearchParams([...params, ...(p > 1 ? [["sayfa", String(p)]] : [])])}`} />

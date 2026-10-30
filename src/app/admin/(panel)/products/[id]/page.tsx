@@ -15,10 +15,13 @@ import { allowed } from "@/lib/auth/rbac";
 import { requireDb } from "@/lib/db";
 import { dirOf, LOCALE_META, type Locale } from "@/lib/i18n/config";
 import { localizePath } from "@/lib/i18n/routes";
-import { formatMoney } from "@/lib/money";
+import { formatMoney, toDecimalString } from "@/lib/money";
+import { quickPriceAction } from "../../pricing/actions";
 import { publishTranslationAction, unpublishTranslationAction } from "../../translations/actions";
 import { deleteSpecAction, saveCategoriesAction, saveMetaAction, saveRelatedAction, saveSpecAction, saveTranslationAction, setDocumentStatusAction, uploadDocumentAction, uploadProductImageAction, verifySpecAction } from "../actions";
 import { MediaOrderEditor, VariantsEditor } from "./editors";
+import { SeoSuggestButton } from "@/components/admin/SeoSuggestButton";
+import { suggestSeo } from "@/lib/seo/suggest";
 
 export const metadata = { title: "Ürün düzenle" };
 const TABS = [
@@ -60,6 +63,8 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
   const live = livePrice(p.prices);
   const legacyId = p.sourceKey?.split(":").pop();
   const visible = p.status === "PUBLISHED" && !p.needsReview;
+  const primaryCat = (p.categories.find((c) => c.isPrimary) ?? p.categories[0])?.category.translations[0]?.name ?? null;
+  const trSeo = suggestSeo({ locale: "tr", title: tr?.title ?? "", category: primaryCat, shortDescription: tr?.shortDescription, descriptionHtml: tr?.descriptionHtml });
 
   const head = (
     <PageHeader
@@ -104,13 +109,17 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
                 <Input name="slug" label="Adres (slug)" defaultValue={tr.slug} required hint={`Vitrin adresi: /urun/${tr.slug}`} disabled={!can("product.edit")} />
                 <Area name="shortDescription" label="Kısa açıklama" defaultValue={tr.shortDescription ?? ""} rows={2} hint="Listelerde ve paylaşımlarda kullanılır (en fazla 500 karakter)." disabled={!can("product.edit")} />
                 <RichTextEditor name="descriptionHtml" label="Ürün açıklaması" defaultValue={tr.descriptionHtml ?? ""} hint="Yalnız gerçek ürün bilgisi. Kaydederken HTML güvenlik filtresinden geçer." />
+                <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+                  <p className="text-sm font-semibold text-ink">Google görünümü (SEO)</p>
+                  <SeoSuggestButton titleId="seo-title-tr" descId="seo-desc-tr" suggestion={trSeo} />
+                </div>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-1">
-                    <Input id="seo-title-tr" name="seoTitle" label="SEO başlığı" defaultValue={tr.seoTitle ?? ""} hint="Boşsa ürün adı kullanılır." />
+                    <Input id="seo-title-tr" name="seoTitle" label="SEO başlığı" defaultValue={tr.seoTitle ?? ""} placeholder={trSeo.seoTitle} hint="Sonuna otomatik “| KORNNE” eklenir. Boşsa ürün adı kullanılır." />
                     <LengthHint forId="seo-title-tr" min={30} max={60} />
                   </div>
                   <div className="space-y-1">
-                    <Area id="seo-desc-tr" name="seoDescription" label="SEO açıklaması" defaultValue={tr.seoDescription ?? ""} rows={3} />
+                    <Area id="seo-desc-tr" name="seoDescription" label="SEO açıklaması" defaultValue={tr.seoDescription ?? ""} placeholder={trSeo.seoDescription} rows={3} />
                     <LengthHint forId="seo-desc-tr" min={70} max={160} />
                   </div>
                 </div>
@@ -162,15 +171,27 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
                 ) : null}
               </ActionForm>
             </Card>
-            <Card title="Fiyat" actions={<Link href={`/admin/pricing/${p.id}`} className="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">Fiyat merkezi →</Link>}>
-              <KeyValues
-                rows={[
-                  ["Vitrindeki fiyat", live ? `${formatMoney(live.amountMinor)} (${live.vatIncluded ? "KDV dahil" : "KDV hariç"})` : "Fiyat için teklif alın"],
-                  ["Eski site ham fiyatı", p.prices.find((x) => x.source === "LEGACY_IMPORT")?.rawAmount ?? "—"],
-                  ["Onay bekleyen öneri", p.prices.filter((x) => x.source === "ADMIN" && x.status === "UNVERIFIED").length],
-                ]}
-              />
-              <p className="mt-3 text-xs text-steel">Onaylı fiyat yalnız gösterimi değiştirir; online satış ayrıca tüm ticari onaylar tamamlanınca açılır.</p>
+            <Card title="Fiyat" description={live ? `Vitrinde: ${formatMoney(live.amountMinor)} (${live.vatIncluded ? "KDV dahil" : "KDV hariç"})` : "Vitrinde fiyat yok — “Fiyat için teklif alın” gösteriliyor."} actions={<Link href={`/admin/pricing/${p.id}`} className="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">Fiyat geçmişi →</Link>}>
+              {can("price.approve") || can("price.propose") ? (
+                <ActionForm action={quickPriceAction} className="space-y-3" aria-label="Fiyatı güncelle">
+                  <input type="hidden" name="productId" value={p.id} />
+                  <Input name="amount" label="Satış fiyatı (TL)" required inputMode="decimal" defaultValue={live ? toDecimalString(live.amountMinor).replace(".", ",") : ""} hint="Örn. 1250000 veya 1.250.000,00" />
+                  <div className="grid grid-cols-2 gap-3">
+                    <Select name="vatMode" label="KDV" defaultValue={live?.vatIncluded === false ? "excluded" : "included"}>
+                      <option value="included">KDV dahil</option>
+                      <option value="excluded">KDV hariç</option>
+                    </Select>
+                    <Input name="vatRate" label="KDV oranı (%)" required inputMode="decimal" defaultValue={live?.vatRateBp != null ? String(live.vatRateBp / 100) : "20"} />
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <SubmitButton pendingText="Kaydediliyor…">{can("price.approve") ? "Fiyatı kaydet" : "Fiyat öner"}</SubmitButton>
+                    <FormMessage className="w-full" />
+                  </div>
+                  <p className="text-xs text-steel">{can("price.approve") ? "Kaydedince vitrindeki fiyat hemen değişir; önceki fiyat geçmişte saklanır." : "Öneriniz bir yönetici onaylayınca vitrine yansır."}</p>
+                </ActionForm>
+              ) : (
+                <p className="text-sm text-steel">Fiyat değiştirme yetkiniz yok.</p>
+              )}
             </Card>
           </div>
         </div>
@@ -252,6 +273,9 @@ async function LanguagesTab({ product, canEdit, canPublish, token }: { product: 
                 </div>
                 <div lang={locale} dir={dirOf(locale)}>
                   <RichTextEditor name="descriptionHtml" label="Açıklama" defaultValue={t.descriptionHtml ?? ""} minHeight="10rem" />
+                </div>
+                <div className="flex justify-end">
+                  <SeoSuggestButton titleId={`seo-title-${locale}`} descId={`seo-desc-${locale}`} suggestion={suggestSeo({ locale, title: t.title, shortDescription: t.shortDescription, descriptionHtml: t.descriptionHtml })} />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2" lang={locale} dir={dirOf(locale)}>
                   <div className="space-y-1">

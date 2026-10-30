@@ -9,7 +9,7 @@ export type Column<T> = { key: string; header: string; cell: (row: T) => ReactNo
 
 export function DataTable<T>({ caption, columns, rows, rowKey, empty }: { caption: string; columns: Column<T>[]; rows: T[]; rowKey: (row: T) => string; empty: string }) {
   return (
-    <div className="min-w-0 overflow-x-auto rounded-[var(--radius-lg)] border border-line bg-surface" tabIndex={0} role="region" aria-label="Kaydırılabilir tablo">
+    <div className="relative min-w-0 overflow-x-auto rounded-[var(--radius-lg)] border border-line bg-surface" tabIndex={0} role="region" aria-label="Kaydırılabilir tablo">
       <table className="w-full min-w-[40rem] border-collapse text-sm">
         <caption className="sr-only">{caption}</caption>
         <thead className="bg-surface-2 text-xs tracking-wide text-steel uppercase">

@@ -155,3 +155,47 @@ export async function revokePrice(db: PrismaClient, actor: Actor, priceId: strin
 export function livePrice<T extends { status: string; validFrom: Date; validTo: Date | null }>(rows: T[], now = new Date()): T | null {
   return rows.filter((r) => r.status === "VERIFIED" && r.validFrom <= now && (!r.validTo || r.validTo > now)).sort((a, b) => +b.validFrom - +a.validFrom)[0] ?? null;
 }
+
+/**
+ * Simple price update from the product page (client request 30.10.2026: "fiyat ürünün içinde olsun"). For users with
+ * price-approval rights the new price goes live at once: it is stored as a new history row (proposed + approved by
+ * the same actor, recorded as "direct"), the previous live price ends now, everything is audit-logged. Editors without
+ * approval rights keep the proposal flow (proposePrice).
+ */
+export const directPriceSchema = z
+  .object({
+    productId: z.string().min(10).max(40),
+    amount: z.string().trim().min(1, "Satış fiyatını girin."),
+    vatMode: z.enum(["included", "excluded"], { message: "KDV dahil mi hariç mi seçin." }),
+    vatRate: z.string().trim().min(1, "KDV oranını girin."),
+    note: z.string().trim().max(300).optional(),
+  })
+  .transform((v, ctx) => {
+    const amountMinor = parseMinor(v.amount);
+    if (amountMinor === null || amountMinor <= 0n) ctx.addIssue({ code: "custom", path: ["amount"], message: "Geçerli bir tutar girin (örn. 1.250.000,00)." });
+    else if (amountMinor > 100_000_000_000n) ctx.addIssue({ code: "custom", path: ["amount"], message: "Tutar makul aralığın dışında." });
+    const rate = vatRateToBp(v.vatRate);
+    if (rate === null) ctx.addIssue({ code: "custom", path: ["vatRate"], message: "KDV oranı 0 ile 100 arasında olmalı (örn. 20)." });
+    return { ...v, amountMinor: amountMinor ?? 0n, vatRateBp: rate ?? 0 };
+  });
+
+export async function setPriceDirect(db: PrismaClient, actor: Actor, raw: unknown) {
+  const v = directPriceSchema.parse(raw);
+  const product = await db.product.findUnique({ where: { id: v.productId }, select: { id: true } });
+  if (!product) throw new AdminError("Ürün bulunamadı.");
+  return db.$transaction(async (tx) => {
+    const now = new Date();
+    const evidence = "Ürün sayfasından güncellendi";
+    const price = await tx.price.create({
+      data: { productId: v.productId, currency: "TRY", amountMinor: v.amountMinor, compareAtMinor: null, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, validFrom: now, source: "ADMIN", status: "VERIFIED", createdById: actor.id, approvedById: actor.id, approvedAt: now, evidence, note: v.note || null },
+    });
+    const previous = await tx.price.findMany({ where: { productId: v.productId, variantId: null, status: "VERIFIED", id: { not: price.id }, OR: [{ validTo: null }, { validTo: { gt: now } }] }, select: { id: true } });
+    for (const old of previous) {
+      await tx.price.update({ where: { id: old.id }, data: { validTo: now } });
+      await event(tx, old.id, "superseded", actor.id, `yerini ${price.id} aldı`);
+    }
+    await event(tx, price.id, "approved", actor.id, v.note || "doğrudan güncelleme (ürün sayfası)");
+    await audit(tx, actor.id, "price.set_direct", price.id, { productId: v.productId, amountMinor: v.amountMinor, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, superseded: previous.map((x) => x.id) });
+    return price;
+  });
+}

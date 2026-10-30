@@ -8,14 +8,16 @@ import { Notice } from "@/components/ui/States";
 import { fmtDateTime } from "@/lib/admin/format";
 import { PENDING_PASSWORD } from "@/lib/admin/users";
 import { requireAdmin } from "@/lib/auth/guard";
-import { ROLE_LABELS, ROLES } from "@/lib/auth/rbac";
+import { allowed, ROLE_LABELS, ROLES } from "@/lib/auth/rbac";
+import { RowActions } from "@/components/admin/RowActions";
+import { userActiveAction } from "../row-actions";
 import { requireDb } from "@/lib/db";
 import { inviteUserAction } from "./actions";
 
 export const metadata = { title: "Kullanıcılar" };
 
 export default async function UsersPage() {
-  await requireAdmin("users");
+  const me = await requireAdmin("users");
   const users = await requireDb().user.findMany({ orderBy: [{ active: "desc" }, { name: "asc" }], select: { id: true, name: true, email: true, role: true, active: true, lastLoginAt: true, passwordHash: true, _count: { select: { sessions: true } } } });
   return (
     <>
@@ -34,6 +36,13 @@ export default async function UsersPage() {
             { key: "s", header: "Durum", cell: (u) => (!u.active ? <Badge tone="outline">Pasif</Badge> : u.passwordHash === PENDING_PASSWORD ? <Badge tone="warning">Davet bekliyor</Badge> : <Badge tone="success">Aktif</Badge>) },
             { key: "l", header: "Son giriş", cell: (u) => fmtDateTime(u.lastLoginAt) },
             { key: "o", header: "Oturum", align: "end", cell: (u) => u._count.sessions },
+            {
+              key: "x",
+              header: "İşlemler",
+              align: "end",
+              // users are never hard-deleted (audit history) — "Pasif yap" blocks login and ends sessions
+              cell: (u) => <RowActions id={u.id} editHref={`/admin/users/${u.id}`} toggle={allowed(me.role, "user.manage") && u.id !== me.id ? { action: userActiveAction, active: u.active } : undefined} />,
+            },
           ]}
         />
         <Card title="Kullanıcı davet et">

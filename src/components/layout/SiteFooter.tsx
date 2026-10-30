@@ -2,7 +2,7 @@ import { ConsentReopenButton } from "@/components/analytics/AnalyticsRoot";
 import { analyticsConfig } from "@/lib/analytics/config";
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { SITE } from "@/config/site";
 import { catalog } from "@/lib/catalog";
 import { getContact, getMenu, hasMenus, type MenuLink } from "@/lib/cms/store";
@@ -119,15 +119,28 @@ export async function SiteFooter({ localeParam }: { localeParam: string }) {
         </address>
       </div>
       <div className="border-t border-white/10">
-        <p className="container-site py-5 text-xs text-white/60">
-          © {year} {SITE.name}. {d.footer.rights}
-          {analyticsConfig().enabled ? (
-            <>
-              {" · "}
-              <ConsentReopenButton label={d.consent.reopen} />
-            </>
-          ) : null}
-        </p>
+        {/* bottom/end padding keeps the floating WhatsApp button (fixed, bottom-right) from covering the credit */}
+        <div className="container-site flex flex-col items-center gap-3 pt-5 pb-24 text-center sm:flex-row sm:justify-between sm:pb-5 sm:text-start sm:pe-24 lg:pe-28">
+          <p className="text-xs text-white/60">
+            © {year} {SITE.name}. {d.footer.rights}
+            {analyticsConfig().enabled ? (
+              <>
+                {" · "}
+                <ConsentReopenButton label={d.consent.reopen} />
+              </>
+            ) : null}
+          </p>
+          {/* agency credit */}
+          <a href="https://www.3ytasarim.com" target="_blank" rel="noopener" className="kn-credit group inline-flex min-h-11 items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 text-xs text-white/70 transition-[border-color,background-color,transform] duration-300 hover:-translate-y-0.5 hover:border-white/25 hover:bg-white/[0.08] motion-reduce:hover:translate-y-0">
+            <span aria-hidden="true" className="kn-credit-dot relative inline-flex size-2 rounded-full bg-gradient-to-br from-sky-400 to-fuchsia-400" />
+            <span>Design by</span>
+            <span className="kn-credit-name relative font-semibold">
+              3Y Tasarım &amp; Yazılım Hizmetleri
+              <span aria-hidden="true" className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-gradient-to-r from-sky-400 via-white to-fuchsia-400 transition-transform duration-500 ease-[var(--ease-premium)] group-hover:scale-x-100 rtl:origin-right" />
+            </span>
+            <ArrowUpRight aria-hidden="true" className="size-3.5 opacity-60 transition-[transform,opacity] duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100 rtl:-scale-x-100" />
+          </a>
+        </div>
       </div>
     </footer>
   );

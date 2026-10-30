@@ -8,6 +8,7 @@ import { fmtDateTime, pageParam } from "@/lib/admin/format";
 import { contactKey, maskEmail, maskPhone } from "@/lib/admin/quotes";
 import { requireAdmin } from "@/lib/auth/guard";
 import { requireDb } from "@/lib/db";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const metadata = { title: "Müşteriler" };
 export const dynamic = "force-dynamic";
@@ -52,6 +53,7 @@ export default async function CustomersPage({ searchParams }: PageProps<"/admin/
           { key: "n", header: "Talep", align: "end", cell: (r) => r.count },
           { key: "o", header: "Açık", align: "end", cell: (r) => r.open },
           { key: "l", header: "Son talep", cell: (r) => fmtDateTime(r.last) },
+          { key: "x", header: "İşlemler", align: "end", cell: (r) => <RowActions id={String(r.key)} editHref={`/admin/customers/${r.key}`} editLabel="Görüntüle" /> },
         ]}
       />
       <Pagination page={cur} pages={pages} total={rows.length} href={(p) => `/admin/customers?sayfa=${p}`} />

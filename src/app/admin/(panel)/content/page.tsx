@@ -11,6 +11,8 @@ import { fmtDateTime, strParam } from "@/lib/admin/format";
 import { requireAdmin } from "@/lib/auth/guard";
 import { allowed } from "@/lib/auth/rbac";
 import { requireDb } from "@/lib/db";
+import { RowActions } from "@/components/admin/RowActions";
+import { pageArchiveAction } from "../row-actions";
 import { LOCALES } from "@/lib/i18n/config";
 
 export const metadata = { title: "İçerik" };
@@ -74,6 +76,13 @@ export default async function ContentPage({ searchParams }: PageProps<"/admin/co
           },
           { key: "a", header: "Yasal onay", cell: (p) => (p.kind === "LEGAL" ? (p.legalApprovedAt ? <Badge tone="success">Onaylı</Badge> : <Badge tone="warning">Onaysız</Badge>) : "—") },
           { key: "u", header: "Güncelleme", cell: (p) => fmtDateTime(p.translations.map((t) => t.updatedAt).sort((a, b) => +b - +a)[0]) },
+          {
+            key: "x",
+            header: "İşlemler",
+            align: "end",
+            // content keeps its revision history: "Arşivle" hides it everywhere instead of deleting
+            cell: (p) => <RowActions id={p.id} editHref={`/admin/content/${p.id}`} toggle={allowed(user.role, "content.publish") ? { action: pageArchiveAction, active: p.status !== "ARCHIVED", labels: ["Arşivle", "Arşivden çıkar"] } : undefined} />,
+          },
         ]}
       />
     </>

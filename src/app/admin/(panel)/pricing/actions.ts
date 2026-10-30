@@ -3,7 +3,7 @@
 import { requireAnyPermission, requirePermission } from "@/lib/auth/guard";
 import { allowed } from "@/lib/auth/rbac";
 import type { ActionState } from "@/lib/admin/action-state";
-import { approvePrice, proposePrice, rejectPrice, revokePrice } from "@/lib/admin/prices";
+import { approvePrice, proposePrice, rejectPrice, revokePrice, setPriceDirect } from "@/lib/admin/prices";
 import { revalidateStorefront } from "@/lib/admin/revalidate";
 import { formObject, runAction } from "@/lib/admin/run-action";
 import { requireDb } from "@/lib/db";
@@ -41,5 +41,20 @@ export async function revokePriceAction(_p: ActionState, f: FormData): Promise<A
     await revokePrice(requireDb(), user, s(f, "priceId"), s(f, "note"));
     revalidateStorefront("product");
     return "Onaylı fiyat geri alındı; vitrin yeniden “Fiyat için teklif alın” gösteriyor.";
+  });
+}
+
+/** Product page "Fiyatı güncelle": approvers publish at once; editors without approval rights create a proposal. */
+export async function quickPriceAction(_p: ActionState, f: FormData): Promise<ActionState> {
+  return runAction(async () => {
+    const user = await requireAnyPermission(["price.approve", "price.propose"]);
+    const raw = formObject(f);
+    if (allowed(user.role, "price.approve")) {
+      await setPriceDirect(requireDb(), user, raw);
+      const failed = revalidateStorefront("product");
+      return `Fiyat güncellendi ve vitrinde gösteriliyor.${failed.length ? " Uyarı: önbellek yenilenemedi." : ""}`;
+    }
+    await proposePrice(requireDb(), user, { ...raw, currency: "TRY", evidence: "Ürün sayfasından önerildi" });
+    return "Fiyat önerisi kaydedildi; bir yönetici onaylayınca vitrine yansır.";
   });
 }

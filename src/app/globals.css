@@ -364,3 +364,27 @@ html[lang="ar"] :is(.text-display, .text-h1, .text-h2, .text-h3) {
 @media (prefers-reduced-motion: no-preference) {
   .kn-shine::after { animation: kn-shine 4.5s ease-in-out infinite; }
 }
+
+/* footer agency credit: shimmering gradient name + soft pulsing dot (static colours with reduced motion) */
+@keyframes kn-credit-shimmer {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+@keyframes kn-credit-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(56 189 248 / 0.55); }
+  50% { box-shadow: 0 0 0 5px rgb(232 121 249 / 0); }
+}
+.kn-credit-name {
+  background: linear-gradient(90deg, #7dd3fc, #ffffff, #f0abfc, #7dd3fc);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kn-credit-name { animation: kn-credit-shimmer 6s linear infinite; }
+  .kn-credit-dot { animation: kn-credit-pulse 2.4s ease-in-out infinite; }
+}
+@media (forced-colors: active) {
+  .kn-credit-name { color: LinkText; background: none; }
+}

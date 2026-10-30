@@ -5,11 +5,15 @@ import { Badge } from "@/components/ui/Badge";
 import { DataTable } from "@/components/ui/DataTable";
 import { requireAdmin } from "@/lib/auth/guard";
 import { requireDb } from "@/lib/db";
+import { allowed } from "@/lib/auth/rbac";
+import { RowActions } from "@/components/admin/RowActions";
+import { categoryActiveAction, categoryDeleteAction } from "../row-actions";
 
 export const metadata = { title: "Kategoriler" };
 
 export default async function CategoriesPage() {
-  await requireAdmin("products");
+  const user = await requireAdmin("products");
+  const canEdit = allowed(user.role, "category.edit");
   const cats = await requireDb().category.findMany({ orderBy: { sortOrder: "asc" }, include: { translations: true, _count: { select: { products: true } } } });
   return (
     <>
@@ -25,7 +29,20 @@ export default async function CategoriesPage() {
           { key: "p", header: "Ürün", align: "end", cell: (c) => (c.isAllProducts ? <Badge tone="outline">sanal liste</Badge> : c._count.products) },
           { key: "l", header: "Diller", cell: (c) => c.translations.map((t) => t.locale.toUpperCase()).join(", ") },
           { key: "s", header: "SEO başlığı", cell: (c) => `${c.translations.filter((t) => t.seoTitle).length}/${c.translations.length}` },
-          { key: "d", header: "Durum", cell: (c) => (c.status === "PUBLISHED" ? <Badge tone="success">Yayında</Badge> : <Badge tone="neutral">{c.status}</Badge>) },
+          { key: "d", header: "Durum", cell: (c) => (c.status === "PUBLISHED" ? <Badge tone="success">Yayında</Badge> : c.status === "ARCHIVED" ? <Badge tone="outline">Arşiv</Badge> : <Badge tone="neutral">Pasif</Badge>) },
+          {
+            key: "x",
+            header: "İşlemler",
+            align: "end",
+            cell: (c) => (
+              <RowActions
+                id={c.id}
+                editHref={`/admin/categories/${c.id}`}
+                toggle={canEdit && !c.isAllProducts && c.status !== "ARCHIVED" ? { action: categoryActiveAction, active: c.status === "PUBLISHED", labels: ["Pasif yap", "Yayına al"] } : undefined}
+                remove={canEdit && !c.isAllProducts && c.status !== "ARCHIVED" ? { action: categoryDeleteAction } : undefined}
+              />
+            ),
+          },
         ]}
       />
     </>

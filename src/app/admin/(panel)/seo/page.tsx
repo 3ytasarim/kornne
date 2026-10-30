@@ -5,6 +5,8 @@ import { Card, ModuleState, SubNav, Tabs } from "@/components/admin/ui";
 import { SEO_NAV } from "@/components/admin/subnavs";
 import { Badge } from "@/components/ui/Badge";
 import { Notice } from "@/components/ui/States";
+import { ActionForm, ConfirmSubmit, FormMessage } from "@/components/admin/forms";
+import { fillEmptySeoAction } from "./actions";
 import { requireAdmin } from "@/lib/auth/guard";
 import { CATALOG_DATA_VERIFIED } from "@/lib/catalog";
 import { requireDb } from "@/lib/db";
@@ -79,6 +81,7 @@ export default async function SeoPage({ searchParams }: PageProps<"/admin/seo">)
   const dup = new Set(titles.filter((t, i) => titles.indexOf(t) !== i));
   const withWarn = rows.filter((r) => warnings(r, dup).length).length;
   const indexable = isIndexable();
+  const emptyProducts = await db.productTranslation.count({ where: { OR: [{ seoTitle: null }, { seoTitle: "" }, { seoDescription: null }, { seoDescription: "" }], product: { status: { not: "ARCHIVED" } } } });
   return (
     <>
       <PageHeader title="SEO / GEO" description="Her dil için başlık, açıklama, kanonik adres ve hreflang. hreflang yalnız gerçekten yayımlanmış çevirileri gösterir; taslak veya olmayan çeviriye bağlantı üretilmez." actions={<ModuleState state="partial" title="Alan düzenleme + rapor; Search Console/GA4 yalnız plan (bağlantı yok)" />} />
@@ -89,6 +92,16 @@ export default async function SeoPage({ searchParams }: PageProps<"/admin/seo">)
         <StatCard label={`${locale.toUpperCase()} sayfa`} value={rows.length} />
         <StatCard label="Uyarılı" value={withWarn} tone={withWarn ? "warning" : "success"} />
       </div>
+      {emptyProducts ? (
+        <Card className="mb-6" title={`${emptyProducts} ürün metninde SEO başlığı veya açıklaması boş`} description="Tek tıkla doldurun: başlık = ürün adı + kategori, açıklama = ürün açıklamasının ilk cümleleri (Google sınırlarına göre kısaltılır). Yalnız BOŞ alanlar yazılır; elle girdikleriniz değişmez. Sonra her ürünü tek tek düzenleyebilirsiniz.">
+          <ActionForm action={fillEmptySeoAction} className="flex flex-wrap items-center gap-3">
+            <ConfirmSubmit variant="primary" size="md" confirmText="Evet, boş alanları doldur">
+              Boş SEO alanlarını otomatik doldur
+            </ConfirmSubmit>
+            <FormMessage />
+          </ActionForm>
+        </Card>
+      ) : null}
       <Notice className="mb-6">
         JSON-LD: Ürün sayfalarında <code>Offer</code> yalnız doğrulanmış fiyatla, <code>AggregateRating</code>/<code>Review</code> hiç üretilmez (yorum yok). FAQPage verisi yalnız yayındaki SSS’den ({faq} soru, {locale.toUpperCase()}). Site URL: {getSiteUrl()}
       </Notice>

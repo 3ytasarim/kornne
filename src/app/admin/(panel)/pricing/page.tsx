@@ -9,6 +9,7 @@ import { livePrice } from "@/lib/admin/prices";
 import { requireAdmin } from "@/lib/auth/guard";
 import { requireDb } from "@/lib/db";
 import { formatMoney } from "@/lib/money";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const metadata = { title: "Fiyat merkezi" };
 const PER_PAGE = 25;
@@ -105,6 +106,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/admin/pr
           },
           { key: "live", header: "Vitrindeki fiyat", cell: (r) => (r.live ? <span className="font-semibold text-success">{formatMoney(r.live.amountMinor)} {r.live.vatIncluded ? "KDV dahil" : "+KDV"}</span> : <span className="text-steel">Teklif alın</span>) },
           { key: "s", header: "Durum", cell: (r) => <div className="flex flex-wrap gap-1">{r.live ? <Badge tone="success">Onaylı</Badge> : <Badge tone="warning">Onaysız</Badge>}{r.pending.length ? <Badge tone="brand">{r.pending.length} öneri</Badge> : null}{r.invalidDiscount ? <Badge tone="outline">Hatalı indirim</Badge> : null}{!r.visible ? <Badge tone="outline">Vitrinde değil</Badge> : null}</div> },
+          { key: "x", header: "İşlemler", align: "end", cell: (r) => <RowActions id={String(r.id)} editHref={`/admin/products/${r.id}`} editLabel="Fiyatı düzenle" /> },
         ]}
       />
       <Pagination page={cur} pages={pages} total={filtered.length} href={(p) => `/admin/pricing?${new URLSearchParams([...params, ...(p > 1 ? [["sayfa", String(p)]] : [])])}`} />

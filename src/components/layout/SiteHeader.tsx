@@ -71,9 +71,12 @@ export async function SiteHeader({ localeParam }: { localeParam: string }) {
             {utility.map((u) => (
               <Link key={u.href} href={u.href} className="inline-flex min-h-9 items-center gap-1.5 rounded px-2 hover:text-white">
                 <u.icon aria-hidden="true" className="size-3.5" />
-                {u.label}
+                <span className="sr-only xl:not-sr-only">{u.label}</span>
               </Link>
             ))}
+            <span className="ms-2 border-s border-white/15 ps-2">
+              <LanguageSwitcher options={languages} label={d.a11y.languageSwitcher} variant="flags" />
+            </span>
             <a href={`tel:${contact.phoneE164}`} className="ms-2 inline-flex min-h-9 items-center gap-1.5 border-s border-white/15 ps-3 font-semibold text-white">
               <Phone aria-hidden="true" className="size-3.5" />
               <span dir="ltr">{contact.phoneDisplay}</span>
@@ -102,7 +105,7 @@ export async function SiteHeader({ localeParam }: { localeParam: string }) {
 
         <div className="ms-auto flex items-center gap-1 sm:gap-1.5">
           <ThemeToggle labels={{ dark: d.a11y.darkMode, light: d.a11y.lightMode }} />
-          <div className="hidden lg:block">
+          <div className="hidden sm:block md:hidden">
             <LanguageSwitcher options={languages} label={d.a11y.languageSwitcher} />
           </div>
           <CartLink href={href("/sepetim")} label={d.nav.cart} />

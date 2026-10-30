@@ -10,6 +10,7 @@ import { commerceGate } from "@/lib/commerce/gate";
 import { requireDb } from "@/lib/db";
 import { formatMoney } from "@/lib/money";
 import { ORDER_STATUS_TR, PAYMENT_STATUS_TR, orderTone } from "./labels";
+import { RowActions } from "@/components/admin/RowActions";
 
 export const metadata = { title: "Siparişler" };
 
@@ -72,6 +73,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
               { key: "p", header: "Ödeme", cell: (o) => `${PAYMENT_STATUS_TR[o.paymentStatus] ?? o.paymentStatus}${o.paymentMethod === "BANK_TRANSFER" ? " · EFT/Havale" : ""}` },
               { key: "t", header: "Tutar", align: "end", cell: (o) => formatMoney(o.totalMinor, o.currency) },
               { key: "d", header: "Tarih", cell: (o) => fmtDateTime(o.placedAt) },
+              { key: "x", header: "İşlemler", align: "end", cell: (o) => <RowActions id={String(o.id)} editHref={`/admin/orders/${o.id}`} editLabel="Görüntüle" /> },
             ]}
           />
         </div>

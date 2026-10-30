@@ -10,6 +10,8 @@ import { requireAdmin } from "@/lib/auth/guard";
 import { allowed } from "@/lib/auth/rbac";
 import { requireDb } from "@/lib/db";
 import { bulkAction } from "./actions";
+import { RowActions } from "@/components/admin/RowActions";
+import { productActiveAction, productDeleteAction } from "../row-actions";
 
 export const metadata = { title: "Ürünler" };
 const PER_PAGE = 25;
@@ -117,9 +119,9 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
         <FilterSelect name="sirala" label="Sırala" value={sort} options={[["sira", "Vitrin sırası"], ["ad", "Ada göre"], ["guncel", "Son güncellenen"]]} />
       </FilterBar>
 
-      <ActionForm action={bulkAction} aria-label="Toplu işlem">
-        <div className="overflow-x-auto rounded-[var(--radius-lg)] border border-line bg-surface" tabIndex={0} role="region" aria-label="Kaydırılabilir tablo">
-          <table className="w-full min-w-[56rem] border-collapse text-sm">
+      <div>
+        <div className="relative overflow-x-auto rounded-[var(--radius-lg)] border border-line bg-surface" tabIndex={0} role="region" aria-label="Kaydırılabilir tablo">
+          <table className="w-full min-w-[72rem] border-collapse text-sm">
             <caption className="sr-only">Ürünler</caption>
             <thead className="bg-surface-2 text-xs tracking-wide text-steel uppercase">
               <tr>
@@ -136,12 +138,13 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
                 <th scope="col" className="px-4 py-3 text-start">Diller</th>
                 <th scope="col" className="px-4 py-3 text-end">Görsel</th>
                 <th scope="col" className="px-4 py-3 text-start">Güncelleme</th>
+                <th scope="col" className="px-4 py-3 text-end">İşlemler</th>
               </tr>
             </thead>
             <tbody>
               {slice.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-steel">
+                  <td colSpan={10} className="px-4 py-10 text-center text-steel">
                     Filtreyle eşleşen ürün yok.
                   </td>
                 </tr>
@@ -150,7 +153,7 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
                   <tr key={p.id} className="border-t border-line hover:bg-surface-2/60">
                     {canBulk ? (
                       <td className="px-4 py-3 align-top">
-                        <input type="checkbox" name="ids" value={p.id} aria-label={`Seç: ${p.tr?.title ?? p.id}`} className="size-5 accent-brand-700" />
+                        <input type="checkbox" name="ids" form="bulk-products" value={p.id} aria-label={`Seç: ${p.tr?.title ?? p.id}`} className="size-5 accent-brand-700" />
                       </td>
                     ) : null}
                     <td className="px-4 py-3 align-top">
@@ -186,6 +189,14 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
                     </td>
                     <td className="px-4 py-3 text-end align-top tabular-nums">{p._count.media}</td>
                     <td className="px-4 py-3 align-top text-xs text-steel">{fmtDateTime(p.updatedAt)}</td>
+                    <td className="px-4 py-3 align-top">
+                      <RowActions
+                        id={p.id}
+                        editHref={`/admin/products/${p.id}`}
+                        toggle={allowed(user.role, "product.publish") && p.status !== "ARCHIVED" ? { action: productActiveAction, active: p.status === "PUBLISHED" && !p.needsReview, labels: ["Pasif yap", "Yayına al"] } : undefined}
+                        remove={allowed(user.role, "product.archive") && p.status !== "ARCHIVED" ? { action: productDeleteAction, confirm: "Silinsin mi? Tekrar tıklayın" } : undefined}
+                      />
+                    </td>
                   </tr>
                 ))
               )}
@@ -193,7 +204,8 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
           </table>
         </div>
         {canBulk ? (
-          <div className="mt-4 flex flex-wrap items-end gap-3">
+          // row checkboxes join this form via form="bulk-products" (row buttons are their own forms → no nesting)
+          <ActionForm action={bulkAction} aria-label="Toplu işlem" id="bulk-products" className="mt-4 flex flex-wrap items-end gap-3">
             <label className="flex flex-col gap-1 text-xs font-semibold text-steel">
               Seçilenlere uygula
               <select name="op" defaultValue="draft" className="min-h-12 rounded-[var(--radius-md)] border border-line-strong bg-surface px-3 text-sm font-normal text-ink">
@@ -205,10 +217,10 @@ export default async function ProductsPage({ searchParams }: PageProps<"/admin/p
               Uygula
             </SubmitButton>
             <FormMessage />
-            <p className="w-full text-xs text-steel">Toplu yayınlama bilinçli olarak yok: her ürün kendi ekranında, kontrol edilerek yayınlanır.</p>
-          </div>
+            <p className="w-full text-xs text-steel">Seçtiğiniz ürünlere birlikte uygulanır. Tek ürün için satırdaki düğmeleri kullanın.</p>
+          </ActionForm>
         ) : null}
-      </ActionForm>
+      </div>
       <Pagination page={current} pages={pages} total={rows.length} href={href} />
     </>
   );
