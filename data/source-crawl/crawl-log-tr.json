@@ -1,0 +1,802 @@
+[
+ {
+  "lang": "tr",
+  "path": "tr/",
+  "status": 200,
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "tr",
+  "path": "",
+  "status": 200,
+  "location": null,
+  "bytes": 85711,
+  "sha256": "6df633e66249a72f16ee0c9c0ee0305ccb34b2ded54cf32ac9e5c5580ca55fa2",
+  "file": "tr__home.html",
+  "captured_at": "2026-10-21T21:13:29.961Z"
+ },
+ {
+  "lang": "tr",
+  "path": "siparisim-ne-durumda",
+  "status": 200,
+  "location": null,
+  "bytes": 47801,
+  "sha256": "3ef3d68838580a688da0ad80984fa9ff9737bf3d7b165016e5cfda1e22af1679",
+  "file": "tr__siparisim-ne-durumda.html",
+  "captured_at": "2026-10-21T21:13:31.454Z"
+ },
+ {
+  "lang": "tr",
+  "path": "odeme-bildirimi",
+  "status": 200,
+  "location": null,
+  "bytes": 48621,
+  "sha256": "9c5f2b51fdf9890c9678868f0163fe52831e9548d24d48453d2f0b9d8c715618",
+  "file": "tr__odeme-bildirimi.html",
+  "captured_at": "2026-10-21T21:13:32.934Z"
+ },
+ {
+  "lang": "tr",
+  "path": "banka-hesaplari",
+  "status": 200,
+  "location": null,
+  "bytes": 51559,
+  "sha256": "b52b1b2ffbaf94a56cf913829e10b45e3aafd31e45cf37dab6527a965bf9b13c",
+  "file": "tr__banka-hesaplari.html",
+  "captured_at": "2026-10-21T21:13:34.447Z"
+ },
+ {
+  "lang": "tr",
+  "path": "favorilerim",
+  "status": 200,
+  "location": null,
+  "bytes": 48935,
+  "sha256": "8780d6ff4199d1475e975887a31215d0763ae00f9897ff866d5bf6478792f8f9",
+  "file": "tr__favorilerim.html",
+  "captured_at": "2026-10-21T21:13:35.939Z"
+ },
+ {
+  "lang": "tr",
+  "path": "blog",
+  "status": 200,
+  "location": null,
+  "bytes": 47576,
+  "sha256": "b6c769e4adb05a83ea0d002a1dedbef8dccec6948badc29d8a5343eda646a8c7",
+  "file": "tr__blog.html",
+  "captured_at": "2026-10-21T21:13:37.438Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sayfa/kurumsal",
+  "status": 200,
+  "location": null,
+  "bytes": 48970,
+  "sha256": "87cb755a0ce04df83fb127a3e219ce115defaf19c74a3778a3d71c3d23cbb41f",
+  "file": "tr__sayfa_kurumsal.html",
+  "captured_at": "2026-10-21T21:13:38.966Z"
+ },
+ {
+  "lang": "tr",
+  "path": "iletisim",
+  "status": 200,
+  "location": null,
+  "bytes": 51737,
+  "sha256": "61a11796414d4b41fa68a28ee41d4efb0b6a205d31e0b8cd921883d44d7cf995",
+  "file": "tr__iletisim.html",
+  "captured_at": "2026-10-21T21:13:40.491Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sepetim",
+  "status": 200,
+  "location": null,
+  "bytes": 49058,
+  "sha256": "a31c99fd266b6dbb8821790816b8ef3c2935bf6e05c01f24aa3ba942031dd101",
+  "file": "tr__sepetim.html",
+  "captured_at": "2026-10-21T21:13:42.004Z"
+ },
+ {
+  "lang": "tr",
+  "path": "giris-yap",
+  "status": 200,
+  "location": null,
+  "bytes": 48877,
+  "sha256": "3c967959fd2aea3c701faa246ff227a96456f1edb48bf0493dafb5bf01c0a821",
+  "file": "tr__giris-yap.html",
+  "captured_at": "2026-10-21T21:13:43.501Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/mezbaha-ekipmanlari",
+  "status": 200,
+  "location": null,
+  "bytes": 67874,
+  "sha256": "ae20a179156233a4ed61e2a3b2255ab424231150579dd270cf4e9d25de0c736a",
+  "file": "tr__kategori_mezbaha-ekipmanlari.html",
+  "captured_at": "2026-10-21T21:13:45.035Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/kurban-ekipmanlari",
+  "status": 200,
+  "location": null,
+  "bytes": 68321,
+  "sha256": "145620d47d63ca3087fd4af5e9dcccd89fd54a904e3d1b99aeef103453aa8b9f",
+  "file": "tr__kategori_kurban-ekipmanlari.html",
+  "captured_at": "2026-10-21T21:13:46.528Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/robotik-sistemler",
+  "status": 200,
+  "location": null,
+  "bytes": 68148,
+  "sha256": "2f913ef1c903ea6b2e3ae7acb58e563971808f04b6b081b85fab9a544ac34c08",
+  "file": "tr__kategori_robotik-sistemler.html",
+  "captured_at": "2026-10-21T21:13:48.033Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/tum-urunler",
+  "status": 200,
+  "location": null,
+  "bytes": 67842,
+  "sha256": "0feef2c09322131969ae09802a3a7221eac2eb2c9fffd5cb1ebcb9b89d1a2a79",
+  "file": "tr__kategori_tum-urunler.html",
+  "captured_at": "2026-10-21T21:13:49.557Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ikiye-bolme-testeresi",
+  "status": 200,
+  "location": null,
+  "bytes": 74223,
+  "sha256": "d76cd7746f4b56f64a8cf9b02825bd8daa3653347e6997b613c238cb7f770373",
+  "file": "tr__urun_ikiye-bolme-testeresi.html",
+  "captured_at": "2026-10-21T21:13:51.075Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kurban-yatirma-kabini",
+  "status": 200,
+  "location": null,
+  "bytes": 73682,
+  "sha256": "b70f87b782eb01b5d3d027fa052c841148b8830a6b175b0377bada319435d1e1",
+  "file": "tr__urun_kurban-yatirma-kabini.html",
+  "captured_at": "2026-10-21T21:13:52.593Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/lama-ray-kancasi-buyuk-bas",
+  "status": 200,
+  "location": null,
+  "bytes": 73106,
+  "sha256": "748099d33f2555a3a678efb2d9349771ef75f3df197e4728c51193ffa1acda7c",
+  "file": "tr__urun_lama-ray-kancasi-buyuk-bas.html",
+  "captured_at": "2026-10-21T21:13:54.139Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/monoray-kancasi-buyuk-bas",
+  "status": 200,
+  "location": null,
+  "bytes": 72740,
+  "sha256": "ce4de4231b34f48d97c2f96ce8d588ea69097f3a547c43ad3530da6a5958bf33",
+  "file": "tr__urun_monoray-kancasi-buyuk-bas.html",
+  "captured_at": "2026-10-21T21:13:55.649Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ikiz-ray-kantar",
+  "status": 200,
+  "location": null,
+  "bytes": 72465,
+  "sha256": "fe77a81754f196392fdfc72687974aafa14ad3cc58d0abd754733eb148aedd4c",
+  "file": "tr__urun_ikiz-ray-kantar.html",
+  "captured_at": "2026-10-21T21:13:57.175Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ikiz-ray-kancasi-paslanmaz",
+  "status": 200,
+  "location": null,
+  "bytes": 73845,
+  "sha256": "c670e95ca2d8bf922306faf0989e8772dcc494f26bf5eb7751e80cdb99f94e5b",
+  "file": "tr__urun_ikiz-ray-kancasi-paslanmaz.html",
+  "captured_at": "2026-10-21T21:13:58.713Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kurban-kanama-kancasi",
+  "status": 200,
+  "location": null,
+  "bytes": 73212,
+  "sha256": "26300cfa49d9ebbc50acb12cd47c606eebae02e084fabcb5128f7acdb5e0b7f0",
+  "file": "tr__urun_kurban-kanama-kancasi.html",
+  "captured_at": "2026-10-21T21:14:00.242Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/dos-acma-testeresi",
+  "status": 200,
+  "location": null,
+  "bytes": 73346,
+  "sha256": "0c1fa30ff0a24461cf65eafb64673ebcd51dc3094e4b4ebfefcdd0d9f7979230",
+  "file": "tr__urun_dos-acma-testeresi.html",
+  "captured_at": "2026-10-21T21:14:01.775Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/hijyen-geciti",
+  "status": 200,
+  "location": null,
+  "bytes": 72136,
+  "sha256": "99bdf2591c57c35f1e80fab1e3e0c476b9d37162f9fdd3203b7ab750465a43fe",
+  "file": "tr__urun_hijyen-geciti.html",
+  "captured_at": "2026-10-21T21:14:03.295Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/sulu-sterilizator",
+  "status": 200,
+  "location": null,
+  "bytes": 71846,
+  "sha256": "2dd44e3d17f23f410e1971c878643b97e177c4194a60371cb4bf303c562c3a4f",
+  "file": "tr__urun_sulu-sterilizator.html",
+  "captured_at": "2026-10-21T21:14:04.821Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-kesim-bicak",
+  "status": 200,
+  "location": null,
+  "bytes": 72246,
+  "sha256": "83797ea926e6fa965574401721b160282317cf626fb36111980b3494013ea90b",
+  "file": "tr__urun_kasap-kesim-bicak.html",
+  "captured_at": "2026-10-21T21:14:06.487Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ayak-ve-boynuz-testeresi",
+  "status": 200,
+  "location": null,
+  "bytes": 73493,
+  "sha256": "9b3282816d4f61c412d517167a73656dcc6afac3251e394f9c8d929298c2dddd",
+  "file": "tr__urun_ayak-ve-boynuz-testeresi.html",
+  "captured_at": "2026-10-21T21:14:08.037Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/testere-serit",
+  "status": 200,
+  "location": null,
+  "bytes": 72517,
+  "sha256": "0b98cf8ec57c1de3479beb92a6b29fd26fc96cfa92f2aec448a852ab6f03d3ea",
+  "file": "tr__urun_testere-serit.html",
+  "captured_at": "2026-10-21T21:14:09.566Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kurban-testeresi",
+  "status": 200,
+  "location": null,
+  "bytes": 74089,
+  "sha256": "2b4cb70c906ccc5dcf95016e4002e5af1078633f7cdd4abf54a7bd9c7e0fa9f9",
+  "file": "tr__urun_kurban-testeresi.html",
+  "captured_at": "2026-10-21T21:14:11.141Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sayfa/iade-ve-geri-odeme-politikalari",
+  "status": 200,
+  "location": null,
+  "bytes": 50536,
+  "sha256": "b037ee0830d5b37cf26417151d7a42263ed52d91d91a8feb46ef15c59d17af4c",
+  "file": "tr__sayfa_iade-ve-geri-odeme-politikalari.html",
+  "captured_at": "2026-10-21T21:14:12.629Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sayfa/mesafeli-satis-sozlesmesi",
+  "status": 200,
+  "location": null,
+  "bytes": 67437,
+  "sha256": "e2a80ff522ca4f1a20a36de94ff4415ab8c01d083141ab72e3274dfe1c143a6f",
+  "file": "tr__sayfa_mesafeli-satis-sozlesmesi.html",
+  "captured_at": "2026-10-21T21:14:14.123Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sayfa/kisisel-verilenin-korunmasi-kanunu",
+  "status": 200,
+  "location": null,
+  "bytes": 55253,
+  "sha256": "fd39f637a2fff724fd8dacde7fdd6e59125eb5c81c080b58f2ecec60b2e6f6e2",
+  "file": "tr__sayfa_kisisel-verilenin-korunmasi-kanunu.html",
+  "captured_at": "2026-10-21T21:14:15.621Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/dairesel-kesim-hucresi",
+  "status": 200,
+  "location": null,
+  "bytes": 73564,
+  "sha256": "5e37b09dad7c2c0c1fb7fadcf4170f821a6dd678f560e9433c918c69f3444110",
+  "file": "tr__urun_dairesel-kesim-hucresi.html",
+  "captured_at": "2026-10-21T21:14:17.137Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ayakta-kesim-hucresi",
+  "status": 200,
+  "location": null,
+  "bytes": 73946,
+  "sha256": "17929cb246e43f20c6f7e03cb4a00a4214898261192c1a3596f487c6c6a04340",
+  "file": "tr__urun_ayakta-kesim-hucresi.html",
+  "captured_at": "2026-10-21T21:14:18.656Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ceyrekleme-testere",
+  "status": 200,
+  "location": null,
+  "bytes": 73561,
+  "sha256": "d322c7d3347195aaff7971eefa8b5cbe3ed655ce833efffa9b731933747c7995",
+  "file": "tr__urun_ceyrekleme-testere.html",
+  "captured_at": "2026-10-21T21:14:20.192Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/testere-sterilizator",
+  "status": 200,
+  "location": null,
+  "bytes": 73429,
+  "sha256": "96b9afa641762569d9a06a9f050d7492b877964720e8db38f7dbc79a1eb24f1a",
+  "file": "tr__urun_testere-sterilizator.html",
+  "captured_at": "2026-10-21T21:14:21.704Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kayit-ol",
+  "status": 200,
+  "location": null,
+  "bytes": 50313,
+  "sha256": "f42ad130caf93a15eb8da48a1147eaf3c6ebf87cac0ca2c298b4095509776410",
+  "file": "tr__kayit-ol.html",
+  "captured_at": "2026-10-21T21:14:23.209Z"
+ },
+ {
+  "lang": "tr",
+  "path": "sifremi-unuttum",
+  "status": 200,
+  "location": null,
+  "bytes": 48664,
+  "sha256": "f16c42877ffcefd4dd6a01048da1978297f9de09599fa17153a92697b11c649f",
+  "file": "tr__sifremi-unuttum.html",
+  "captured_at": "2026-10-21T21:14:24.697Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-ozel-kancalar-tip-2",
+  "status": 200,
+  "location": null,
+  "bytes": 72400,
+  "sha256": "7a717c020cb32effa793fafc26f87d6221f2f443644c3cd060f5f53de5950854",
+  "file": "tr__urun_kasap-ozel-kancalar-tip-2.html",
+  "captured_at": "2026-10-21T21:14:26.251Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-ozel-kancalar-tip-1",
+  "status": 200,
+  "location": null,
+  "bytes": 72076,
+  "sha256": "b0394677e5da479b9ce288bdee176b90a411a719f849a3fa9225b997a00f6218",
+  "file": "tr__urun_kasap-ozel-kancalar-tip-1.html",
+  "captured_at": "2026-10-21T21:14:27.762Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-deri-yuzme-bicak",
+  "status": 200,
+  "location": null,
+  "bytes": 72506,
+  "sha256": "c5cf9028e427ca60485d4b5e8730edbdd6e338f6e47b48b8dfb1251c218999c4",
+  "file": "tr__urun_kasap-deri-yuzme-bicak.html",
+  "captured_at": "2026-10-21T21:14:29.290Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-bileme-makinasi",
+  "status": 200,
+  "location": null,
+  "bytes": 72329,
+  "sha256": "3b419d41bcab90e510b9678505a99943a5adba588ae9f8d397b450d3fb6d4805",
+  "file": "tr__urun_kasap-bileme-makinasi.html",
+  "captured_at": "2026-10-21T21:14:30.827Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-masat",
+  "status": 200,
+  "location": null,
+  "bytes": 72691,
+  "sha256": "6dafbd143739cd22c60f298781f1773423433f7b8ad9e6dc5b87997f9f85d530",
+  "file": "tr__urun_kasap-masat.html",
+  "captured_at": "2026-10-21T21:14:32.529Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-onluk",
+  "status": 200,
+  "location": null,
+  "bytes": 72055,
+  "sha256": "c5c7ac3c9aabe5222082a31a652f28368d956cdbba338bcdc41ab48e2c894a25",
+  "file": "tr__urun_kasap-onluk.html",
+  "captured_at": "2026-10-21T21:14:34.112Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kasap-ozel-kancalar-tip-3",
+  "status": 200,
+  "location": null,
+  "bytes": 72045,
+  "sha256": "b26cb8f9d60312f86c0833a09f535075310422afa44090814bf7a6b7e00458f8",
+  "file": "tr__urun_kasap-ozel-kancalar-tip-3.html",
+  "captured_at": "2026-10-21T21:14:35.692Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/onluk-yikama",
+  "status": 200,
+  "location": null,
+  "bytes": 72579,
+  "sha256": "5e54849d6361312832490b55e23f3cbf6cb4fe852ebd169c0512fb0bc07ed46b",
+  "file": "tr__urun_onluk-yikama.html",
+  "captured_at": "2026-10-21T21:14:37.587Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/bot-yikama",
+  "status": 200,
+  "location": null,
+  "bytes": 73212,
+  "sha256": "5366b1e8111d3d62ba9afac4b6fc26173b401581196b35614cff006bcd5ff08a",
+  "file": "tr__urun_bot-yikama.html",
+  "captured_at": "2026-10-21T21:14:39.155Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ayakli-lavabo",
+  "status": 200,
+  "location": null,
+  "bytes": 71924,
+  "sha256": "c28a660a1758d9afca6e921b3a30d95011520211b8fb109d3a17471c7db7a732",
+  "file": "tr__urun_ayakli-lavabo.html",
+  "captured_at": "2026-10-21T21:14:40.676Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/lavabo-diz-basmali",
+  "status": 200,
+  "location": null,
+  "bytes": 72290,
+  "sha256": "7d97ce3fc1879db4e6f933800954f964cd128f3955380faafc134714b22edef3",
+  "file": "tr__urun_lavabo-diz-basmali.html",
+  "captured_at": "2026-10-21T21:14:42.209Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/sterilizator-dolap",
+  "status": 200,
+  "location": null,
+  "bytes": 72305,
+  "sha256": "7d376fc62aafad999e3bddc209c6935917ae6365696ba5aeb26e7d1fc4f2e842",
+  "file": "tr__urun_sterilizator-dolap.html",
+  "captured_at": "2026-10-21T21:14:43.736Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/mezbaha-ekipmanlari/2",
+  "status": 200,
+  "location": null,
+  "bytes": 68410,
+  "sha256": "54d0ba9e0599f870f64fb09e7957a994acd44d65f5cb831a3169224563da5752",
+  "file": "tr__kategori_mezbaha-ekipmanlari_2.html",
+  "captured_at": "2026-10-21T21:14:45.264Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/mezbaha-ekipmanlari/3",
+  "status": 200,
+  "location": null,
+  "bytes": 57520,
+  "sha256": "f8ce339e070eae988b827a7407f047320725e70f33531d213bfced0a9ea287d1",
+  "file": "tr__kategori_mezbaha-ekipmanlari_3.html",
+  "captured_at": "2026-10-21T21:14:46.798Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ikiz-ray-kancasi-kucuk-bas",
+  "status": 200,
+  "location": null,
+  "bytes": 72385,
+  "sha256": "8d0cd1b4c3e2349bbaa7d6d520281ce39dbdd97537ce4e713ceeaa2801ffc548",
+  "file": "tr__urun_ikiz-ray-kancasi-kucuk-bas.html",
+  "captured_at": "2026-10-21T21:14:48.341Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/monoray-kurban-kancasi",
+  "status": 200,
+  "location": null,
+  "bytes": 72892,
+  "sha256": "2338c11f99c0cd21bf35b78064abf3df2f42640e8fd826788e1687d6e91c7f1f",
+  "file": "tr__urun_monoray-kurban-kancasi.html",
+  "captured_at": "2026-10-21T21:14:49.861Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/balansor-40-50-kg-2-mt",
+  "status": 200,
+  "location": null,
+  "bytes": 72363,
+  "sha256": "2805d3deec0dec1e816ed2e30f499ccebf9f490b49ca23cb4652838d0f1751cc",
+  "file": "tr__urun_balansor-40-50-kg-2-mt.html",
+  "captured_at": "2026-10-21T21:14:51.374Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/kurban-ekipmanlari/2",
+  "status": 200,
+  "location": null,
+  "bytes": 49151,
+  "sha256": "e8d4d18bde60dfe5a0334c213b7de66ce795f17e61aa6d77743ae0a2e55ec106",
+  "file": "tr__kategori_kurban-ekipmanlari_2.html",
+  "captured_at": "2026-10-21T21:14:52.874Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kucuk-bas-stoklama-kancasi",
+  "status": 200,
+  "location": null,
+  "bytes": 74400,
+  "sha256": "063a1e760402b8059ef2446bec1a37b25e075778b618fd6aaba72f378fd480eb",
+  "file": "tr__urun_kucuk-bas-stoklama-kancasi.html",
+  "captured_at": "2026-10-21T21:14:54.407Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/platformlar",
+  "status": 200,
+  "location": null,
+  "bytes": 74007,
+  "sha256": "3c0dd80877138563c64743ab8d05d558dc3f29a574d060cf72a7cf40aff074d7",
+  "file": "tr__urun_platformlar.html",
+  "captured_at": "2026-10-21T21:14:55.925Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/robotik-sistemler/2",
+  "status": 200,
+  "location": null,
+  "bytes": 62578,
+  "sha256": "adf5e1c077436939253733d35db94ed11d52d2cf9429f0e63f30d310c250992f",
+  "file": "tr__kategori_robotik-sistemler_2.html",
+  "captured_at": "2026-10-21T21:14:57.437Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/tum-urunler/2",
+  "status": 200,
+  "location": null,
+  "bytes": 68411,
+  "sha256": "ac1265c18462d7210f9daf2e956d4ccc56b9eebf4a00cb28fef9598165d3777c",
+  "file": "tr__kategori_tum-urunler_2.html",
+  "captured_at": "2026-10-21T21:14:58.960Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/tum-urunler/3",
+  "status": 200,
+  "location": null,
+  "bytes": 61523,
+  "sha256": "f488a0f62ae04ba4ffa25ec772965795ff3210fcb5489e78970c1d4761fe7a5a",
+  "file": "tr__kategori_tum-urunler_3.html",
+  "captured_at": "2026-10-21T21:15:00.460Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/kanama-kancasi-kucuk-bas",
+  "status": 200,
+  "location": null,
+  "bytes": 73300,
+  "sha256": "9269856b5e4e70f80805bd11ebdf5ebb4ac5ab6925017517265744938281f8d3",
+  "file": "tr__urun_kanama-kancasi-kucuk-bas.html",
+  "captured_at": "2026-10-21T21:15:01.988Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/ikizray-kurban-kancasi",
+  "status": 200,
+  "location": null,
+  "bytes": 72961,
+  "sha256": "443039a265a9fe475b756d01c940cdab534b3e77fd26ef264eb74fbea3251fc3",
+  "file": "tr__urun_ikizray-kurban-kancasi.html",
+  "captured_at": "2026-10-21T21:15:03.502Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/balansor-70-80-kg-3mt",
+  "status": 200,
+  "location": null,
+  "bytes": 72202,
+  "sha256": "c3686d0ef579ccb77a39faf1782c2455fa294912ebe7311de55afb40dfec30a0",
+  "file": "tr__urun_balansor-70-80-kg-3mt.html",
+  "captured_at": "2026-10-21T21:15:05.090Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/vakum-makinasi",
+  "status": 200,
+  "location": null,
+  "bytes": 72483,
+  "sha256": "49b75302ae8143b5e01e5158aeb99702d2805f036765b5c5ceb124b5201b4403",
+  "file": "tr__urun_vakum-makinasi.html",
+  "captured_at": "2026-10-21T21:15:06.647Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/klasik-kesim-hucresi",
+  "status": 200,
+  "location": null,
+  "bytes": 74034,
+  "sha256": "352220201bc1028fdb783bc964aca1468e4c2935a654c943db2ff2b8066eeb57",
+  "file": "tr__urun_klasik-kesim-hucresi.html",
+  "captured_at": "2026-10-21T21:15:08.208Z"
+ },
+ {
+  "lang": "tr",
+  "path": "urun/bantlar",
+  "status": 200,
+  "location": null,
+  "bytes": 73621,
+  "sha256": "01599e1f706d6a825fa0cb3f2ee11b37c033fde0d5f248000e149bb315254f55",
+  "file": "tr__urun_bantlar.html",
+  "captured_at": "2026-10-21T21:15:09.735Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/mezbaha-ekipmanlari/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67874,
+  "sha256": "ae20a179156233a4ed61e2a3b2255ab424231150579dd270cf4e9d25de0c736a",
+  "file": "tr__kategori_mezbaha-ekipmanlari_1.html",
+  "captured_at": "2026-10-21T21:15:11.263Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/kurban-ekipmanlari/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68321,
+  "sha256": "145620d47d63ca3087fd4af5e9dcccd89fd54a904e3d1b99aeef103453aa8b9f",
+  "file": "tr__kategori_kurban-ekipmanlari_1.html",
+  "captured_at": "2026-10-21T21:15:12.784Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/robotik-sistemler/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68148,
+  "sha256": "2f913ef1c903ea6b2e3ae7acb58e563971808f04b6b081b85fab9a544ac34c08",
+  "file": "tr__kategori_robotik-sistemler_1.html",
+  "captured_at": "2026-10-21T21:15:14.309Z"
+ },
+ {
+  "lang": "tr",
+  "path": "kategori/tum-urunler/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67842,
+  "sha256": "0feef2c09322131969ae09802a3a7221eac2eb2c9fffd5cb1ebcb9b89d1a2a79",
+  "file": "tr__kategori_tum-urunler_1.html",
+  "captured_at": "2026-10-21T21:15:15.828Z"
+ },
+ {
+  "lang": "tr",
+  "note": "done; fetched=70; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "en",
+  "path": "lang-eng/",
+  "status": 200,
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "en",
+  "path": "",
+  "status": 200,
+  "location": null,
+  "bytes": 72,
+  "sha256": "5a47009b8eab3b9d24724daad06b0bd00bc4167d9476902dc0056d8d14ffa939",
+  "file": "en__home.html",
+  "captured_at": "2026-10-21T21:15:18.836Z"
+ },
+ {
+  "lang": "en",
+  "note": "done; fetched=1; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "fr",
+  "path": "lang-fr/",
+  "status": 200,
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "fr",
+  "path": "",
+  "status": 200,
+  "location": null,
+  "bytes": 71,
+  "sha256": "24ae075bba783baad91d48fc54c90f14b34caf30ec60b2c7d7c012743520acc2",
+  "file": "fr__home.html",
+  "captured_at": "2026-10-21T21:15:21.913Z"
+ },
+ {
+  "lang": "fr",
+  "note": "done; fetched=1; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "ru",
+  "path": "lang-ru/",
+  "status": 200,
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "ru",
+  "path": "",
+  "status": 200,
+  "location": null,
+  "bytes": 71,
+  "sha256": "b4438b027998c54e7b541c2c048b8e266dde47ce4b78de5f1ca0bd7837241075",
+  "file": "ru__home.html",
+  "captured_at": "2026-10-21T21:15:24.871Z"
+ },
+ {
+  "lang": "ru",
+  "note": "done; fetched=1; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "ar",
+  "path": "lang-arabic/",
+  "status": 200,
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "ar",
+  "path": "",
+  "status": 200,
+  "location": null,
+  "bytes": 75,
+  "sha256": "d31ff702ecb1e7b253553362d4b885c7efd631f110879f2372c7c74d355dfc03",
+  "file": "ar__home.html",
+  "captured_at": "2026-10-21T21:15:27.838Z"
+ },
+ {
+  "lang": "ar",
+  "note": "done; fetched=1; queue_left=0",
+  "left": []
+ }
+]

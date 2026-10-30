@@ -1,0 +1,359 @@
+{
+ "_meta": {
+  "status": "suggested — client confirmation required",
+  "method": "record order + title meaning + price agreement"
+ },
+ "categories": [
+  {
+   "key": "mezbaha-ekipmanlari",
+   "isAllProducts": false,
+   "locales": {
+    "tr": {
+     "legacySlug": "mezbaha-ekipmanlari",
+     "slug": "mezbaha-ekipmanlari",
+     "name": "Mezbaha Ekipmanları",
+     "sourceUrl": "https://kornne.com/kategori/mezbaha-ekipmanlari"
+    },
+    "en": {
+     "legacySlug": "slaughterhouse-equipments",
+     "slug": "slaughterhouse-equipments",
+     "name": "Slaughterhouse Equipments",
+     "sourceUrl": "https://kornne.com/kategori/slaughterhouse-equipments"
+    },
+    "fr": {
+     "legacySlug": "equipements-dabattoir",
+     "slug": "equipements-dabattoir",
+     "name": "Équipements d'abattoir",
+     "sourceUrl": "https://kornne.com/kategori/equipements-dabattoir"
+    },
+    "ru": {
+     "legacySlug": "lang-russian-equipments",
+     "slug": "oborudovanie-dlya-skotoboyni",
+     "name": "Оборудование для скотобойни",
+     "sourceUrl": "https://kornne.com/kategori/lang-russian-equipments"
+    },
+    "ar": {
+     "legacySlug": "lang-arabic-equipments",
+     "slug": "slaughterhouse-equipment",
+     "name": "معدات المسلخ",
+     "sourceUrl": "https://kornne.com/kategori/lang-arabic-equipments"
+    }
+   }
+  },
+  {
+   "key": "kurban-ekipmanlari",
+   "isAllProducts": false,
+   "locales": {
+    "tr": {
+     "legacySlug": "kurban-ekipmanlari",
+     "slug": "kurban-ekipmanlari",
+     "name": "Kurban Ekipmanları",
+     "sourceUrl": "https://kornne.com/kategori/kurban-ekipmanlari"
+    },
+    "en": {
+     "legacySlug": "sacrifice-equipments",
+     "slug": "sacrifice-equipments",
+     "name": "Sacrifice Equipments",
+     "sourceUrl": "https://kornne.com/kategori/sacrifice-equipments"
+    },
+    "fr": {
+     "legacySlug": "equipements-de-sacrifice",
+     "slug": "equipements-de-sacrifice",
+     "name": "Équipements de sacrifice",
+     "sourceUrl": "https://kornne.com/kategori/equipements-de-sacrifice"
+    },
+    "ru": {
+     "legacySlug": "lang-russian-equipments2",
+     "slug": "oborudovanie-dlya-zhertvoprinosheniya",
+     "name": "Снаряжение для жертвоприношения",
+     "sourceUrl": "https://kornne.com/kategori/lang-russian-equipments2"
+    },
+    "ar": {
+     "legacySlug": "lang-arabic-equipments2",
+     "slug": "sacrifice-equipment",
+     "name": "معدات التضحية",
+     "sourceUrl": "https://kornne.com/kategori/lang-arabic-equipments2"
+    }
+   }
+  },
+  {
+   "key": "robotik-sistemler",
+   "isAllProducts": false,
+   "locales": {
+    "tr": {
+     "legacySlug": "robotik-sistemler",
+     "slug": "robotik-sistemler",
+     "name": "Robotik Sistemler",
+     "sourceUrl": "https://kornne.com/kategori/robotik-sistemler"
+    },
+    "en": {
+     "legacySlug": "robotic-systems",
+     "slug": "robotic-systems",
+     "name": "Robotic Systems",
+     "sourceUrl": "https://kornne.com/kategori/robotic-systems"
+    },
+    "fr": {
+     "legacySlug": "systemes-robotiques",
+     "slug": "systemes-robotiques",
+     "name": "Systèmes robotiques",
+     "sourceUrl": "https://kornne.com/kategori/systemes-robotiques"
+    },
+    "ru": {
+     "legacySlug": "lang-russian-equipments3",
+     "slug": "robototekhnicheskie-sistemy",
+     "name": "Робототехнические системы",
+     "sourceUrl": "https://kornne.com/kategori/lang-russian-equipments3"
+    },
+    "ar": {
+     "legacySlug": "lang-arabic-robotics",
+     "slug": "robotic-systems",
+     "name": "الأنظمة الروبوتية",
+     "sourceUrl": "https://kornne.com/kategori/lang-arabic-robotics"
+    }
+   }
+  },
+  {
+   "key": "tum-urunler",
+   "isAllProducts": true,
+   "locales": {
+    "tr": {
+     "legacySlug": "tum-urunler",
+     "slug": "tum-urunler",
+     "name": "Tüm Ürünler",
+     "sourceUrl": "https://kornne.com/kategori/tum-urunler"
+    },
+    "en": {
+     "legacySlug": "all-products",
+     "slug": "all-products",
+     "name": "All Products",
+     "sourceUrl": "https://kornne.com/kategori/all-products"
+    },
+    "fr": {
+     "legacySlug": "all-products",
+     "slug": "tous-les-produits",
+     "name": "All Products",
+     "sourceUrl": "https://kornne.com/kategori/all-products"
+    },
+    "ru": {
+     "legacySlug": "lang-russian-robotics",
+     "slug": "vse-produkty",
+     "name": "Все продукты",
+     "sourceUrl": "https://kornne.com/kategori/lang-russian-robotics"
+    },
+    "ar": {
+     "legacySlug": "lang-arabic-equipments3",
+     "slug": "all-products",
+     "name": "جميع المنتجات",
+     "sourceUrl": "https://kornne.com/kategori/lang-arabic-equipments3"
+    }
+   }
+  }
+ ],
+ "products": [
+  {
+   "tr": "78",
+   "en": "140",
+   "fr": "177"
+  },
+  {
+   "tr": "79",
+   "en": "141",
+   "fr": "178"
+  },
+  {
+   "tr": "80",
+   "en": "142",
+   "fr": "179"
+  },
+  {
+   "tr": "82",
+   "en": "143",
+   "fr": "180"
+  },
+  {
+   "tr": "84",
+   "en": "144",
+   "fr": "181"
+  },
+  {
+   "tr": "85",
+   "en": "145",
+   "fr": "182"
+  },
+  {
+   "tr": "86",
+   "en": "146",
+   "fr": "183"
+  },
+  {
+   "tr": "100",
+   "en": "147",
+   "fr": "184"
+  },
+  {
+   "tr": "103",
+   "en": "148",
+   "fr": "185"
+  },
+  {
+   "tr": "104",
+   "en": "149",
+   "fr": "186"
+  },
+  {
+   "tr": "105",
+   "en": "150",
+   "fr": "187"
+  },
+  {
+   "tr": "107",
+   "en": "151",
+   "fr": "188"
+  },
+  {
+   "tr": "108",
+   "en": "152",
+   "fr": "189"
+  },
+  {
+   "tr": "109",
+   "en": "153",
+   "fr": "190"
+  },
+  {
+   "tr": "110",
+   "en": "154",
+   "fr": "191"
+  },
+  {
+   "tr": "111",
+   "en": "155",
+   "fr": "192"
+  },
+  {
+   "tr": "112",
+   "en": "156",
+   "fr": "193"
+  },
+  {
+   "tr": "113",
+   "en": "157",
+   "fr": "194"
+  },
+  {
+   "tr": "114",
+   "en": "158",
+   "fr": "195"
+  },
+  {
+   "tr": "115",
+   "en": "159",
+   "fr": "196"
+  },
+  {
+   "tr": "117",
+   "en": "160",
+   "fr": "197"
+  },
+  {
+   "tr": "118",
+   "en": "161",
+   "fr": "198"
+  },
+  {
+   "tr": "119",
+   "en": "162",
+   "fr": "199"
+  },
+  {
+   "tr": "120",
+   "en": null,
+   "fr": "200"
+  },
+  {
+   "tr": "121",
+   "en": "163",
+   "fr": "201"
+  },
+  {
+   "tr": "122",
+   "en": "164",
+   "fr": "202"
+  },
+  {
+   "tr": "123",
+   "en": "165",
+   "fr": "203"
+  },
+  {
+   "tr": "124",
+   "en": "166",
+   "fr": "204"
+  },
+  {
+   "tr": "125",
+   "en": "167",
+   "fr": "205"
+  },
+  {
+   "tr": "126",
+   "en": null,
+   "fr": "206"
+  },
+  {
+   "tr": "127",
+   "en": "169",
+   "fr": "207"
+  },
+  {
+   "tr": "128",
+   "en": "170",
+   "fr": "210"
+  },
+  {
+   "tr": "130",
+   "en": "171",
+   "fr": "211"
+  },
+  {
+   "tr": "131",
+   "en": "172",
+   "fr": "212"
+  },
+  {
+   "tr": "134",
+   "en": "173",
+   "fr": "213"
+  },
+  {
+   "tr": "135",
+   "en": "174",
+   "fr": "214"
+  },
+  {
+   "tr": "136",
+   "en": "175",
+   "fr": "215"
+  },
+  {
+   "tr": "137",
+   "en": "176",
+   "fr": "216"
+  },
+  {
+   "tr": "208",
+   "en": null,
+   "fr": null
+  },
+  {
+   "tr": "209",
+   "en": null,
+   "fr": null
+  },
+  {
+   "tr": "217",
+   "en": null,
+   "fr": null
+  }
+ ]
+}

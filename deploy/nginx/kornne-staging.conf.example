@@ -1,0 +1,71 @@
+# KORNNE — STAGING vhost (DRAFT, not installed anywhere).
+# Install only after approval: /etc/nginx/sites-available/kornne-staging.conf → symlink to sites-enabled,
+# then `sudo nginx -t` BEFORE `sudo systemctl reload nginx` (reload, never restart: other sites keep serving).
+#
+# Deliberately NO `default_server` here: another project on the same Nginx already owns the catch-all
+# default server; a second one makes `nginx -t` fail and would block every reload on the box.
+# <STAGING_HOST> e.g. staging.kornne.com (to be decided — open-questions.md).
+
+upstream kornne_staging_app {
+    server 127.0.0.1:3011;   # staging runs as its own user/port (deploy/ecosystem.config.cjs KORNNE_ENV=staging)
+    keepalive 16;
+}
+
+limit_req_zone $binary_remote_addr zone=kornne_staging_login:10m rate=10r/m;
+
+server {
+    listen 80;
+    listen [::]:80;
+    server_name <STAGING_HOST>;
+    location /.well-known/acme-challenge/ { root /var/www/letsencrypt; }
+    location / { return 301 https://$host$request_uri; }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name <STAGING_HOST>;
+
+    ssl_certificate     /etc/letsencrypt/live/<STAGING_HOST>/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/<STAGING_HOST>/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    # Staging is private: Basic Auth at the edge (the app's own STAGING_BASIC_AUTH_* is a second layer)
+    auth_basic "KORNNE staging";
+    auth_basic_user_file /etc/nginx/kornne-staging.htpasswd;   # created with htpasswd -B, chmod 640 root:www-data
+    add_header X-Robots-Tag "noindex, nofollow, noimageindex" always;
+
+    client_max_body_size 25m;
+    gzip on;
+    gzip_types text/css application/javascript application/json image/svg+xml application/xml;
+
+    location ~ /\.(?!well-known) { deny all; }
+
+    location = /api/health {
+        auth_basic off;                       # uptime monitor
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_staging_app;
+    }
+
+    location = /admin/login {
+        limit_req zone=kornne_staging_login burst=10 nodelay;
+        limit_req_status 429;
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_staging_app;
+    }
+
+    location ^~ /upload/ {
+        # staging media is a SEPARATE copy (/srv/kornne-staging/shared/media) — never the production directory
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_hide_header Cache-Control;
+        add_header Cache-Control "public, max-age=2592000" always;
+        add_header X-Robots-Tag "noindex, noimageindex" always;
+        proxy_pass http://kornne_staging_app;
+    }
+
+    location / {
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_staging_app;
+    }
+}

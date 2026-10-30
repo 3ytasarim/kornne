@@ -1,0 +1,366 @@
+@import "tailwindcss";
+
+/*
+ * KORNNE design tokens (docs/design/design-system.md).
+ * Brand colours are sampled from the ORIGINAL logo file (upload/Kornne_Logo.png): navy #293E59 + silver #C9CED5.
+ * The plan's red #C62828 does not appear in the logo → used only as a semantic "signal" colour (discount/danger)
+ * until the client confirms brand usage.
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root {
+  /* brand */
+  --brand-950: #121b27;
+  --brand-900: #1b2a3d;
+  --brand-800: #22344b;
+  --brand-700: #293e59; /* logo navy */
+  --brand-600: #34507a;
+  --brand-500: #4a6a95;
+  --brand-300: #9fb0c6;
+  --brand-100: #e3e8ef;
+  --brand-50: #f1f4f8;
+  --silver: #c9ced5; /* logo silver */
+
+  /* neutrals (anthracite ramp) */
+  --ink: #151a20;
+  --ink-2: #2a313a;
+  --steel: #5d6773; /* secondary text, 5.7:1 on white */
+  --line: #dde1e6;
+  --line-strong: #c3c9d1;
+  --surface: #ffffff;
+  --surface-2: #f4f5f6;
+  --surface-3: #eceef1;
+
+  /* semantic */
+  --signal: #c62828; /* discount / danger */
+  --signal-50: #fdecec;
+  /* text on tinted danger backgrounds (≥ 4.5:1 in both themes; Sprint 10 axe finding) */
+  --signal-ink: #9b1c1c;
+  --success: #17703f;
+  --success-50: #e8f5ee;
+  --warning: #8a5a00;
+  --warning-50: #fff4dc;
+  --whatsapp: #15803d; /* WhatsApp-family green darkened for 5:1 contrast with white text */
+  --whatsapp-ink: #0b3d20;
+
+  --focus: #2f6fde;
+
+  /* motion */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-micro: 200ms;
+  --dur-ui: 320ms;
+  --dur-page: 800ms;
+
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  --ink: #eef1f5;
+  --ink-2: #cdd3db;
+  --steel: #9aa5b2;
+  --line: #2a323d;
+  --line-strong: #3a4452;
+  --surface: #0f141a;
+  --surface-2: #151b23;
+  --surface-3: #1c242e;
+  --brand-50: #172232;
+  --brand-100: #1f2e43;
+  --signal-50: #3a1515;
+  --signal-ink: #ff9d94;
+  --success-50: #12301f;
+  --warning-50: #33270c;
+  --warning: #f2c46b;
+  --success: #5fd08f;
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-brand-950: var(--brand-950);
+  --color-brand-900: var(--brand-900);
+  --color-brand-800: var(--brand-800);
+  --color-brand-700: var(--brand-700);
+  --color-brand-600: var(--brand-600);
+  --color-brand-500: var(--brand-500);
+  --color-brand-300: var(--brand-300);
+  --color-brand-100: var(--brand-100);
+  --color-brand-50: var(--brand-50);
+  --color-silver: var(--silver);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-steel: var(--steel);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-signal: var(--signal);
+  --color-signal-50: var(--signal-50);
+  --color-signal-ink: var(--signal-ink);
+  --color-success: var(--success);
+  --color-success-50: var(--success-50);
+  --color-warning: var(--warning);
+  --color-warning-50: var(--warning-50);
+  --color-whatsapp: var(--whatsapp);
+  --color-whatsapp-ink: var(--whatsapp-ink);
+  --color-focus: var(--focus);
+
+  --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  /* Latin runs on Arabic pages use the already-loaded Inter (its unicode-range excludes Arabic, so Arabic glyphs still
+     come from IBM Plex Sans Arabic) — saves the 4 Latin subsets of Plex Arabic before LCP (Sprint 10 measurement). */
+  --font-arabic: Inter, var(--font-arabic-face), var(--font-body), sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+
+  --shadow-card: 0 1px 2px rgb(21 26 32 / 0.06), 0 8px 24px -12px rgb(21 26 32 / 0.18);
+  --shadow-pop: 0 12px 40px -12px rgb(21 26 32 / 0.35);
+
+  --ease-premium: var(--ease-out-expo);
+  --container-site: 1320px;
+}
+
+/* ─── base ─── */
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    background: var(--surface);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+  html[lang="ar"] body {
+    font-family: var(--font-arabic);
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
+  }
+  :focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+  ::selection {
+    background: var(--brand-100);
+    color: var(--brand-900);
+  }
+  /* native <dialog> backdrop (modal, drawer, lightbox) */
+  dialog::backdrop {
+    background: rgb(12 17 24 / 0.6);
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* fluid type scale (min 320px → max 1440px) */
+@utility text-display {
+  font-size: clamp(2.125rem, 1.55rem + 2.7vw, 3.75rem);
+  line-height: 1.04;
+  letter-spacing: -0.035em;
+}
+@utility text-h1 {
+  font-size: clamp(1.75rem, 1.45rem + 1.5vw, 2.75rem);
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+}
+@utility text-h2 {
+  font-size: clamp(1.5rem, 1.3rem + 1vw, 2.125rem);
+  line-height: 1.15;
+  letter-spacing: -0.025em;
+}
+@utility text-h3 {
+  font-size: clamp(1.125rem, 1.05rem + 0.4vw, 1.375rem);
+  line-height: 1.3;
+}
+@utility container-site {
+  width: 100%;
+  max-width: var(--container-site);
+  margin-inline: auto;
+  padding-inline: clamp(1rem, 0.5rem + 2.5vw, 2.5rem);
+}
+
+/* sanitized rich text from the catalog */
+@layer components {
+  .rich {
+    color: var(--ink-2);
+    line-height: 1.75;
+  }
+  .rich :where(p, ul, ol) {
+    margin-block: 0.75em;
+  }
+  .rich :where(ul) {
+    list-style: disc;
+    padding-inline-start: 1.25em;
+  }
+  .rich :where(ol) {
+    list-style: decimal;
+    padding-inline-start: 1.25em;
+  }
+  .rich :where(strong, b) {
+    color: var(--ink);
+  }
+  .rich :where(a) {
+    color: var(--brand-600);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .rich :where(h2, h3, h4) {
+    color: var(--ink);
+    font-weight: 700;
+    margin-block: 1.2em 0.5em;
+  }
+  .rich :where(table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .rich :where(td, th) {
+    border: 1px solid var(--line);
+    padding: 0.5rem 0.75rem;
+    text-align: start;
+  }
+}
+
+/*
+ * Scroll reveal (one-shot). Hidden only when JS runs (<html class="js">) and the user allows motion;
+ * no-JS clients, crawlers and screenshot tools always see the content. Pattern reused from Bifire.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  .js .reveal:not(.is-visible) {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  .js .reveal {
+    transition:
+      opacity var(--dur-page) var(--ease-out-expo),
+      transform var(--dur-page) var(--ease-out-expo);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* skeleton shimmer */
+@keyframes kornne-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+@utility skeleton {
+  background: linear-gradient(90deg, var(--surface-3) 25%, var(--surface-2) 50%, var(--surface-3) 75%);
+  background-size: 200% 100%;
+  animation: kornne-shimmer 1.4s linear infinite;
+  border-radius: var(--radius-sm);
+}
+
+/* mobile: the floating WhatsApp button steps aside while the sticky quote bar is shown and on the quote form page
+   (it would cover form fields there) */
+@media (max-width: 1023px) {
+  html[data-sticky-cta] [data-wa-fab],
+  html:has([data-quote-form]) [data-wa-fab] {
+    display: none;
+  }
+}
+
+/* Arabic script never uses the Latin slab display face. UNLAYERED on purpose: inside @layer base the
+   `font-display` utility won and Arabic headings fell back to a serif system face (Sprint 10 finding). */
+html[lang="ar"] .font-display {
+  font-family: var(--font-arabic);
+}
+
+/* Arabic script must not be letter-spaced (breaks joining) — the tight Latin heading tracking is reset. Unlayered. */
+html[lang="ar"] :is(.text-display, .text-h1, .text-h2, .text-h3) {
+  letter-spacing: 0;
+}
+
+/* ─── Sprint 12b motion kit (CSS only, GPU-friendly transforms/opacity; all off with prefers-reduced-motion) ─── */
+@keyframes kn-kenburns {
+  from { transform: scale(1.02); }
+  to { transform: scale(1.12); }
+}
+@keyframes kn-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes kn-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes kn-marquee-rtl {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+@keyframes kn-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+@keyframes kn-rise {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes kn-drift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  50% { transform: translate3d(6%, -4%, 0) scale(1.15); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes kn-ping {
+  75%, 100% { transform: scale(2.2); opacity: 0; }
+}
+.kn-progress { transform-origin: left center; transform: scaleX(0); }
+[dir="rtl"] .kn-progress { transform-origin: right center; }
+.kn-progress[data-state="done"] { transform: scaleX(1); }
+@media (prefers-reduced-motion: no-preference) {
+  .kn-kenburns[data-active="true"] { animation: kn-kenburns 7s linear both; }
+  .kn-progress[data-state="active"] { animation: kn-progress var(--kn-slide, 6s) linear both; }
+  .kn-paused .kn-progress[data-state="active"], .kn-paused .kn-kenburns { animation-play-state: paused; }
+  .kn-marquee-track[data-ready="true"] { animation: kn-marquee var(--kn-marquee, 60s) linear infinite; }
+  [dir="rtl"] .kn-marquee-track { animation-name: kn-marquee-rtl; }
+  .kn-marquee:hover .kn-marquee-track, .kn-marquee:focus-within .kn-marquee-track { animation-play-state: paused; }
+  .kn-float { animation: kn-float 6s ease-in-out infinite; }
+  .kn-float-late { animation: kn-float 7s ease-in-out 1.2s infinite; }
+  .kn-rise { animation: kn-rise 0.9s var(--ease-out-expo) both; animation-delay: calc(var(--i, 0) * 90ms); }
+  .kn-drift { animation: kn-drift 18s ease-in-out infinite; }
+  .kn-ping { animation: kn-ping 1.6s cubic-bezier(0, 0, 0.2, 1) infinite; }
+  @supports (animation-timeline: view()) {
+    .kn-reveal { animation: kn-rise linear both; animation-timeline: view(); animation-range: entry 0% entry 40%; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kn-marquee { overflow-x: auto; }
+}
+
+/* bestseller pill: periodic light sweep */
+@keyframes kn-shine {
+  0%, 70% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%) skewX(-20deg); }
+}
+.kn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.35), transparent);
+  transform: translateX(-120%) skewX(-20deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .kn-shine::after { animation: kn-shine 4.5s ease-in-out infinite; }
+}

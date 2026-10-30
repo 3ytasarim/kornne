@@ -1,0 +1,24 @@
+{
+ "source": "eski çalışma klasörü (KORNNE)",
+ "target": "D:/Projects/kornne",
+ "sourceFiles": 1296,
+ "targetFiles": 1297,
+ "missingInTarget": [],
+ "contentDiffers": [],
+ "extraInTarget": [
+  "scripts/verify-copy.mjs"
+ ],
+ "originals": {
+  "source": 445,
+  "target": 445
+ },
+ "publicUpload": {
+  "source": 445,
+  "target": 445
+ },
+ "envPresent": {
+  "source": true,
+  "target": true
+ },
+ "identical": true
+}

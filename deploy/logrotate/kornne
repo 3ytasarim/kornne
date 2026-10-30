@@ -1,0 +1,24 @@
+# /etc/logrotate.d/kornne (TEMPLATE) — PM2 app logs of both KORNNE environments. Install only with approval.
+# copytruncate: PM2 keeps the file handle open (no reload needed). Nginx access/error logs are rotated by the
+# distribution's existing /etc/logrotate.d/nginx (do not duplicate them here).
+/var/log/kornne/*.log {
+    daily
+    rotate 14
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    su kornne kornne
+}
+
+/var/log/kornne-staging/*.log {
+    daily
+    rotate 7
+    missingok
+    notifempty
+    compress
+    delaycompress
+    copytruncate
+    su kornne-staging kornne-staging
+}

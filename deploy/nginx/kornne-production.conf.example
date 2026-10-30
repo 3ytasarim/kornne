@@ -1,0 +1,105 @@
+# KORNNE — PRODUCTION vhost (TEMPLATE, not installed anywhere).
+# Install only at the approved go-live (docs/deployment/release-and-rollback-runbook.md):
+#   sudo cp kornne-production.conf.example /etc/nginx/sites-available/kornne.conf   (after filling the placeholders)
+#   sudo ln -s ../sites-available/kornne.conf /etc/nginx/sites-enabled/kornne.conf
+#   sudo nginx -t && sudo systemctl reload nginx        # reload, NEVER restart: the other sites keep serving
+#
+# NO `default_server` anywhere in this file: another project on the same Nginx (e.g. Mezbaha Teknolojileri) owns
+# the catch-all default. Two default servers on one listen socket make `nginx -t` fail for EVERY site on the box.
+# deploy/scripts/preflight.sh checks this before installation.
+
+upstream kornne_app {
+    server 127.0.0.1:3010 max_fails=0;     # port confirmed free by preflight.sh
+    keepalive 16;
+}
+
+# per-IP limits (the app has its own DB-backed limits too); zone names are kornne_* to avoid clashes
+limit_req_zone $binary_remote_addr zone=kornne_login:10m rate=10r/m;
+limit_req_zone $binary_remote_addr zone=kornne_general:10m rate=20r/s;
+
+# http → https and www → apex (one hop, 301)
+server {
+    listen 80;
+    listen [::]:80;
+    server_name kornne.com www.kornne.com;
+    location /.well-known/acme-challenge/ { root /var/www/letsencrypt; }
+    location / { return 301 https://kornne.com$request_uri; }
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name www.kornne.com;
+    ssl_certificate     /etc/letsencrypt/live/kornne.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kornne.com/privkey.pem;
+    return 301 https://kornne.com$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    http2 on;
+    server_name kornne.com;
+
+    ssl_certificate     /etc/letsencrypt/live/kornne.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kornne.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_session_cache shared:kornne_ssl:10m;
+    ssl_session_timeout 1d;
+
+    access_log /var/log/nginx/kornne.access.log;
+    error_log  /var/log/nginx/kornne.error.log warn;
+
+    client_max_body_size 25m;            # admin media/PDF uploads (app validates type + size again)
+    gzip on;
+    gzip_vary on;
+    gzip_types text/css application/javascript application/json image/svg+xml application/xml text/plain;
+
+    # security headers come from the app (next.config.ts: CSP, HSTS, X-Frame-Options, nosniff, Referrer-Policy)
+    proxy_intercept_errors on;
+    error_page 502 503 504 /__maintenance.html;
+    location = /__maintenance.html { root /srv/kornne/shared/static; internal; add_header Retry-After 120 always; }
+
+    location ~ /\.(?!well-known) { deny all; }
+
+    # immutable build assets (hashed names) — long cache, served through the app (same release)
+    location ^~ /_next/static/ {
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_app;
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+    }
+
+    # legacy /upload/<original name> URLs: the 445 originals from the persistent media dir (never inside a release).
+    # Unknown names fall through to the app, which returns a REAL 404 (and serves names Nginx cannot map, e.g. "&").
+    location ^~ /upload/ {
+        root /srv/kornne/shared/media;
+        try_files $uri @kornne_upload;
+        add_header Cache-Control "public, max-age=2592000" always;
+        add_header X-Content-Type-Options "nosniff" always;
+    }
+    location @kornne_upload {
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_app;
+    }
+
+    location = /api/health {
+        access_log off;
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_app;
+    }
+
+    location = /admin/login {
+        limit_req zone=kornne_login burst=10 nodelay;
+        limit_req_status 429;
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_app;
+    }
+
+    location / {
+        limit_req zone=kornne_general burst=40 nodelay;
+        limit_req_status 429;
+        include /etc/nginx/snippets/kornne-proxy.conf;
+        proxy_pass http://kornne_app;
+    }
+}

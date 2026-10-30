@@ -1,0 +1,1670 @@
+[
+ {
+  "lang": "en",
+  "path": "lang-eng/",
+  "status": "-",
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "en",
+  "path": "lang-eng/",
+  "status": 200,
+  "location": null,
+  "bytes": 90041,
+  "sha256": "f7b721310b8c52bc94ca16c3546337662226856196a97b5fc72dd316a94efc31",
+  "file": "en__lang-eng_.html",
+  "captured_at": "2026-10-21T21:18:08.183Z"
+ },
+ {
+  "lang": "en",
+  "path": "siparisim-ne-durumda",
+  "status": 200,
+  "location": null,
+  "bytes": 46259,
+  "sha256": "d1194ea476b27fa4cb6d80033a5724411c9a74b1297153ff3eaa983be36b6cc0",
+  "file": "en__siparisim-ne-durumda.html",
+  "captured_at": "2026-10-21T21:18:09.697Z"
+ },
+ {
+  "lang": "en",
+  "path": "odeme-bildirimi",
+  "status": 200,
+  "location": null,
+  "bytes": 46775,
+  "sha256": "cfea9b02ac9ab73db2e30cdb4e294da689993aea16e470ec3dca7a6f3cef28e7",
+  "file": "en__odeme-bildirimi.html",
+  "captured_at": "2026-10-21T21:18:11.208Z"
+ },
+ {
+  "lang": "en",
+  "path": "banka-hesaplari",
+  "status": 200,
+  "location": null,
+  "bytes": 45916,
+  "sha256": "870ae311c2798da694aa4093754db7d6eabfc23baa3c71aeae7a78f9f43de776",
+  "file": "en__banka-hesaplari.html",
+  "captured_at": "2026-10-21T21:18:12.724Z"
+ },
+ {
+  "lang": "en",
+  "path": "favorilerim",
+  "status": 200,
+  "location": null,
+  "bytes": 47375,
+  "sha256": "1a52b53bd4b870c0bffb1bcb0583f4010628b886a4ce7630b5ecec6f37535007",
+  "file": "en__favorilerim.html",
+  "captured_at": "2026-10-21T21:18:14.224Z"
+ },
+ {
+  "lang": "en",
+  "path": "blog",
+  "status": 200,
+  "location": null,
+  "bytes": 45992,
+  "sha256": "5a9773dfeb13d7636ea71993fba73c4674a3fea58253e93165ec2dd339178391",
+  "file": "en__blog.html",
+  "captured_at": "2026-10-21T21:18:15.722Z"
+ },
+ {
+  "lang": "en",
+  "path": "sayfa/corporate-information",
+  "status": 200,
+  "location": null,
+  "bytes": 45418,
+  "sha256": "00a7f046e43b627b7a76347993c2f3855ef3c4b549837ed1ff4f1d441a546465",
+  "file": "en__sayfa_corporate-information.html",
+  "captured_at": "2026-10-21T21:18:17.220Z"
+ },
+ {
+  "lang": "en",
+  "path": "iletisim",
+  "status": 200,
+  "location": null,
+  "bytes": 50149,
+  "sha256": "5efc2e154c01c9df5e3563285b77f374493dcbe57e9404931a09fd4cb0b70f47",
+  "file": "en__iletisim.html",
+  "captured_at": "2026-10-21T21:18:18.747Z"
+ },
+ {
+  "lang": "en",
+  "path": "sepetim",
+  "status": 200,
+  "location": null,
+  "bytes": 47481,
+  "sha256": "b07a2cefa2cf5c29442e4ece0c09acb938f7baefefc5422e472ccea20fec2458",
+  "file": "en__sepetim.html",
+  "captured_at": "2026-10-21T21:18:20.235Z"
+ },
+ {
+  "lang": "en",
+  "path": "giris-yap",
+  "status": 200,
+  "location": null,
+  "bytes": 47299,
+  "sha256": "8ee6626a71bef13f75fa520e0ef402d8334772f75a5c0c94f283815d0e3f8423",
+  "file": "en__giris-yap.html",
+  "captured_at": "2026-10-21T21:18:21.774Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/slaughterhouse-equipments",
+  "status": 200,
+  "location": null,
+  "bytes": 67578,
+  "sha256": "07388b56703f518f9d01a31422dd17314b8e75aef2b775b56e807571657f52ca",
+  "file": "en__kategori_slaughterhouse-equipments.html",
+  "captured_at": "2026-10-21T21:18:23.282Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/sacrifice-equipments",
+  "status": 200,
+  "location": null,
+  "bytes": 67553,
+  "sha256": "33717192f9b4c964f6197300b76f196d0d3885e0a0f9f4d9ec99b73bf652b0cb",
+  "file": "en__kategori_sacrifice-equipments.html",
+  "captured_at": "2026-10-21T21:18:24.800Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/robotic-systems",
+  "status": 200,
+  "location": null,
+  "bytes": 67528,
+  "sha256": "ffac55781e662fc17727f8e62235ca1f6b9471261222a6fb4e86374deeb5cde1",
+  "file": "en__kategori_robotic-systems.html",
+  "captured_at": "2026-10-21T21:18:26.310Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/all-products",
+  "status": 200,
+  "location": null,
+  "bytes": 67513,
+  "sha256": "95d01b93a088033b3c90194bbfc677df3f9be5e484a1fae67b6fc37e00f1d7f4",
+  "file": "en__kategori_all-products.html",
+  "captured_at": "2026-10-21T21:18:27.830Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/circular-cutting-cell",
+  "status": 200,
+  "location": null,
+  "bytes": 72901,
+  "sha256": "56e5a96854120bf7af62f22ff399e1027a5d29c21dbb0622d5fac5b55ed4b1c6",
+  "file": "en__urun_circular-cutting-cell.html",
+  "captured_at": "2026-10-21T21:18:29.335Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/standing-slaughter-cell",
+  "status": 200,
+  "location": null,
+  "bytes": 71348,
+  "sha256": "9cb9bb4217552ad536efd174f7a7fc35567284075cd64bc6993194cbf9da97f9",
+  "file": "en__urun_standing-slaughter-cell.html",
+  "captured_at": "2026-10-21T21:18:30.854Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/sacrifice-laying-cabin",
+  "status": 200,
+  "location": null,
+  "bytes": 71319,
+  "sha256": "d7d8246b980ce75a2d5fdce6dca95cff6473cb291ab6630456ce5e3b3fbc8b2f",
+  "file": "en__urun_sacrifice-laying-cabin.html",
+  "captured_at": "2026-10-21T21:18:32.395Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/bisection-saw",
+  "status": 200,
+  "location": null,
+  "bytes": 71535,
+  "sha256": "f9f9824c651918657523fe85a051d17ba17aefb2e91cd431c852cf74506e62f6",
+  "file": "en__urun_bisection-saw.html",
+  "captured_at": "2026-10-21T21:18:33.910Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/breast-cutting-saw",
+  "status": 200,
+  "location": null,
+  "bytes": 71409,
+  "sha256": "63b8adbe19f32a86ccb5fe416e5483a2791eb32b9f700110f48b532b4b4fbbe8",
+  "file": "en__urun_breast-cutting-saw.html",
+  "captured_at": "2026-10-21T21:18:35.432Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/saw-band",
+  "status": 200,
+  "location": null,
+  "bytes": 70970,
+  "sha256": "15a8745eed07a8cff5078b49cffdf3d31ad2a1896809abdb872693d9016107ee",
+  "file": "en__urun_saw-band.html",
+  "captured_at": "2026-10-21T21:18:36.951Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/foot-and-horn-saw",
+  "status": 200,
+  "location": null,
+  "bytes": 71710,
+  "sha256": "14dad39288c9ebd788e95f6b0e2a90d7125e41e645f169cb9b6fb3f48f176732",
+  "file": "en__urun_foot-and-horn-saw.html",
+  "captured_at": "2026-10-21T21:18:38.489Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/small-head-storage-hook",
+  "status": 200,
+  "location": null,
+  "bytes": 71933,
+  "sha256": "020ca1e9f11727a27b75256a86f401e681d36bac71537094d0f85e22314f7940",
+  "file": "en__urun_small-head-storage-hook.html",
+  "captured_at": "2026-10-21T21:18:40.007Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/twin-rail-hook-large-head",
+  "status": 200,
+  "location": null,
+  "bytes": 71617,
+  "sha256": "639259539164a9b905401ef76260274ee28078a235e7caacf2c9c90a3e0eabfc",
+  "file": "en__urun_twin-rail-hook-large-head.html",
+  "captured_at": "2026-10-21T21:18:41.532Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/bleeding-hook-small-head",
+  "status": 200,
+  "location": null,
+  "bytes": 71246,
+  "sha256": "e9497fd83822182919e25ec742d542787e80b992bbab7a662ebd20ca12de3342",
+  "file": "en__urun_bleeding-hook-small-head.html",
+  "captured_at": "2026-10-21T21:18:43.064Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/bleeding-hook-big-head",
+  "status": 200,
+  "location": null,
+  "bytes": 72015,
+  "sha256": "ec6380b13ad11010cd9dcbbb3865d0fd5ceecdb88cb7b122157e03d0269ee782",
+  "file": "en__urun_bleeding-hook-big-head.html",
+  "captured_at": "2026-10-21T21:18:44.581Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/saw-sterilizer",
+  "status": 200,
+  "location": null,
+  "bytes": 71606,
+  "sha256": "a8edbea7ebf80b163296b1c4c90ed7bf3044f178001a1c0c00e5833a37af2732",
+  "file": "en__urun_saw-sterilizer.html",
+  "captured_at": "2026-10-21T21:18:46.103Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/quartering-saw",
+  "status": 200,
+  "location": null,
+  "bytes": 71231,
+  "sha256": "c3ef7eb85c4b02c3b5f1b003dc83089815c3eb78823699073cc75965394ed697",
+  "file": "en__urun_quartering-saw.html",
+  "captured_at": "2026-10-21T21:18:47.635Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/balancer",
+  "status": 200,
+  "location": null,
+  "bytes": 70967,
+  "sha256": "b14f536b9097ab0c78e4294202324ec449662c93875a79cdd1a22ae7efd87f99",
+  "file": "en__urun_balancer.html",
+  "captured_at": "2026-10-21T21:18:49.160Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/monorail-hook-big-head",
+  "status": 200,
+  "location": null,
+  "bytes": 71179,
+  "sha256": "c119161df4391151edf84da660b130bb0d0d60112578b6ae4d36ad6c1ad4ed97",
+  "file": "en__urun_monorail-hook-big-head.html",
+  "captured_at": "2026-10-21T21:18:50.682Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-masat",
+  "status": 200,
+  "location": null,
+  "bytes": 71219,
+  "sha256": "e7a6eec2fe7558ad6592329da4610d9b42162bef6013974ae835ec53fbf2bd04",
+  "file": "en__urun_butcher-masat.html",
+  "captured_at": "2026-10-21T21:18:52.301Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-apron",
+  "status": 200,
+  "location": null,
+  "bytes": 71227,
+  "sha256": "02e2919492192f97780681be4f3aae74dcb8bf43f0bdb147c55ceaad6b2e33c3",
+  "file": "en__urun_butcher-apron.html",
+  "captured_at": "2026-10-21T21:18:53.812Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-sharpening-machine",
+  "status": 200,
+  "location": null,
+  "bytes": 71048,
+  "sha256": "ca013fffe2f99a8e4ef24ee1b19a85e5015c274611e31a33b1eba321eff4db17",
+  "file": "en__urun_butcher-sharpening-machine.html",
+  "captured_at": "2026-10-21T21:18:55.340Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-leathering-knife",
+  "status": 200,
+  "location": null,
+  "bytes": 71325,
+  "sha256": "a2e28f592ff42e5670b3a7e600915aa2b749eda421dd82ea9c52948a631aa68b",
+  "file": "en__urun_butcher-leathering-knife.html",
+  "captured_at": "2026-10-21T21:18:56.867Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-special-hooks-type-1",
+  "status": 200,
+  "location": null,
+  "bytes": 71071,
+  "sha256": "1853c8d6a65b5db7153aada1cc36f64e47e05ca7015dfdb234869e35648ec509",
+  "file": "en__urun_butcher-special-hooks-type-1.html",
+  "captured_at": "2026-10-21T21:18:58.523Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-special-hooks-type-2",
+  "status": 200,
+  "location": null,
+  "bytes": 71053,
+  "sha256": "dbeffa2373638857cfc772d967ffa7d7fa81fb1b529cee45d406bfb179218dd4",
+  "file": "en__urun_butcher-special-hooks-type-2.html",
+  "captured_at": "2026-10-21T21:19:00.059Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/sacrifice-saw",
+  "status": 200,
+  "location": null,
+  "bytes": 71083,
+  "sha256": "614967fe263291f21c51ac65d3b460c76d3b47ed42b5398e9b74d35513781b2f",
+  "file": "en__urun_sacrifice-saw.html",
+  "captured_at": "2026-10-21T21:19:01.571Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/lama-rail-hook-large-head",
+  "status": 200,
+  "location": null,
+  "bytes": 70940,
+  "sha256": "498989a2907bb208bfcd32f2b7550e369d7a41d30da748cc24c1582a31366530",
+  "file": "en__urun_lama-rail-hook-large-head.html",
+  "captured_at": "2026-10-21T21:19:03.108Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/butcher-special-hooks-type-3",
+  "status": 200,
+  "location": null,
+  "bytes": 71056,
+  "sha256": "e2917623713072d32b624f62ded4acfb4de24a2f09db7afec6713413540f3ada",
+  "file": "en__urun_butcher-special-hooks-type-3.html",
+  "captured_at": "2026-10-21T21:19:04.670Z"
+ },
+ {
+  "lang": "en",
+  "path": "kayit-ol",
+  "status": 200,
+  "location": null,
+  "bytes": 48120,
+  "sha256": "2436d347822a73f15b524dd723d2fda87ed25c9e457b9b447826cc9c1a9b0c4d",
+  "file": "en__kayit-ol.html",
+  "captured_at": "2026-10-21T21:19:06.165Z"
+ },
+ {
+  "lang": "en",
+  "path": "sifremi-unuttum",
+  "status": 200,
+  "location": null,
+  "bytes": 47124,
+  "sha256": "abd56ac964e59e0182dd64755b2084c38e1a092fd12e088a56dea1d6d892f016",
+  "file": "en__sifremi-unuttum.html",
+  "captured_at": "2026-10-21T21:19:07.685Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/twin-rail-hook-small-head",
+  "status": 200,
+  "location": null,
+  "bytes": 71216,
+  "sha256": "7925ecfcaf127d8ef00203c38e49b139de0d51b3f8d6c316e18cee90d973758c",
+  "file": "en__urun_twin-rail-hook-small-head.html",
+  "captured_at": "2026-10-21T21:19:09.190Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/sterilizer-cabinet",
+  "status": 200,
+  "location": null,
+  "bytes": 71164,
+  "sha256": "1edc0b8132f746a958fb35821f7ccb0809afa66e10c30ba0922b570a44217f45",
+  "file": "en__urun_sterilizer-cabinet.html",
+  "captured_at": "2026-10-21T21:19:10.704Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/slaughterhouse-equipments/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67536,
+  "sha256": "cfa0fd30b6b36e7b8f6481bba3cbfab2ae2e14ad25ca119afdc693e76742b308",
+  "file": "en__kategori_slaughterhouse-equipments_2.html",
+  "captured_at": "2026-10-21T21:19:12.201Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/slaughterhouse-equipments/3",
+  "status": 200,
+  "location": null,
+  "bytes": 54971,
+  "sha256": "b1ad271ef561e08284f46213bf5535b8fcac332011f29ddf06d6e79e82976229",
+  "file": "en__kategori_slaughterhouse-equipments_3.html",
+  "captured_at": "2026-10-21T21:19:13.694Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/sacrifice-equipments/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67511,
+  "sha256": "b3784ffcc0cefeb766e68914c7e8af1d2d681ed8c7fe998373be8adf6b3feb58",
+  "file": "en__kategori_sacrifice-equipments_2.html",
+  "captured_at": "2026-10-21T21:19:15.188Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/sacrifice-equipments/3",
+  "status": 200,
+  "location": null,
+  "bytes": 54946,
+  "sha256": "f0e667aec3eb303721bfa328f7a5a10dbf90d694abcf900a635dbc14b5bdeb59",
+  "file": "en__kategori_sacrifice-equipments_3.html",
+  "captured_at": "2026-10-21T21:19:16.688Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/robotic-systems/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67486,
+  "sha256": "0d3ad34ed1f0fb179c93be345365f49672a6965629cf50aae14f0745d1e7d88a",
+  "file": "en__kategori_robotic-systems_2.html",
+  "captured_at": "2026-10-21T21:19:18.182Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/robotic-systems/3",
+  "status": 200,
+  "location": null,
+  "bytes": 54921,
+  "sha256": "476fff7f56f2fb16e610b1e5c24b43f9e412ff1e0b12209888816657e7ce5128",
+  "file": "en__kategori_robotic-systems_3.html",
+  "captured_at": "2026-10-21T21:19:19.684Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/all-products/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67509,
+  "sha256": "170a318a8c7f077ac9e00858e410684818f6832aeac144fca9e9bc8298753b65",
+  "file": "en__kategori_all-products_2.html",
+  "captured_at": "2026-10-21T21:19:21.205Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/all-products/3",
+  "status": 200,
+  "location": null,
+  "bytes": 56315,
+  "sha256": "248cc215a62b509cf740d4a4774929a81adf696ccdeb45aab86baa76693c22f8",
+  "file": "en__kategori_all-products_3.html",
+  "captured_at": "2026-10-21T21:19:22.695Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/vacuum-machine",
+  "status": 200,
+  "location": null,
+  "bytes": 71360,
+  "sha256": "2729a15a21b9050ed8dc430e40847e84363dc2205ab88ea30788e4dbbecb534a",
+  "file": "en__urun_vacuum-machine.html",
+  "captured_at": "2026-10-21T21:19:24.189Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/apron-washing",
+  "status": 200,
+  "location": null,
+  "bytes": 71036,
+  "sha256": "6cd60187e987640c1db56405739a72a3713fabe92a866868e1b9a97f6b7b4b52",
+  "file": "en__urun_apron-washing.html",
+  "captured_at": "2026-10-21T21:19:25.702Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/boot-washing",
+  "status": 200,
+  "location": null,
+  "bytes": 71742,
+  "sha256": "fa61bec7bbd2875572ab4b9c092a48829b9addcf38aa3ea27a66875a7e678a5e",
+  "file": "en__urun_boot-washing.html",
+  "captured_at": "2026-10-21T21:19:27.203Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/sink-knee-press",
+  "status": 200,
+  "location": null,
+  "bytes": 71248,
+  "sha256": "c9d133d4191dcc98c3c028b268446c81df7b3c146a27602971bfa8cc7dc35e19",
+  "file": "en__urun_sink-knee-press.html",
+  "captured_at": "2026-10-21T21:19:28.713Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/water-sterilizer",
+  "status": 200,
+  "location": null,
+  "bytes": 70984,
+  "sha256": "aaed717bbfa5852191b8d66a1481d77e144e98fa85bc032ec14223c628a9f90a",
+  "file": "en__urun_water-sterilizer.html",
+  "captured_at": "2026-10-21T21:19:30.212Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/pedestal-sink",
+  "status": 200,
+  "location": null,
+  "bytes": 71479,
+  "sha256": "dd26db52ac71afe4856d196f4a930f686d9306043856899f8ed0258a0c07e6a6",
+  "file": "en__urun_pedestal-sink.html",
+  "captured_at": "2026-10-21T21:19:31.719Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/twin-rail-scale",
+  "status": 200,
+  "location": null,
+  "bytes": 71847,
+  "sha256": "d30f0ca0580e7548f5cf1ea8b3ad3151c66ac39e283e5431dd2f7874cc293a42",
+  "file": "en__urun_twin-rail-scale.html",
+  "captured_at": "2026-10-21T21:19:33.240Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/bands",
+  "status": 200,
+  "location": null,
+  "bytes": 71673,
+  "sha256": "6704cd5b76c05ae1ede0906cabbf1fab89ef51286dcbf1cad709f4468100e2f3",
+  "file": "en__urun_bands.html",
+  "captured_at": "2026-10-21T21:19:34.736Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/classic-cutting-cell",
+  "status": 200,
+  "location": null,
+  "bytes": 71239,
+  "sha256": "4cd49ca23e132b5a2a21796d85fd61bd881a31bd18adf590475377d61a225e3a",
+  "file": "en__urun_classic-cutting-cell.html",
+  "captured_at": "2026-10-21T21:19:36.252Z"
+ },
+ {
+  "lang": "en",
+  "path": "urun/platforms",
+  "status": 200,
+  "location": null,
+  "bytes": 72125,
+  "sha256": "6f384b5e1d5d2a9ee1dfca86415d6aaa379c938d850e26058b348ecf8b22e837",
+  "file": "en__urun_platforms.html",
+  "captured_at": "2026-10-21T21:19:37.760Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/slaughterhouse-equipments/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67578,
+  "sha256": "07388b56703f518f9d01a31422dd17314b8e75aef2b775b56e807571657f52ca",
+  "file": "en__kategori_slaughterhouse-equipments_1.html",
+  "captured_at": "2026-10-21T21:19:39.269Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/sacrifice-equipments/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67553,
+  "sha256": "33717192f9b4c964f6197300b76f196d0d3885e0a0f9f4d9ec99b73bf652b0cb",
+  "file": "en__kategori_sacrifice-equipments_1.html",
+  "captured_at": "2026-10-21T21:19:40.773Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/robotic-systems/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67528,
+  "sha256": "ffac55781e662fc17727f8e62235ca1f6b9471261222a6fb4e86374deeb5cde1",
+  "file": "en__kategori_robotic-systems_1.html",
+  "captured_at": "2026-10-21T21:19:42.261Z"
+ },
+ {
+  "lang": "en",
+  "path": "kategori/all-products/1",
+  "status": 200,
+  "location": null,
+  "bytes": 67513,
+  "sha256": "95d01b93a088033b3c90194bbfc677df3f9be5e484a1fae67b6fc37e00f1d7f4",
+  "file": "en__kategori_all-products_1.html",
+  "captured_at": "2026-10-21T21:19:43.762Z"
+ },
+ {
+  "lang": "en",
+  "note": "done; fetched=64; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "fr",
+  "path": "lang-fr/",
+  "status": "-",
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "fr",
+  "path": "lang-fr/",
+  "status": 200,
+  "location": null,
+  "bytes": 72182,
+  "sha256": "f506632ed5c2362b0d92c2ed2ca8c6ae8dbedf2fed714e634094d95095c7c0d1",
+  "file": "fr__lang-fr_.html",
+  "captured_at": "2026-10-21T21:19:46.577Z"
+ },
+ {
+  "lang": "fr",
+  "path": "siparisim-ne-durumda",
+  "status": 200,
+  "location": null,
+  "bytes": 46600,
+  "sha256": "3057f6aba8d6673e825282f9459031bff6389012de95a963a88eea3645411df3",
+  "file": "fr__siparisim-ne-durumda.html",
+  "captured_at": "2026-10-21T21:19:48.071Z"
+ },
+ {
+  "lang": "fr",
+  "path": "odeme-bildirimi",
+  "status": 200,
+  "location": null,
+  "bytes": 47145,
+  "sha256": "59d86e2fb2f3ca2d67afeded482c058bc3b349725aa0551c0903e989ab5f649a",
+  "file": "fr__odeme-bildirimi.html",
+  "captured_at": "2026-10-21T21:19:49.560Z"
+ },
+ {
+  "lang": "fr",
+  "path": "banka-hesaplari",
+  "status": 200,
+  "location": null,
+  "bytes": 46262,
+  "sha256": "3a4701353bb213db7dd0d4c692ce288e0c34305f6d2c54917de173d51256b682",
+  "file": "fr__banka-hesaplari.html",
+  "captured_at": "2026-10-21T21:19:51.055Z"
+ },
+ {
+  "lang": "fr",
+  "path": "favorilerim",
+  "status": 200,
+  "location": null,
+  "bytes": 47747,
+  "sha256": "493102148794a8f38e2ca61db8209cc067a91f4b40b491fa0eb9086a7aabb85a",
+  "file": "fr__favorilerim.html",
+  "captured_at": "2026-10-21T21:19:52.551Z"
+ },
+ {
+  "lang": "fr",
+  "path": "blog",
+  "status": 200,
+  "location": null,
+  "bytes": 46381,
+  "sha256": "657e297ffbd2555b97fc288c514db2bd9b744fa7ff61b2c1af04a294cad40570",
+  "file": "fr__blog.html",
+  "captured_at": "2026-10-21T21:19:54.041Z"
+ },
+ {
+  "lang": "fr",
+  "path": "sayfa/information-dentreprise",
+  "status": 200,
+  "location": null,
+  "bytes": 45772,
+  "sha256": "103e6de5c64d441b0ac093a01957d4ac75a9220ac535016ce74059f52d4cb469",
+  "file": "fr__sayfa_information-dentreprise.html",
+  "captured_at": "2026-10-21T21:19:55.526Z"
+ },
+ {
+  "lang": "fr",
+  "path": "iletisim",
+  "status": 200,
+  "location": null,
+  "bytes": 50537,
+  "sha256": "9505ab47035fe6322f4f09ce3b9cdca2d7f92926bfd17b3e542c7027122a5271",
+  "file": "fr__iletisim.html",
+  "captured_at": "2026-10-21T21:19:57.029Z"
+ },
+ {
+  "lang": "fr",
+  "path": "sepetim",
+  "status": 200,
+  "location": null,
+  "bytes": 47897,
+  "sha256": "a86d713731f59d80556210bdcd37565cb9b1b2b483c5da76b3b236f9f9cd52f1",
+  "file": "fr__sepetim.html",
+  "captured_at": "2026-10-21T21:19:58.530Z"
+ },
+ {
+  "lang": "fr",
+  "path": "giris-yap",
+  "status": 200,
+  "location": null,
+  "bytes": 47713,
+  "sha256": "6d61e38ef5be77b9618026f5a4a3b3eb3c84e687a675faf4d8063485bf10a63e",
+  "file": "fr__giris-yap.html",
+  "captured_at": "2026-10-21T21:20:00.018Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-dabattoir",
+  "status": 200,
+  "location": null,
+  "bytes": 68533,
+  "sha256": "9eb34ba4b0f53eae24888681e34b9732e331e70db321dabe86acdb6bdba687d0",
+  "file": "fr__kategori_equipements-dabattoir.html",
+  "captured_at": "2026-10-21T21:20:01.521Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-de-sacrifice",
+  "status": 200,
+  "location": null,
+  "bytes": 68546,
+  "sha256": "ee9817df9c7a135572ece4b69739b21af62bc86f6be2e76552d6997da70850f5",
+  "file": "fr__kategori_equipements-de-sacrifice.html",
+  "captured_at": "2026-10-21T21:20:03.041Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/systemes-robotiques",
+  "status": 200,
+  "location": null,
+  "bytes": 68521,
+  "sha256": "b58080720609cfb267d96213f7089ddc4c07cd5ee9027a17f6ccbe2ad50acde8",
+  "file": "fr__kategori_systemes-robotiques.html",
+  "captured_at": "2026-10-21T21:20:04.543Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/all-products",
+  "status": 200,
+  "location": null,
+  "bytes": 68486,
+  "sha256": "d76aad3c45c93b6033177752340e6ec47aef8084e9ee7469d42ce56c133b6903",
+  "file": "fr__kategori_all-products.html",
+  "captured_at": "2026-10-21T21:20:06.116Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/cellule-de-coupe-circulaire",
+  "status": 200,
+  "location": null,
+  "bytes": 72391,
+  "sha256": "eb362c7734aef0469ecc10b7ef57dded7643e3f4cdb6c84125cdb04fb58098b7",
+  "file": "fr__urun_cellule-de-coupe-circulaire.html",
+  "captured_at": "2026-10-21T21:20:07.716Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/cellule-dabattage-debout",
+  "status": 200,
+  "location": null,
+  "bytes": 71838,
+  "sha256": "04388ea35afb4b4e9ae0e18b5709d738ffdb128c977df138d88671f6333798bd",
+  "file": "fr__urun_cellule-dabattage-debout.html",
+  "captured_at": "2026-10-21T21:20:09.258Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/cabine-de-pose-du-sacrifice",
+  "status": 200,
+  "location": null,
+  "bytes": 71871,
+  "sha256": "6901c3ec7f4e41d54e9cfc0a811530580f0732ef269be46abde3197fc15eb48d",
+  "file": "fr__urun_cabine-de-pose-du-sacrifice.html",
+  "captured_at": "2026-10-21T21:20:10.783Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/scie-bissection",
+  "status": 200,
+  "location": null,
+  "bytes": 71934,
+  "sha256": "e45aeff233a612d3cb0c553b7ec4504080e33579cb265d7989fc719e382d1415",
+  "file": "fr__urun_scie-bissection.html",
+  "captured_at": "2026-10-21T21:20:12.323Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/scie-a-couper-le-sein",
+  "status": 200,
+  "location": null,
+  "bytes": 71688,
+  "sha256": "e4b9525131ae140976701b1346eca9c1b9f50a5698cbc1d33fb98f9fc76042b3",
+  "file": "fr__urun_scie-a-couper-le-sein.html",
+  "captured_at": "2026-10-21T21:20:13.847Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/scie-a-quartier",
+  "status": 200,
+  "location": null,
+  "bytes": 71750,
+  "sha256": "d989c63482a897d06612e7fd36d8b111814654af0a05118b923add9f95c0d7f2",
+  "file": "fr__urun_scie-a-quartier.html",
+  "captured_at": "2026-10-21T21:20:15.373Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/sterilisateur-de-scie",
+  "status": 200,
+  "location": null,
+  "bytes": 71854,
+  "sha256": "2936a8ce108b8307a680881d72ab4c9f6a5d3762fdb7b84552a7d366a8a34a5e",
+  "file": "fr__urun_sterilisateur-de-scie.html",
+  "captured_at": "2026-10-21T21:20:16.903Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-de-saignement-grosse-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 71661,
+  "sha256": "3e0a44ae33d5f8696ff761134e8104b7d9287ebc8810796dc6078e4970593484",
+  "file": "fr__urun_crochet-de-saignement-grosse-tete.html",
+  "captured_at": "2026-10-21T21:20:18.420Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-monorail-big-head",
+  "status": 200,
+  "location": null,
+  "bytes": 71448,
+  "sha256": "3756c96888e5e400c4ee94ab6326e4023542d264b47ce62eaec334928cd26eaa",
+  "file": "fr__urun_crochet-monorail-big-head.html",
+  "captured_at": "2026-10-21T21:20:19.938Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/couteau-a-cuir-de-boucher",
+  "status": 200,
+  "location": null,
+  "bytes": 71832,
+  "sha256": "02d4676e2aa526e4b986a3bc93040148b0a83372d291fc5d289e22a22b701f6d",
+  "file": "fr__urun_couteau-a-cuir-de-boucher.html",
+  "captured_at": "2026-10-21T21:20:21.458Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/affuteuse-de-boucher",
+  "status": 200,
+  "location": null,
+  "bytes": 71618,
+  "sha256": "c8826012d731b55406a65946cc8068dde17d40d5035c0758d5acc69ea84a7087",
+  "file": "fr__urun_affuteuse-de-boucher.html",
+  "captured_at": "2026-10-21T21:20:22.981Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/armoire-de-sterilisation",
+  "status": 200,
+  "location": null,
+  "bytes": 71919,
+  "sha256": "dad7aa11f02858383ded21280612fb4db4f94e71c325bc54dab8b8b78653a8c9",
+  "file": "fr__urun_armoire-de-sterilisation.html",
+  "captured_at": "2026-10-21T21:20:24.508Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kayit-ol",
+  "status": 200,
+  "location": null,
+  "bytes": 48503,
+  "sha256": "7e68f0ec1aec45b6974c37433fe198ac5af73b731ba654d9ad94c6e9e33202c3",
+  "file": "fr__kayit-ol.html",
+  "captured_at": "2026-10-21T21:20:26.006Z"
+ },
+ {
+  "lang": "fr",
+  "path": "sifremi-unuttum",
+  "status": 200,
+  "location": null,
+  "bytes": 47549,
+  "sha256": "2c2b60d608b725486a696fb18b47168351ffd3074da221939beb9086ac927d4a",
+  "file": "fr__sifremi-unuttum.html",
+  "captured_at": "2026-10-21T21:20:27.502Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-de-saignement-petite-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 71515,
+  "sha256": "0ec8e1afb606e6ee3e8f1cfe305678fc23c671cc530e2a81ef6213ae3af4b2a3",
+  "file": "fr__urun_crochet-de-saignement-petite-tete.html",
+  "captured_at": "2026-10-21T21:20:29.035Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-a-double-rail-grande-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 72205,
+  "sha256": "32f4bf3ecb5f9b1fa32777e3969b2f29450765601ccfa6810f627956d5910f1a",
+  "file": "fr__urun_crochet-a-double-rail-grande-tete.html",
+  "captured_at": "2026-10-21T21:20:30.562Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-a-double-rail-petite-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 71660,
+  "sha256": "2976e71b84ccba54bedd47183a269c7c7b660c6aeaafd4bb7193e1563e721555",
+  "file": "fr__urun_crochet-a-double-rail-petite-tete.html",
+  "captured_at": "2026-10-21T21:20:32.088Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-de-rangement-a-petite-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 71937,
+  "sha256": "84102f3a9db4187c6b94fd4f6fe0a5571c238e8eb43b76dccf95e948148a1a14",
+  "file": "fr__urun_crochet-de-rangement-a-petite-tete.html",
+  "captured_at": "2026-10-21T21:20:33.608Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/scie-a-pied-et-a-corne",
+  "status": 200,
+  "location": null,
+  "bytes": 72315,
+  "sha256": "e4286254a6967b06ffee679b0187582c90e461f05d4216bff124054337fa3819",
+  "file": "fr__urun_scie-a-pied-et-a-corne.html",
+  "captured_at": "2026-10-21T21:20:35.133Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/balancier",
+  "status": 200,
+  "location": null,
+  "bytes": 71455,
+  "sha256": "e25a991942aeab5ce4cee9d215be4a2f7f62bc86b06d4647739ca43d7e90f208",
+  "file": "fr__urun_balancier.html",
+  "captured_at": "2026-10-21T21:20:36.673Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-dabattoir/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67839,
+  "sha256": "1cf2dfeb20471adcba23891e82b3eba00aa4e5e5ab4a082046095779e3ed343f",
+  "file": "fr__kategori_equipements-dabattoir_2.html",
+  "captured_at": "2026-10-21T21:20:38.218Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-dabattoir/3",
+  "status": 200,
+  "location": null,
+  "bytes": 58289,
+  "sha256": "ced12d9c5d957e1be4107bea838e26904effa018267a71f3c352752fc6893417",
+  "file": "fr__kategori_equipements-dabattoir_3.html",
+  "captured_at": "2026-10-21T21:20:39.757Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-de-sacrifice/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67852,
+  "sha256": "1681b3b15b9a4dbc4356b0eff2ba53b0a2eb7535c3ca13f238a725549b12801d",
+  "file": "fr__kategori_equipements-de-sacrifice_2.html",
+  "captured_at": "2026-10-21T21:20:41.293Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-de-sacrifice/3",
+  "status": 200,
+  "location": null,
+  "bytes": 58302,
+  "sha256": "b9834ce9f1c25c63a742ef8425477f7d980b83df708ac8daa365c75f84800a49",
+  "file": "fr__kategori_equipements-de-sacrifice_3.html",
+  "captured_at": "2026-10-21T21:20:42.934Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/systemes-robotiques/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67827,
+  "sha256": "a39f4fbd18e0df69cea412906617a5aa167fd1f05b165482edde053070c5a078",
+  "file": "fr__kategori_systemes-robotiques_2.html",
+  "captured_at": "2026-10-21T21:20:44.446Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/systemes-robotiques/3",
+  "status": 200,
+  "location": null,
+  "bytes": 58277,
+  "sha256": "4c82800036066beb4e728bc85b343d8772cf85671cc01f34ccf48b0f1c5ce362",
+  "file": "fr__kategori_systemes-robotiques_3.html",
+  "captured_at": "2026-10-21T21:20:45.959Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/all-products/2",
+  "status": 200,
+  "location": null,
+  "bytes": 67792,
+  "sha256": "2b87a978aedbb9d45c37e2eb81eb531c6f51158f9c564ea4384eccd94336a522",
+  "file": "fr__kategori_all-products_2.html",
+  "captured_at": "2026-10-21T21:20:47.486Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/all-products/3",
+  "status": 200,
+  "location": null,
+  "bytes": 58242,
+  "sha256": "d899331547501e2d1066d229c5aaf20ebc38d534205c91aae1e3f28a03273ce0",
+  "file": "fr__kategori_all-products_3.html",
+  "captured_at": "2026-10-21T21:20:49.000Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/scie-sacrificielle",
+  "status": 200,
+  "location": null,
+  "bytes": 71837,
+  "sha256": "4f1bd2fb2f59898f481976cfc45879ac44c1cdf284e6168b3c24b3539a8cc328",
+  "file": "fr__urun_scie-sacrificielle.html",
+  "captured_at": "2026-10-21T21:20:50.578Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/cellule-de-coupe-classique",
+  "status": 200,
+  "location": null,
+  "bytes": 72003,
+  "sha256": "71dd950c2e191a5eabea853932456595ef92e0b796b4daedb44cd6fd56050f13",
+  "file": "fr__urun_cellule-de-coupe-classique.html",
+  "captured_at": "2026-10-21T21:20:52.295Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/bande-de-scie",
+  "status": 200,
+  "location": null,
+  "bytes": 71626,
+  "sha256": "dcd59f03be83db5f58ebaa74cbdc9c77b6ba7722ac2889e6f1f8c11e10930ab7",
+  "file": "fr__urun_bande-de-scie.html",
+  "captured_at": "2026-10-21T21:20:53.909Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/plateformes",
+  "status": 200,
+  "location": null,
+  "bytes": 72616,
+  "sha256": "954c77534a685704bfb94b6da5de27afafbeafaaca56bbd2465fa6132a7e2120",
+  "file": "fr__urun_plateformes.html",
+  "captured_at": "2026-10-21T21:20:55.436Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/balance-a-double-rail",
+  "status": 200,
+  "location": null,
+  "bytes": 72669,
+  "sha256": "57307fdf402f1a8cb9aff20dd9f30a82d76a5f8cce5b189b30add3cf8a63e1e1",
+  "file": "fr__urun_balance-a-double-rail.html",
+  "captured_at": "2026-10-21T21:20:56.958Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/couteau-de-boucher",
+  "status": 200,
+  "location": null,
+  "bytes": 71675,
+  "sha256": "4c6200fc9d2783b2121f95776490a6866f3ea5b4791f313054b45dcc7fedcf00",
+  "file": "fr__urun_couteau-de-boucher.html",
+  "captured_at": "2026-10-21T21:20:58.676Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/presse-a-genoux-pour-evier",
+  "status": 200,
+  "location": null,
+  "bytes": 71914,
+  "sha256": "1b093023404a2546b25aaf608836d5bb5deb30db0bc945c9baa34fafbcbef507",
+  "file": "fr__urun_presse-a-genoux-pour-evier.html",
+  "captured_at": "2026-10-21T21:21:00.189Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/boucher-masat",
+  "status": 200,
+  "location": null,
+  "bytes": 71665,
+  "sha256": "3ed4d20ed997f7da9b5ee1fecfa803151c921cc919183d4b722fb9b7bb64baf3",
+  "file": "fr__urun_boucher-masat.html",
+  "captured_at": "2026-10-21T21:21:01.705Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/tablier-de-boucher",
+  "status": 200,
+  "location": null,
+  "bytes": 71717,
+  "sha256": "85f4b6c25810834b7d29065a93bcfb6baa56a18fadaf6f808f9afc3b152e9d11",
+  "file": "fr__urun_tablier-de-boucher.html",
+  "captured_at": "2026-10-21T21:21:03.219Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/lavabo-sur-pied",
+  "status": 200,
+  "location": null,
+  "bytes": 71800,
+  "sha256": "89b8a90fd1589cbae2ecea46ca526a6ac6082753e5dc1ea10b390aef20309c9a",
+  "file": "fr__urun_lavabo-sur-pied.html",
+  "captured_at": "2026-10-21T21:21:04.745Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochets-speciaux-boucher-type-1",
+  "status": 200,
+  "location": null,
+  "bytes": 71644,
+  "sha256": "183c81a695e6d7f344d6f82a57bb8c9bb84ee2003ea7040b4ffac011398db5e2",
+  "file": "fr__urun_crochets-speciaux-boucher-type-1.html",
+  "captured_at": "2026-10-21T21:21:06.271Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochets-speciaux-boucher-type-2",
+  "status": 200,
+  "location": null,
+  "bytes": 71734,
+  "sha256": "7ab782026471194ba63bcd53f5020aab67be7d5679cee42dab0ca391683ae137",
+  "file": "fr__urun_crochets-speciaux-boucher-type-2.html",
+  "captured_at": "2026-10-21T21:21:07.798Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/bandes",
+  "status": 200,
+  "location": null,
+  "bytes": 71757,
+  "sha256": "c72ed970be665b95f34b1588d1194052cd38283f4519aebde08a2e0f4e5523fb",
+  "file": "fr__urun_bandes.html",
+  "captured_at": "2026-10-21T21:21:09.329Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/sterilisateur-deau",
+  "status": 200,
+  "location": null,
+  "bytes": 71604,
+  "sha256": "77f976c246b444a6c1e7298223c25f289f7c66b2f57e98db8fac148c8b406fe4",
+  "file": "fr__urun_sterilisateur-deau.html",
+  "captured_at": "2026-10-21T21:21:10.869Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/lavage-des-bottes",
+  "status": 200,
+  "location": null,
+  "bytes": 72396,
+  "sha256": "c7873dd31a2079b06b938ccee2ccc2ef287a4260ccaa94ef8875e19770a431cc",
+  "file": "fr__urun_lavage-des-bottes.html",
+  "captured_at": "2026-10-21T21:21:12.393Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/defile-dhygiene",
+  "status": 200,
+  "location": null,
+  "bytes": 71433,
+  "sha256": "2980a0f2ded4ef6c411e1cc0ef6f65f27937a0a024cbb73773bd94f8a6e5e730",
+  "file": "fr__urun_defile-dhygiene.html",
+  "captured_at": "2026-10-21T21:21:13.924Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/aspirateur",
+  "status": 200,
+  "location": null,
+  "bytes": 71862,
+  "sha256": "799d481d5db437db859f74a81d204574dad4a0f099683795e61770e1be0a0f90",
+  "file": "fr__urun_aspirateur.html",
+  "captured_at": "2026-10-21T21:21:15.437Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochet-de-rail-lama-grosse-tete",
+  "status": 200,
+  "location": null,
+  "bytes": 71406,
+  "sha256": "36b421e061870a3cca958085d83126f68fbf8ea1637e5b269c795ce5839d70af",
+  "file": "fr__urun_crochet-de-rail-lama-grosse-tete.html",
+  "captured_at": "2026-10-21T21:21:17.025Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/crochets-speciaux-boucher-type-3",
+  "status": 200,
+  "location": null,
+  "bytes": 71611,
+  "sha256": "06123da2dc040137c566ef102d0776139c5770154c98f8f62ffebbbbb52bdc7f",
+  "file": "fr__urun_crochets-speciaux-boucher-type-3.html",
+  "captured_at": "2026-10-21T21:21:18.586Z"
+ },
+ {
+  "lang": "fr",
+  "path": "urun/lavage-du-tablier",
+  "status": 200,
+  "location": null,
+  "bytes": 71722,
+  "sha256": "3c7715756bc1aa56a5f9b73b760cada3a05b4469d8073aaafd96bc98de38be7a",
+  "file": "fr__urun_lavage-du-tablier.html",
+  "captured_at": "2026-10-21T21:21:20.184Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-dabattoir/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68533,
+  "sha256": "9eb34ba4b0f53eae24888681e34b9732e331e70db321dabe86acdb6bdba687d0",
+  "file": "fr__kategori_equipements-dabattoir_1.html",
+  "captured_at": "2026-10-21T21:21:21.695Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/equipements-de-sacrifice/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68546,
+  "sha256": "ee9817df9c7a135572ece4b69739b21af62bc86f6be2e76552d6997da70850f5",
+  "file": "fr__kategori_equipements-de-sacrifice_1.html",
+  "captured_at": "2026-10-21T21:21:23.207Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/systemes-robotiques/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68521,
+  "sha256": "b58080720609cfb267d96213f7089ddc4c07cd5ee9027a17f6ccbe2ad50acde8",
+  "file": "fr__kategori_systemes-robotiques_1.html",
+  "captured_at": "2026-10-21T21:21:24.703Z"
+ },
+ {
+  "lang": "fr",
+  "path": "kategori/all-products/1",
+  "status": 200,
+  "location": null,
+  "bytes": 68486,
+  "sha256": "d76aad3c45c93b6033177752340e6ec47aef8084e9ee7469d42ce56c133b6903",
+  "file": "fr__kategori_all-products_1.html",
+  "captured_at": "2026-10-21T21:21:26.217Z"
+ },
+ {
+  "lang": "fr",
+  "note": "done; fetched=66; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "ru",
+  "path": "lang-ru/",
+  "status": "-",
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "ru",
+  "path": "lang-ru/",
+  "status": 200,
+  "location": null,
+  "bytes": 52862,
+  "sha256": "1cc6b353fae62e19aad1e3804eef90091c89195804116b1d0fd201d5d85c9d86",
+  "file": "ru__lang-ru_.html",
+  "captured_at": "2026-10-21T21:21:29.024Z"
+ },
+ {
+  "lang": "ru",
+  "path": "siparisim-ne-durumda",
+  "status": 200,
+  "location": null,
+  "bytes": 45761,
+  "sha256": "6aad67639da4eaac92392853ee3d493665bc3f026c70201cd41ddaa0ec945c35",
+  "file": "ru__siparisim-ne-durumda.html",
+  "captured_at": "2026-10-21T21:21:30.520Z"
+ },
+ {
+  "lang": "ru",
+  "path": "odeme-bildirimi",
+  "status": 200,
+  "location": null,
+  "bytes": 46319,
+  "sha256": "9ee0e8fc87887778a5a3c457bc950c7302bbf055bc7898752f74318eabda0633",
+  "file": "ru__odeme-bildirimi.html",
+  "captured_at": "2026-10-21T21:21:32.027Z"
+ },
+ {
+  "lang": "ru",
+  "path": "banka-hesaplari",
+  "status": 200,
+  "location": null,
+  "bytes": 45457,
+  "sha256": "caec099634a2008889326fe5b14668b6b9b5e502b119f160af50f90d5a6c32a0",
+  "file": "ru__banka-hesaplari.html",
+  "captured_at": "2026-10-21T21:21:33.527Z"
+ },
+ {
+  "lang": "ru",
+  "path": "favorilerim",
+  "status": 200,
+  "location": null,
+  "bytes": 46913,
+  "sha256": "c98b23bef428d1228c1c37792de35546fd7fa8023a822919bd01fde759da3e27",
+  "file": "ru__favorilerim.html",
+  "captured_at": "2026-10-21T21:21:35.029Z"
+ },
+ {
+  "lang": "ru",
+  "path": "blog",
+  "status": 200,
+  "location": null,
+  "bytes": 45534,
+  "sha256": "f2c855b29a3156a1cdf8be259077ba3e3f37df0391028159ba4b5d9db70594d2",
+  "file": "ru__blog.html",
+  "captured_at": "2026-10-21T21:21:36.542Z"
+ },
+ {
+  "lang": "ru",
+  "path": "sayfa/lang-russian-corparate",
+  "status": 200,
+  "location": null,
+  "bytes": 44971,
+  "sha256": "523f5c8172de0fd65b50e3ce0fe0aa09a180e0cbba39871c2d6a84c4ce0b3942",
+  "file": "ru__sayfa_lang-russian-corparate.html",
+  "captured_at": "2026-10-21T21:21:38.047Z"
+ },
+ {
+  "lang": "ru",
+  "path": "iletisim",
+  "status": 200,
+  "location": null,
+  "bytes": 49748,
+  "sha256": "9d879dee8d06921968ea4045d7e2a45f711aac7a1c05dd5d9cc1a54381862e11",
+  "file": "ru__iletisim.html",
+  "captured_at": "2026-10-21T21:21:39.544Z"
+ },
+ {
+  "lang": "ru",
+  "path": "sepetim",
+  "status": 200,
+  "location": null,
+  "bytes": 47053,
+  "sha256": "2c547cac5cce64d4b4cecc1bc50733ed9ac060dad2ae9a9121991d6449fcc7ea",
+  "file": "ru__sepetim.html",
+  "captured_at": "2026-10-21T21:21:41.052Z"
+ },
+ {
+  "lang": "ru",
+  "path": "giris-yap",
+  "status": 200,
+  "location": null,
+  "bytes": 46854,
+  "sha256": "e3be368f9987e0e082ef6e71c160384ca29eae72181a28e112d03c933ac03e3c",
+  "file": "ru__giris-yap.html",
+  "captured_at": "2026-10-21T21:21:42.560Z"
+ },
+ {
+  "lang": "ru",
+  "path": "kategori/lang-russian-equipments",
+  "status": 200,
+  "location": null,
+  "bytes": 46279,
+  "sha256": "4282cfaf809470ed793683db89b52aab3b0286e8216a78d97290df72264406e7",
+  "file": "ru__kategori_lang-russian-equipments.html",
+  "captured_at": "2026-10-21T21:21:44.089Z"
+ },
+ {
+  "lang": "ru",
+  "path": "kategori/lang-russian-equipments2",
+  "status": 200,
+  "location": null,
+  "bytes": 46293,
+  "sha256": "117aa1721a33c8ed2aacc8048623e4ca2e359270eb3cadd36b87b2563c32a2fc",
+  "file": "ru__kategori_lang-russian-equipments2.html",
+  "captured_at": "2026-10-21T21:21:45.582Z"
+ },
+ {
+  "lang": "ru",
+  "path": "kategori/lang-russian-equipments3",
+  "status": 200,
+  "location": null,
+  "bytes": 46281,
+  "sha256": "cbb4b51a851da35b152b99359893daca8102bd9454a30f3f98a72f10c31631eb",
+  "file": "ru__kategori_lang-russian-equipments3.html",
+  "captured_at": "2026-10-21T21:21:47.079Z"
+ },
+ {
+  "lang": "ru",
+  "path": "kategori/lang-russian-robotics",
+  "status": 200,
+  "location": null,
+  "bytes": 46252,
+  "sha256": "d64d501f18dd15d949a8bf9a8594e0122fe98f3e42c22b858de86c31fe64e855",
+  "file": "ru__kategori_lang-russian-robotics.html",
+  "captured_at": "2026-10-21T21:21:48.625Z"
+ },
+ {
+  "lang": "ru",
+  "path": "kayit-ol",
+  "status": 200,
+  "location": null,
+  "bytes": 47683,
+  "sha256": "55fb319956400c2ac7c24bfd3cbd05b1f6f6245bfa802add5f49410540276455",
+  "file": "ru__kayit-ol.html",
+  "captured_at": "2026-10-21T21:21:50.180Z"
+ },
+ {
+  "lang": "ru",
+  "path": "sifremi-unuttum",
+  "status": 200,
+  "location": null,
+  "bytes": 46687,
+  "sha256": "ac61977df0a9891ccf7592ccd776d2e0167079bb7cc11f09617f32a152bbdf71",
+  "file": "ru__sifremi-unuttum.html",
+  "captured_at": "2026-10-21T21:21:51.670Z"
+ },
+ {
+  "lang": "ru",
+  "note": "done; fetched=16; queue_left=0",
+  "left": []
+ },
+ {
+  "lang": "ar",
+  "path": "lang-arabic/",
+  "status": "-",
+  "location": null,
+  "note": "language switch"
+ },
+ {
+  "lang": "ar",
+  "path": "lang-arabic/",
+  "status": 200,
+  "location": null,
+  "bytes": 52051,
+  "sha256": "6a0420686418841dd582bf836f5f6590ba9a88700d47f368938abce71e299fe4",
+  "file": "ar__lang-arabic_.html",
+  "captured_at": "2026-10-21T21:21:54.491Z"
+ },
+ {
+  "lang": "ar",
+  "path": "siparisim-ne-durumda",
+  "status": 200,
+  "location": null,
+  "bytes": 45039,
+  "sha256": "c12b081bc9baef6e33e807873d74d4002c53f84533f7321ed0e226baaca0d9d0",
+  "file": "ar__siparisim-ne-durumda.html",
+  "captured_at": "2026-10-21T21:21:55.988Z"
+ },
+ {
+  "lang": "ar",
+  "path": "odeme-bildirimi",
+  "status": 200,
+  "location": null,
+  "bytes": 45592,
+  "sha256": "5a4a5c50976abd62c9bb81700fe2eb9b0b1893ba669b97a04ef68931c89c5dad",
+  "file": "ar__odeme-bildirimi.html",
+  "captured_at": "2026-10-21T21:21:57.480Z"
+ },
+ {
+  "lang": "ar",
+  "path": "banka-hesaplari",
+  "status": 200,
+  "location": null,
+  "bytes": 44758,
+  "sha256": "28de102f37f68bedf68354b0be66a139763caebf9b901ec89768ac1ef1223354",
+  "file": "ar__banka-hesaplari.html",
+  "captured_at": "2026-10-21T21:21:58.978Z"
+ },
+ {
+  "lang": "ar",
+  "path": "favorilerim",
+  "status": 200,
+  "location": null,
+  "bytes": 46158,
+  "sha256": "374d03dbc293eec33a192d07ee8ac88a303efdd327748734780ec95912960942",
+  "file": "ar__favorilerim.html",
+  "captured_at": "2026-10-21T21:22:00.473Z"
+ },
+ {
+  "lang": "ar",
+  "path": "blog",
+  "status": 200,
+  "location": null,
+  "bytes": 44821,
+  "sha256": "2a323f829e69d884b49a06a89591ef66fc9a7ba55d94756703af63b4bae30add",
+  "file": "ar__blog.html",
+  "captured_at": "2026-10-21T21:22:01.973Z"
+ },
+ {
+  "lang": "ar",
+  "path": "sayfa/lang-arabic-corparate",
+  "status": 200,
+  "location": null,
+  "bytes": 44236,
+  "sha256": "b68fd7d87ad80c0e5b794a1b48ff9419721c49e091ca4c81944471e18a7966a5",
+  "file": "ar__sayfa_lang-arabic-corparate.html",
+  "captured_at": "2026-10-21T21:22:03.470Z"
+ },
+ {
+  "lang": "ar",
+  "path": "iletisim",
+  "status": 200,
+  "location": null,
+  "bytes": 48950,
+  "sha256": "bfe37fdf4108ccd6d179d00c24d3150e21b8b9b6bcd91cc46b9df56839be8161",
+  "file": "ar__iletisim.html",
+  "captured_at": "2026-10-21T21:22:04.979Z"
+ },
+ {
+  "lang": "ar",
+  "path": "sepetim",
+  "status": 200,
+  "location": null,
+  "bytes": 46327,
+  "sha256": "162b1051952d9d91961a321241aee5225e4d32a307a1eee3f85df4a0fff1f4cd",
+  "file": "ar__sepetim.html",
+  "captured_at": "2026-10-21T21:22:06.483Z"
+ },
+ {
+  "lang": "ar",
+  "path": "giris-yap",
+  "status": 200,
+  "location": null,
+  "bytes": 46123,
+  "sha256": "888b628588cce0a206c5665a959e5e6aa835a4a5a63f2cf1a5475524a7581da5",
+  "file": "ar__giris-yap.html",
+  "captured_at": "2026-10-21T21:22:07.992Z"
+ },
+ {
+  "lang": "ar",
+  "path": "kategori/lang-arabic-equipments",
+  "status": 200,
+  "location": null,
+  "bytes": 45455,
+  "sha256": "6185cac6e2156e43e454f2392e26af1e02f5760c26ab1fc2bd5ed16bef2f9143",
+  "file": "ar__kategori_lang-arabic-equipments.html",
+  "captured_at": "2026-10-21T21:22:09.489Z"
+ },
+ {
+  "lang": "ar",
+  "path": "kategori/lang-arabic-equipments2",
+  "status": 200,
+  "location": null,
+  "bytes": 45458,
+  "sha256": "7833395a5d7ccff5e7225b6658e1bebd66e0759f0cffca86507ccfcc6a149171",
+  "file": "ar__kategori_lang-arabic-equipments2.html",
+  "captured_at": "2026-10-21T21:22:10.987Z"
+ },
+ {
+  "lang": "ar",
+  "path": "kategori/lang-arabic-robotics",
+  "status": 200,
+  "location": null,
+  "bytes": 45463,
+  "sha256": "2ec324a8ebd2a2f06212d778d982f08e6217eff36e7cc66b4567cc5ea8788a88",
+  "file": "ar__kategori_lang-arabic-robotics.html",
+  "captured_at": "2026-10-21T21:22:12.496Z"
+ },
+ {
+  "lang": "ar",
+  "path": "kategori/lang-arabic-equipments3",
+  "status": 200,
+  "location": null,
+  "bytes": 45458,
+  "sha256": "4f5695da3797831a0895eb43fe2f4cebbe5b12f1e5f479afa68112e639a048f0",
+  "file": "ar__kategori_lang-arabic-equipments3.html",
+  "captured_at": "2026-10-21T21:22:13.972Z"
+ },
+ {
+  "lang": "ar",
+  "path": "kayit-ol",
+  "status": 200,
+  "location": null,
+  "bytes": 46927,
+  "sha256": "16d262a67a166b94d8574ce7d84661e96ea1654d11d2637f28e57fcda02d76ec",
+  "file": "ar__kayit-ol.html",
+  "captured_at": "2026-10-21T21:22:15.472Z"
+ },
+ {
+  "lang": "ar",
+  "path": "sifremi-unuttum",
+  "status": 200,
+  "location": null,
+  "bytes": 45917,
+  "sha256": "b5b2f12e57e6a7bb6d968ff8d7b46e2d8d8b09004dfe92a95210db95a6311f76",
+  "file": "ar__sifremi-unuttum.html",
+  "captured_at": "2026-10-21T21:22:16.980Z"
+ },
+ {
+  "lang": "ar",
+  "note": "done; fetched=16; queue_left=0",
+  "left": []
+ }
+]

@@ -1,0 +1,42 @@
+tr_source_id,tr_title,tr_price,en_source_id,en_title,en_price,fr_source_id,fr_title,fr_price,price_consistent,method,status
+78,Dairesel Kesim Hücresi,1807479.94,140,Circular Cutting Cell,1807479.94,177,Cellule de coupe circulaire,1807479.94,yes,record-order+title (manual),suggested — client confirmation required
+79,Ayakta Kesim Hücresi,1108321.70,141,Standing Slaughter Cell,4818.79,178,Cellule d'abattage debout,1108321.70,NO,record-order+title (manual),suggested — client confirmation required
+80,Kurban Yatırma Kabini,375865.62,142,Sacrifice Laying Cabin,57825.48,179,Cabine de pose du sacrifice,867382.20,NO,record-order+title (manual),suggested — client confirmation required
+82,İkiye Bölme Testeresi,358421.60,143,Bisection Saw,358421.60,180,Scie bissection,358421.60,yes,record-order+title (manual),suggested — client confirmation required
+84,Döş Açma Testeresi,261033.85,144,Breast Cutting Saw,261033.85,181,Scie à couper le sein,261033.85,yes,record-order+title (manual),suggested — client confirmation required
+85,Çeyrekleme Testere,274960.16,145,Quartering Saw,274960.16,182,Scie à quartier,274960.16,yes,record-order+title (manual),suggested — client confirmation required
+86,Testere Sterilizatör,65776.48,146,Saw Sterilizer,65776.48,183,Stérilisateur de scie,65776.48,yes,record-order+title (manual),suggested — client confirmation required
+100,Kurban Kanama Kancası,2216.64,147,Bleeding Hook Big Head,1879.33,184,Crochet de Saignement Grosse Tête,1879.33,NO,record-order+title (manual),suggested — client confirmation required
+103,Kanama Kancası Küçük Baş,2650.33,148,Bleeding Hook Small Head,2891.27,185,Crochet de Saignement Petite Tête,2891.27,NO,record-order+title (manual),suggested — client confirmation required
+104,İkiz Ray Kancası Paslanmaz,3132.21,149,Twin Rail Hook Large Head,2891.27,186,"Crochet à double rail, grande tête",2891.27,NO,record-order+title (manual),suggested — client confirmation required
+105,İkiz Ray Kancası Küçük Baş,2891.27,150,Twin Rail Hook Small Head,3180.40,187,"Crochet à double rail, petite tête",3710.78,NO,record-order+title (manual),suggested — client confirmation required
+107,Küçük Baş Stoklama Kancası,8914.76,151,Small Head Storage Hook,8914.76,188,Crochet de rangement à petite tête,8914.76,yes,record-order+title (manual),suggested — client confirmation required
+108,Ayak ve Boynuz Testeresi,276068.48,152,Foot and Horn Saw,276068.48,189,Scie à pied et à corne,276068.48,yes,record-order+title (manual),suggested — client confirmation required
+109,Testere Şerit,1638.39,153,Saw Band,1638.39,190,Bande de scie,1638.39,yes,record-order+title (manual),suggested — client confirmation required
+110,Balansör 70-80 kg 3mt,108181.84,154,Balancer,108181.84,191,balancier,108181.84,yes,record-order+title (manual),suggested — client confirmation required
+111,Sterilizatör Dolap,14359.99,155,Sterilizer Cabinet,14359.99,192,Armoire de stérilisation,14359.99,yes,record-order+title (manual),suggested — client confirmation required
+112,Sulu Sterilizatör,17347.64,156,Water Sterilizer,17347.64,193,Stérilisateur d'eau,17347.64,yes,record-order+title (manual),suggested — client confirmation required
+113,Lavabo Diz Basmalı,8962.95,157,Sink Knee Press,8962.95,194,Presse à genoux pour évier,8962.95,yes,record-order+title (manual),suggested — client confirmation required
+114,Ayaklı Lavabo,18311.40,158,Pedestal Sink,18311.40,195,Lavabo sur pied,18311.40,yes,record-order+title (manual),suggested — client confirmation required
+115,Bantlar,42742.67,159,Bands,42742.67,196,Bandes,887.00,NO,record-order+title (manual),suggested — client confirmation required
+117,Platformlar,230049.03,160,Platforms,230049.03,197,Plateformes,230049.03,yes,record-order+title (manual),suggested — client confirmation required
+118,Bot Yıkama,53151.25,161,Boot Washing,53151.25,198,Lavage des bottes,53151.25,yes,record-order+title (manual),suggested — client confirmation required
+119,Önlük Yıkama,66499.30,162,Apron Washing,66499.30,199,Lavage du tablier,66499.30,yes,record-order+title (manual),suggested — client confirmation required
+120,Hijyen Geçiti,144178.20,,,,200,Défilé d'hygiène,144178.20,yes,record-order+title (manual),suggested — client confirmation required
+121,İkiz Ray Kantar,67463.06,163,Twin Rail Scale,137190.95,201,Balance à double rail,137190.95,NO,record-order+title (manual),suggested — client confirmation required
+122,Kasap Özel Kancalar Tip 3,771.01,164,Butcher Special Hooks Type 3,771.01,202,Crochets spéciaux boucher type 3,771.01,yes,record-order+title (manual),suggested — client confirmation required
+123,Kasap Önlük,1445.64,165,Butcher Apron,1445.64,203,Tablier de boucher,1445.64,yes,record-order+title (manual),suggested — client confirmation required
+124,Kasap Masat,8384.69,166,Butcher Masat,8384.69,204,Boucher Masat,8384.69,yes,record-order+title (manual),suggested — client confirmation required
+125,Kasap Bileme Makinası,74209.37,167,Butcher Sharpening Machine,74209.37,205,Affûteuse de boucher,74209.37,yes,record-order+title (manual),suggested — client confirmation required
+126,Kasap Kesim Bıçak,7131.81,,,,206,Couteau de boucher,7131.81,yes,record-order+title (manual),suggested — client confirmation required
+127,Kasap Deri Yüzme Bıçak,5107.92,169,Butcher Leathering Knife,5107.92,207,Couteau à cuir de boucher,5107.92,yes,record-order+title (manual),suggested — client confirmation required
+128,Vakum Makinası,349651.40,170,Vacuum Machine,349651.40,210,Aspirateur,349651.40,yes,record-order+title (manual),suggested — client confirmation required
+130,Kasap Özel Kancalar Tip 1,771.01,171,Butcher Special Hooks Type 1,771.01,211,Crochets spéciaux boucher type 1,771.01,yes,record-order+title (manual),suggested — client confirmation required
+131,Kasap Özel Kancalar Tip 2,771.01,172,Butcher Special Hooks Type 2,771.01,212,Crochets spéciaux boucher type 2,771.01,yes,record-order+title (manual),suggested — client confirmation required
+134,Klasik Kesim Hücresi,867382.20,173,Classic Cutting Cell,867382.20,213,Cellule de coupe classique,867382.20,yes,record-order+title (manual),suggested — client confirmation required
+135,Kurban Testeresi,204798.58,174,Sacrifice Saw,168657.65,214,Scie sacrificielle,168657.65,NO,record-order+title (manual),suggested — client confirmation required
+136,Lama ray Kancası Büyük Baş,4336.91,175,Lama rail hook large head,2891.27,215,Crochet de rail Lama grosse tête,2891.27,NO,record-order+title (manual),suggested — client confirmation required
+137,Monoray kancası Büyük Baş,1445.64,176,Monorail hook Big Head,2891.27,216,Crochet monorail Big Head,2891.27,NO,record-order+title (manual),suggested — client confirmation required
+208,İkizray Kurban Kancası,1927.52,,,,,,,yes,record-order+title (manual),suggested — client confirmation required
+209,Monoray Kurban Kancası,1927.52,,,,,,,yes,record-order+title (manual),suggested — client confirmation required
+217,Balansör 40-50 kg 2 mt,46983.20,,,,,,,yes,record-order+title (manual),suggested — client confirmation required

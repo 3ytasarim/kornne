@@ -1,0 +1,235 @@
+old_url,old_path,session_lang,page_type,title,new_path,status,note
+https://kornne.com/,/,tr,home,KORNNE MEZBAHA TEKNOLOJİLERİ,/,200-same,
+https://kornne.com/siparisim-ne-durumda,/siparisim-ne-durumda,tr,utility,Siparişim Ne Durumda?,/siparisim-ne-durumda,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/odeme-bildirimi,/odeme-bildirimi,tr,utility,Ödeme Bildirimi,/odeme-bildirimi,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/banka-hesaplari,/banka-hesaplari,tr,utility,Banka Hesapları,/banka-hesaplari,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/favorilerim,/favorilerim,tr,utility,Favorilerim,/favorilerim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/blog,/blog,tr,blog,Blog,/blog,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/sayfa/kurumsal,/sayfa/kurumsal,tr,cms_page,Kurumsal,/sayfa/kurumsal,200-same,
+https://kornne.com/iletisim,/iletisim,tr,utility,İletişim,/iletisim,200-same,
+https://kornne.com/sepetim,/sepetim,tr,utility,Sepetim,/sepetim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/giris-yap,/giris-yap,tr,utility,Giriş Yap,/giris-yap,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/kategori/mezbaha-ekipmanlari,/kategori/mezbaha-ekipmanlari,tr,category,Mezbaha Ekipmanları,/kategori/mezbaha-ekipmanlari,200-same,
+https://kornne.com/kategori/kurban-ekipmanlari,/kategori/kurban-ekipmanlari,tr,category,Kurban Ekipmanları,/kategori/kurban-ekipmanlari,200-same,
+https://kornne.com/kategori/robotik-sistemler,/kategori/robotik-sistemler,tr,category,Robotik Sistemler,/kategori/robotik-sistemler,200-same,
+https://kornne.com/kategori/tum-urunler,/kategori/tum-urunler,tr,category,Tüm Ürünler,/kategori/tum-urunler,200-same,
+https://kornne.com/urun/ikiye-bolme-testeresi,/urun/ikiye-bolme-testeresi,tr,product,İkiye Bölme Testeresi,/urun/ikiye-bolme-testeresi,200-same,
+https://kornne.com/urun/kurban-yatirma-kabini,/urun/kurban-yatirma-kabini,tr,product,Kurban Yatırma Kabini,/urun/kurban-yatirma-kabini,200-same,
+https://kornne.com/urun/lama-ray-kancasi-buyuk-bas,/urun/lama-ray-kancasi-buyuk-bas,tr,product,Lama ray Kancası Büyük Baş,/urun/lama-ray-kancasi-buyuk-bas,200-same,
+https://kornne.com/urun/monoray-kancasi-buyuk-bas,/urun/monoray-kancasi-buyuk-bas,tr,product,Monoray kancası Büyük Baş,/urun/monoray-kancasi-buyuk-bas,200-same,
+https://kornne.com/urun/ikiz-ray-kantar,/urun/ikiz-ray-kantar,tr,product,İkiz Ray Kantar,/urun/ikiz-ray-kantar,200-same,
+https://kornne.com/urun/ikiz-ray-kancasi-paslanmaz,/urun/ikiz-ray-kancasi-paslanmaz,tr,product,İkiz Ray Kancası Paslanmaz,/urun/ikiz-ray-kancasi-paslanmaz,200-same,
+https://kornne.com/urun/kurban-kanama-kancasi,/urun/kurban-kanama-kancasi,tr,product,Kurban Kanama Kancası,/urun/kurban-kanama-kancasi,200-same,
+https://kornne.com/urun/dos-acma-testeresi,/urun/dos-acma-testeresi,tr,product,Döş Açma Testeresi,/urun/dos-acma-testeresi,200-same,
+https://kornne.com/urun/hijyen-geciti,/urun/hijyen-geciti,tr,product,Hijyen Geçiti,/urun/hijyen-geciti,200-same,
+https://kornne.com/urun/sulu-sterilizator,/urun/sulu-sterilizator,tr,product,Sulu Sterilizatör,/urun/sulu-sterilizator,200-same,
+https://kornne.com/urun/kasap-kesim-bicak,/urun/kasap-kesim-bicak,tr,product,Kasap Kesim Bıçak,/urun/kasap-kesim-bicak,200-same,
+https://kornne.com/urun/ayak-ve-boynuz-testeresi,/urun/ayak-ve-boynuz-testeresi,tr,product,Ayak ve Boynuz Testeresi,/urun/ayak-ve-boynuz-testeresi,200-same,
+https://kornne.com/urun/testere-serit,/urun/testere-serit,tr,product,Testere Şerit,/urun/testere-serit,200-same,
+https://kornne.com/urun/kurban-testeresi,/urun/kurban-testeresi,tr,product,Kurban Testeresi,/urun/kurban-testeresi,200-same,
+https://kornne.com/sayfa/iade-ve-geri-odeme-politikalari,/sayfa/iade-ve-geri-odeme-politikalari,tr,cms_page,İade ve Geri Ödeme Politikaları,/sayfa/iade-ve-geri-odeme-politikalari,200-same,legal text served noindex until legal approval (Sprint 7)
+https://kornne.com/sayfa/mesafeli-satis-sozlesmesi,/sayfa/mesafeli-satis-sozlesmesi,tr,cms_page,Mesafeli Satış Sözleşmesi,/sayfa/mesafeli-satis-sozlesmesi,200-same,legal text served noindex until legal approval (Sprint 7)
+https://kornne.com/sayfa/kisisel-verilenin-korunmasi-kanunu,/sayfa/kisisel-verilenin-korunmasi-kanunu,tr,cms_page,Kişisel Verilenin Korunması Kanunu,/sayfa/kisisel-verilenin-korunmasi-kanunu,200-same,legal text served noindex until legal approval (Sprint 7)
+https://kornne.com/urun/dairesel-kesim-hucresi,/urun/dairesel-kesim-hucresi,tr,product,Dairesel Kesim Hücresi,/urun/dairesel-kesim-hucresi,200-same,
+https://kornne.com/urun/ayakta-kesim-hucresi,/urun/ayakta-kesim-hucresi,tr,product,Ayakta Kesim Hücresi,/urun/ayakta-kesim-hucresi,200-same,
+https://kornne.com/urun/ceyrekleme-testere,/urun/ceyrekleme-testere,tr,product,Çeyrekleme Testere,/urun/ceyrekleme-testere,200-same,
+https://kornne.com/urun/testere-sterilizator,/urun/testere-sterilizator,tr,product,Testere Sterilizatör,/urun/testere-sterilizator,200-same,
+https://kornne.com/kayit-ol,/kayit-ol,tr,utility,Kayıt Ol,/kayit-ol,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/sifremi-unuttum,/sifremi-unuttum,tr,utility,Şifremi Unuttum,/sifremi-unuttum,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/urun/kasap-ozel-kancalar-tip-2,/urun/kasap-ozel-kancalar-tip-2,tr,product,Kasap Özel Kancalar Tip 2,/urun/kasap-ozel-kancalar-tip-2,200-same,
+https://kornne.com/urun/kasap-ozel-kancalar-tip-1,/urun/kasap-ozel-kancalar-tip-1,tr,product,Kasap Özel Kancalar Tip 1,/urun/kasap-ozel-kancalar-tip-1,200-same,
+https://kornne.com/urun/kasap-deri-yuzme-bicak,/urun/kasap-deri-yuzme-bicak,tr,product,Kasap Deri Yüzme Bıçak,/urun/kasap-deri-yuzme-bicak,200-same,
+https://kornne.com/urun/kasap-bileme-makinasi,/urun/kasap-bileme-makinasi,tr,product,Kasap Bileme Makinası,/urun/kasap-bileme-makinasi,200-same,
+https://kornne.com/urun/kasap-masat,/urun/kasap-masat,tr,product,Kasap Masat,/urun/kasap-masat,200-same,
+https://kornne.com/urun/kasap-onluk,/urun/kasap-onluk,tr,product,Kasap Önlük,/urun/kasap-onluk,200-same,
+https://kornne.com/urun/kasap-ozel-kancalar-tip-3,/urun/kasap-ozel-kancalar-tip-3,tr,product,Kasap Özel Kancalar Tip 3,/urun/kasap-ozel-kancalar-tip-3,200-same,
+https://kornne.com/urun/onluk-yikama,/urun/onluk-yikama,tr,product,Önlük Yıkama,/urun/onluk-yikama,200-same,
+https://kornne.com/urun/bot-yikama,/urun/bot-yikama,tr,product,Bot Yıkama,/urun/bot-yikama,200-same,
+https://kornne.com/urun/ayakli-lavabo,/urun/ayakli-lavabo,tr,product,Ayaklı Lavabo,/urun/ayakli-lavabo,200-same,
+https://kornne.com/urun/lavabo-diz-basmali,/urun/lavabo-diz-basmali,tr,product,Lavabo Diz Basmalı,/urun/lavabo-diz-basmali,200-same,
+https://kornne.com/urun/sterilizator-dolap,/urun/sterilizator-dolap,tr,product,Sterilizatör Dolap,/urun/sterilizator-dolap,200-same,
+https://kornne.com/kategori/mezbaha-ekipmanlari/2,/kategori/mezbaha-ekipmanlari/2,tr,category,Mezbaha Ekipmanları,/kategori/mezbaha-ekipmanlari/2,200-same,page 2 of 2 (page size 24)
+https://kornne.com/kategori/mezbaha-ekipmanlari/3,/kategori/mezbaha-ekipmanlari/3,tr,category,Mezbaha Ekipmanları,/kategori/mezbaha-ekipmanlari,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/urun/ikiz-ray-kancasi-kucuk-bas,/urun/ikiz-ray-kancasi-kucuk-bas,tr,product,İkiz Ray Kancası Küçük Baş,/urun/ikiz-ray-kancasi-kucuk-bas,200-same,
+https://kornne.com/urun/monoray-kurban-kancasi,/urun/monoray-kurban-kancasi,tr,product,Monoray Kurban Kancası,/urun/monoray-kurban-kancasi,200-same,
+https://kornne.com/urun/balansor-40-50-kg-2-mt,/urun/balansor-40-50-kg-2-mt,tr,product,Balansör 40-50 kg 2 mt,/urun/balansor-40-50-kg-2-mt,200-same,
+https://kornne.com/kategori/kurban-ekipmanlari/2,/kategori/kurban-ekipmanlari/2,tr,category,Kurban Ekipmanları,/kategori/kurban-ekipmanlari,301,legacy page 2; new listing has 1 page(s) of 24
+https://kornne.com/urun/kucuk-bas-stoklama-kancasi,/urun/kucuk-bas-stoklama-kancasi,tr,product,Küçük Baş Stoklama Kancası,/urun/kucuk-bas-stoklama-kancasi,200-same,
+https://kornne.com/urun/platformlar,/urun/platformlar,tr,product,Platformlar,/urun/platformlar,200-same,
+https://kornne.com/kategori/robotik-sistemler/2,/kategori/robotik-sistemler/2,tr,category,Robotik Sistemler,/kategori/robotik-sistemler/2,200-same,page 2 of 2 (page size 24)
+https://kornne.com/kategori/tum-urunler/2,/kategori/tum-urunler/2,tr,category,Tüm Ürünler,/kategori/tum-urunler/2,200-same,page 2 of 2 (page size 24)
+https://kornne.com/kategori/tum-urunler/3,/kategori/tum-urunler/3,tr,category,Tüm Ürünler,/kategori/tum-urunler,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/urun/kanama-kancasi-kucuk-bas,/urun/kanama-kancasi-kucuk-bas,tr,product,Kanama Kancası Küçük Baş,/urun/kanama-kancasi-kucuk-bas,200-same,
+https://kornne.com/urun/ikizray-kurban-kancasi,/urun/ikizray-kurban-kancasi,tr,product,İkizray Kurban Kancası,/urun/ikizray-kurban-kancasi,200-same,
+https://kornne.com/urun/balansor-70-80-kg-3mt,/urun/balansor-70-80-kg-3mt,tr,product,Balansör 70-80 kg 3mt,/urun/balansor-70-80-kg-3mt,200-same,
+https://kornne.com/urun/vakum-makinasi,/urun/vakum-makinasi,tr,product,Vakum Makinası,/urun/vakum-makinasi,200-same,
+https://kornne.com/urun/klasik-kesim-hucresi,/urun/klasik-kesim-hucresi,tr,product,Klasik Kesim Hücresi,/urun/klasik-kesim-hucresi,200-same,
+https://kornne.com/urun/bantlar,/urun/bantlar,tr,product,Bantlar,/urun/bantlar,200-same,
+https://kornne.com/kategori/mezbaha-ekipmanlari/1,/kategori/mezbaha-ekipmanlari/1,tr,category,Mezbaha Ekipmanları,/kategori/mezbaha-ekipmanlari,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/kurban-ekipmanlari/1,/kategori/kurban-ekipmanlari/1,tr,category,Kurban Ekipmanları,/kategori/kurban-ekipmanlari,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/robotik-sistemler/1,/kategori/robotik-sistemler/1,tr,category,Robotik Sistemler,/kategori/robotik-sistemler,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/tum-urunler/1,/kategori/tum-urunler/1,tr,category,Tüm Ürünler,/kategori/tum-urunler,301,duplicate of page 1 (/1)
+https://kornne.com/lang-eng/,/lang-eng/,en,home,KORNNE SLAUGHTER TECHNOLOGY,/en,301,session-based language switch → prefixed locale home
+https://kornne.com/siparisim-ne-durumda,/siparisim-ne-durumda,en,utility,What's the status of my order?,/siparisim-ne-durumda,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/odeme-bildirimi,/odeme-bildirimi,en,utility,Payment Notification,/odeme-bildirimi,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/banka-hesaplari,/banka-hesaplari,en,utility,Bank Accounts,/banka-hesaplari,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/favorilerim,/favorilerim,en,utility,My Favorites,/favorilerim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/blog,/blog,en,blog,Blog,/blog,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/sayfa/corporate-information,/sayfa/corporate-information,en,cms_page,Corporate information,/en/page/corporate-information,301,legacy corporate page (empty body on source)
+https://kornne.com/iletisim,/iletisim,en,utility,Communication,/en/contact,n/a,same legacy URL for every language (session)
+https://kornne.com/sepetim,/sepetim,en,utility,My Cart,/sepetim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/giris-yap,/giris-yap,en,utility,Login,/giris-yap,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/kategori/slaughterhouse-equipments,/kategori/slaughterhouse-equipments,en,category,Slaughterhouse Equipments,/en/category/slaughterhouse-equipments,301,legacy en URL (only reachable with a session cookie)
+https://kornne.com/kategori/sacrifice-equipments,/kategori/sacrifice-equipments,en,category,Sacrifice Equipments,/en/category/sacrifice-equipments,301,legacy en URL (only reachable with a session cookie)
+https://kornne.com/kategori/robotic-systems,/kategori/robotic-systems,en,category,Robotic Systems,/en/category/robotic-systems,301,legacy en URL (only reachable with a session cookie)
+https://kornne.com/kategori/all-products,/kategori/all-products,en,category,All Products,/en/category/all-products,301,legacy en URL (only reachable with a session cookie)
+https://kornne.com/urun/circular-cutting-cell,/urun/circular-cutting-cell,en,product,Circular Cutting Cell,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/circular-cutting-cell pending match approval
+https://kornne.com/urun/standing-slaughter-cell,/urun/standing-slaughter-cell,en,product,Standing Slaughter Cell,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/standing-slaughter-cell pending match approval
+https://kornne.com/urun/sacrifice-laying-cabin,/urun/sacrifice-laying-cabin,en,product,Sacrifice Laying Cabin,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/sacrifice-laying-cabin pending match approval
+https://kornne.com/urun/bisection-saw,/urun/bisection-saw,en,product,Bisection Saw,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/bisection-saw pending match approval
+https://kornne.com/urun/breast-cutting-saw,/urun/breast-cutting-saw,en,product,Breast Cutting Saw,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/breast-cutting-saw pending match approval
+https://kornne.com/urun/saw-band,/urun/saw-band,en,product,Saw Band,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/saw-band pending match approval
+https://kornne.com/urun/foot-and-horn-saw,/urun/foot-and-horn-saw,en,product,Foot and Horn Saw,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/foot-and-horn-saw pending match approval
+https://kornne.com/urun/small-head-storage-hook,/urun/small-head-storage-hook,en,product,Small Head Storage Hook,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/small-head-storage-hook pending match approval
+https://kornne.com/urun/twin-rail-hook-large-head,/urun/twin-rail-hook-large-head,en,product,Twin Rail Hook Large Head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/twin-rail-hook-large-head pending match approval
+https://kornne.com/urun/bleeding-hook-small-head,/urun/bleeding-hook-small-head,en,product,Bleeding Hook Small Head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/bleeding-hook-small-head pending match approval
+https://kornne.com/urun/bleeding-hook-big-head,/urun/bleeding-hook-big-head,en,product,Bleeding Hook Big Head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/bleeding-hook-big-head pending match approval
+https://kornne.com/urun/saw-sterilizer,/urun/saw-sterilizer,en,product,Saw Sterilizer,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/saw-sterilizer pending match approval
+https://kornne.com/urun/quartering-saw,/urun/quartering-saw,en,product,Quartering Saw,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/quartering-saw pending match approval
+https://kornne.com/urun/balancer,/urun/balancer,en,product,Balancer,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/balancer pending match approval
+https://kornne.com/urun/monorail-hook-big-head,/urun/monorail-hook-big-head,en,product,Monorail hook Big Head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/monorail-hook-big-head pending match approval
+https://kornne.com/urun/butcher-masat,/urun/butcher-masat,en,product,Butcher Masat,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-masat pending match approval
+https://kornne.com/urun/butcher-apron,/urun/butcher-apron,en,product,Butcher Apron,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-apron pending match approval
+https://kornne.com/urun/butcher-sharpening-machine,/urun/butcher-sharpening-machine,en,product,Butcher Sharpening Machine,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-sharpening-machine pending match approval
+https://kornne.com/urun/butcher-leathering-knife,/urun/butcher-leathering-knife,en,product,Butcher Leathering Knife,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-leathering-knife pending match approval
+https://kornne.com/urun/butcher-special-hooks-type-1,/urun/butcher-special-hooks-type-1,en,product,Butcher Special Hooks Type 1,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-special-hooks-type-1 pending match approval
+https://kornne.com/urun/butcher-special-hooks-type-2,/urun/butcher-special-hooks-type-2,en,product,Butcher Special Hooks Type 2,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-special-hooks-type-2 pending match approval
+https://kornne.com/urun/sacrifice-saw,/urun/sacrifice-saw,en,product,Sacrifice Saw,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/sacrifice-saw pending match approval
+https://kornne.com/urun/lama-rail-hook-large-head,/urun/lama-rail-hook-large-head,en,product,Lama rail hook large head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/lama-rail-hook-large-head pending match approval
+https://kornne.com/urun/butcher-special-hooks-type-3,/urun/butcher-special-hooks-type-3,en,product,Butcher Special Hooks Type 3,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/butcher-special-hooks-type-3 pending match approval
+https://kornne.com/kayit-ol,/kayit-ol,en,utility,Register,/kayit-ol,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/sifremi-unuttum,/sifremi-unuttum,en,utility,I forgot my password,/sifremi-unuttum,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/urun/twin-rail-hook-small-head,/urun/twin-rail-hook-small-head,en,product,Twin Rail Hook Small Head,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/twin-rail-hook-small-head pending match approval
+https://kornne.com/urun/sterilizer-cabinet,/urun/sterilizer-cabinet,en,product,Sterilizer Cabinet,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/sterilizer-cabinet pending match approval
+https://kornne.com/kategori/slaughterhouse-equipments/2,/kategori/slaughterhouse-equipments/2,en,category,Slaughterhouse Equipments,/en/category/slaughterhouse-equipments,301,legacy page 2; new listing has 2 page(s) of 24
+https://kornne.com/kategori/slaughterhouse-equipments/3,/kategori/slaughterhouse-equipments/3,en,category,Slaughterhouse Equipments,/en/category/slaughterhouse-equipments,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/kategori/sacrifice-equipments/2,/kategori/sacrifice-equipments/2,en,category,Sacrifice Equipments,/en/category/sacrifice-equipments,301,legacy page 2; new listing has 1 page(s) of 24
+https://kornne.com/kategori/sacrifice-equipments/3,/kategori/sacrifice-equipments/3,en,category,Sacrifice Equipments,/en/category/sacrifice-equipments,301,legacy page 3; new listing has 1 page(s) of 24
+https://kornne.com/kategori/robotic-systems/2,/kategori/robotic-systems/2,en,category,Robotic Systems,/en/category/robotic-systems,301,legacy page 2; new listing has 2 page(s) of 24
+https://kornne.com/kategori/robotic-systems/3,/kategori/robotic-systems/3,en,category,Robotic Systems,/en/category/robotic-systems,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/kategori/all-products/2,/kategori/all-products/2,en,category,All Products,/en/category/all-products,301,legacy page 2; new listing has 2 page(s) of 24
+https://kornne.com/kategori/all-products/3,/kategori/all-products/3,en,category,All Products,/en/category/all-products,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/urun/vacuum-machine,/urun/vacuum-machine,en,product,Vacuum Machine,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/vacuum-machine pending match approval
+https://kornne.com/urun/apron-washing,/urun/apron-washing,en,product,Apron Washing,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/apron-washing pending match approval
+https://kornne.com/urun/boot-washing,/urun/boot-washing,en,product,Boot Washing,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/boot-washing pending match approval
+https://kornne.com/urun/sink-knee-press,/urun/sink-knee-press,en,product,Sink Knee Press,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/sink-knee-press pending match approval
+https://kornne.com/urun/water-sterilizer,/urun/water-sterilizer,en,product,Water Sterilizer,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/water-sterilizer pending match approval
+https://kornne.com/urun/pedestal-sink,/urun/pedestal-sink,en,product,Pedestal Sink,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/pedestal-sink pending match approval
+https://kornne.com/urun/twin-rail-scale,/urun/twin-rail-scale,en,product,Twin Rail Scale,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/twin-rail-scale pending match approval
+https://kornne.com/urun/bands,/urun/bands,en,product,Bands,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/bands pending match approval
+https://kornne.com/urun/classic-cutting-cell,/urun/classic-cutting-cell,en,product,Classic Cutting Cell,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/classic-cutting-cell pending match approval
+https://kornne.com/urun/platforms,/urun/platforms,en,product,Platforms,/en/category/all-products,301,separate legacy en record; suggested product target /en/product/platforms pending match approval
+https://kornne.com/kategori/slaughterhouse-equipments/1,/kategori/slaughterhouse-equipments/1,en,category,Slaughterhouse Equipments,/en/category/slaughterhouse-equipments,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/sacrifice-equipments/1,/kategori/sacrifice-equipments/1,en,category,Sacrifice Equipments,/en/category/sacrifice-equipments,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/robotic-systems/1,/kategori/robotic-systems/1,en,category,Robotic Systems,/en/category/robotic-systems,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/all-products/1,/kategori/all-products/1,en,category,All Products,/en/category/all-products,301,duplicate of page 1 (/1)
+https://kornne.com/lang-fr/,/lang-fr/,fr,home,TECHNOLOGIE D'ABATTAGE KORNNE,/fr,301,session-based language switch → prefixed locale home
+https://kornne.com/siparisim-ne-durumda,/siparisim-ne-durumda,fr,utility,Quel est le statut de ma commande ?,/siparisim-ne-durumda,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/odeme-bildirimi,/odeme-bildirimi,fr,utility,Notification de paiement,/odeme-bildirimi,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/banka-hesaplari,/banka-hesaplari,fr,utility,Comptes bancaires,/banka-hesaplari,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/favorilerim,/favorilerim,fr,utility,Mes Favoris,/favorilerim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/blog,/blog,fr,blog,Blog,/blog,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/sayfa/information-dentreprise,/sayfa/information-dentreprise,fr,cms_page,Information d'entreprise,/fr/page/information-dentreprise,301,legacy corporate page (empty body on source)
+https://kornne.com/iletisim,/iletisim,fr,utility,Communication,/fr/contact,n/a,same legacy URL for every language (session)
+https://kornne.com/sepetim,/sepetim,fr,utility,mon panier,/sepetim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/giris-yap,/giris-yap,fr,utility,Se connecter,/giris-yap,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/kategori/equipements-dabattoir,/kategori/equipements-dabattoir,fr,category,Équipements d'abattoir,/fr/categorie/equipements-dabattoir,301,legacy fr URL (only reachable with a session cookie)
+https://kornne.com/kategori/equipements-de-sacrifice,/kategori/equipements-de-sacrifice,fr,category,Équipements de sacrifice,/fr/categorie/equipements-de-sacrifice,301,legacy fr URL (only reachable with a session cookie)
+https://kornne.com/kategori/systemes-robotiques,/kategori/systemes-robotiques,fr,category,Systèmes robotiques,/fr/categorie/systemes-robotiques,301,legacy fr URL (only reachable with a session cookie)
+https://kornne.com/kategori/all-products,/kategori/all-products,fr,category,All Products,/fr/categorie/tous-les-produits,301,legacy fr URL (only reachable with a session cookie) COLLISION: also used by another locale; first mapping kept
+https://kornne.com/urun/cellule-de-coupe-circulaire,/urun/cellule-de-coupe-circulaire,fr,product,Cellule de coupe circulaire,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/cellule-de-coupe-circulaire pending match approval
+https://kornne.com/urun/cellule-dabattage-debout,/urun/cellule-dabattage-debout,fr,product,Cellule d'abattage debout,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/cellule-dabattage-debout pending match approval
+https://kornne.com/urun/cabine-de-pose-du-sacrifice,/urun/cabine-de-pose-du-sacrifice,fr,product,Cabine de pose du sacrifice,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/cabine-de-pose-du-sacrifice pending match approval
+https://kornne.com/urun/scie-bissection,/urun/scie-bissection,fr,product,Scie bissection,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/scie-bissection pending match approval
+https://kornne.com/urun/scie-a-couper-le-sein,/urun/scie-a-couper-le-sein,fr,product,Scie à couper le sein,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/scie-a-couper-le-sein pending match approval
+https://kornne.com/urun/scie-a-quartier,/urun/scie-a-quartier,fr,product,Scie à quartier,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/scie-a-quartier pending match approval
+https://kornne.com/urun/sterilisateur-de-scie,/urun/sterilisateur-de-scie,fr,product,Stérilisateur de scie,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/sterilisateur-de-scie pending match approval
+https://kornne.com/urun/crochet-de-saignement-grosse-tete,/urun/crochet-de-saignement-grosse-tete,fr,product,Crochet de Saignement Grosse Tête,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-de-saignement-grosse-tete pending match approval
+https://kornne.com/urun/crochet-monorail-big-head,/urun/crochet-monorail-big-head,fr,product,Crochet monorail Big Head,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-monorail-big-head pending match approval
+https://kornne.com/urun/couteau-a-cuir-de-boucher,/urun/couteau-a-cuir-de-boucher,fr,product,Couteau à cuir de boucher,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/couteau-a-cuir-de-boucher pending match approval
+https://kornne.com/urun/affuteuse-de-boucher,/urun/affuteuse-de-boucher,fr,product,Affûteuse de boucher,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/affuteuse-de-boucher pending match approval
+https://kornne.com/urun/armoire-de-sterilisation,/urun/armoire-de-sterilisation,fr,product,Armoire de stérilisation,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/armoire-de-sterilisation pending match approval
+https://kornne.com/kayit-ol,/kayit-ol,fr,utility,Registre,/kayit-ol,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/sifremi-unuttum,/sifremi-unuttum,fr,utility,j'ai oublié mon mot de passe,/sifremi-unuttum,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/urun/crochet-de-saignement-petite-tete,/urun/crochet-de-saignement-petite-tete,fr,product,Crochet de Saignement Petite Tête,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-de-saignement-petite-tete pending match approval
+https://kornne.com/urun/crochet-a-double-rail-grande-tete,/urun/crochet-a-double-rail-grande-tete,fr,product,"Crochet à double rail, grande tête",/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-a-double-rail-grande-tete pending match approval
+https://kornne.com/urun/crochet-a-double-rail-petite-tete,/urun/crochet-a-double-rail-petite-tete,fr,product,"Crochet à double rail, petite tête",/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-a-double-rail-petite-tete pending match approval
+https://kornne.com/urun/crochet-de-rangement-a-petite-tete,/urun/crochet-de-rangement-a-petite-tete,fr,product,Crochet de rangement à petite tête,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-de-rangement-a-petite-tete pending match approval
+https://kornne.com/urun/scie-a-pied-et-a-corne,/urun/scie-a-pied-et-a-corne,fr,product,Scie à pied et à corne,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/scie-a-pied-et-a-corne pending match approval
+https://kornne.com/urun/balancier,/urun/balancier,fr,product,balancier,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/balancier pending match approval
+https://kornne.com/kategori/equipements-dabattoir/2,/kategori/equipements-dabattoir/2,fr,category,Équipements d'abattoir,/fr/categorie/equipements-dabattoir,301,legacy page 2; new listing has 2 page(s) of 24
+https://kornne.com/kategori/equipements-dabattoir/3,/kategori/equipements-dabattoir/3,fr,category,Équipements d'abattoir,/fr/categorie/equipements-dabattoir,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/kategori/equipements-de-sacrifice/2,/kategori/equipements-de-sacrifice/2,fr,category,Équipements de sacrifice,/fr/categorie/equipements-de-sacrifice,301,legacy page 2; new listing has 1 page(s) of 24
+https://kornne.com/kategori/equipements-de-sacrifice/3,/kategori/equipements-de-sacrifice/3,fr,category,Équipements de sacrifice,/fr/categorie/equipements-de-sacrifice,301,legacy page 3; new listing has 1 page(s) of 24
+https://kornne.com/kategori/systemes-robotiques/2,/kategori/systemes-robotiques/2,fr,category,Systèmes robotiques,/fr/categorie/systemes-robotiques,301,legacy page 2; new listing has 2 page(s) of 24
+https://kornne.com/kategori/systemes-robotiques/3,/kategori/systemes-robotiques/3,fr,category,Systèmes robotiques,/fr/categorie/systemes-robotiques,301,legacy page 3; new listing has 2 page(s) of 24
+https://kornne.com/kategori/all-products/2,/kategori/all-products/2,fr,category,All Products,/fr/categorie/tous-les-produits,301,legacy page 2; new listing has 2 page(s) of 24 COLLISION: also used by another locale; first mapping kept
+https://kornne.com/kategori/all-products/3,/kategori/all-products/3,fr,category,All Products,/fr/categorie/tous-les-produits,301,legacy page 3; new listing has 2 page(s) of 24 COLLISION: also used by another locale; first mapping kept
+https://kornne.com/urun/scie-sacrificielle,/urun/scie-sacrificielle,fr,product,Scie sacrificielle,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/scie-sacrificielle pending match approval
+https://kornne.com/urun/cellule-de-coupe-classique,/urun/cellule-de-coupe-classique,fr,product,Cellule de coupe classique,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/cellule-de-coupe-classique pending match approval
+https://kornne.com/urun/bande-de-scie,/urun/bande-de-scie,fr,product,Bande de scie,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/bande-de-scie pending match approval
+https://kornne.com/urun/plateformes,/urun/plateformes,fr,product,Plateformes,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/plateformes pending match approval
+https://kornne.com/urun/balance-a-double-rail,/urun/balance-a-double-rail,fr,product,Balance à double rail,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/balance-a-double-rail pending match approval
+https://kornne.com/urun/couteau-de-boucher,/urun/couteau-de-boucher,fr,product,Couteau de boucher,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/couteau-de-boucher pending match approval
+https://kornne.com/urun/presse-a-genoux-pour-evier,/urun/presse-a-genoux-pour-evier,fr,product,Presse à genoux pour évier,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/presse-a-genoux-pour-evier pending match approval
+https://kornne.com/urun/boucher-masat,/urun/boucher-masat,fr,product,Boucher Masat,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/boucher-masat pending match approval
+https://kornne.com/urun/tablier-de-boucher,/urun/tablier-de-boucher,fr,product,Tablier de boucher,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/tablier-de-boucher pending match approval
+https://kornne.com/urun/lavabo-sur-pied,/urun/lavabo-sur-pied,fr,product,Lavabo sur pied,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/lavabo-sur-pied pending match approval
+https://kornne.com/urun/crochets-speciaux-boucher-type-1,/urun/crochets-speciaux-boucher-type-1,fr,product,Crochets spéciaux boucher type 1,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochets-speciaux-boucher-type-1 pending match approval
+https://kornne.com/urun/crochets-speciaux-boucher-type-2,/urun/crochets-speciaux-boucher-type-2,fr,product,Crochets spéciaux boucher type 2,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochets-speciaux-boucher-type-2 pending match approval
+https://kornne.com/urun/bandes,/urun/bandes,fr,product,Bandes,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/bandes pending match approval
+https://kornne.com/urun/sterilisateur-deau,/urun/sterilisateur-deau,fr,product,Stérilisateur d'eau,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/sterilisateur-deau pending match approval
+https://kornne.com/urun/lavage-des-bottes,/urun/lavage-des-bottes,fr,product,Lavage des bottes,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/lavage-des-bottes pending match approval
+https://kornne.com/urun/defile-dhygiene,/urun/defile-dhygiene,fr,product,Défilé d'hygiène,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/defile-dhygiene pending match approval
+https://kornne.com/urun/aspirateur,/urun/aspirateur,fr,product,Aspirateur,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/aspirateur pending match approval
+https://kornne.com/urun/crochet-de-rail-lama-grosse-tete,/urun/crochet-de-rail-lama-grosse-tete,fr,product,Crochet de rail Lama grosse tête,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochet-de-rail-lama-grosse-tete pending match approval
+https://kornne.com/urun/crochets-speciaux-boucher-type-3,/urun/crochets-speciaux-boucher-type-3,fr,product,Crochets spéciaux boucher type 3,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/crochets-speciaux-boucher-type-3 pending match approval
+https://kornne.com/urun/lavage-du-tablier,/urun/lavage-du-tablier,fr,product,Lavage du tablier,/fr/categorie/tous-les-produits,301,separate legacy fr record; suggested product target /fr/produit/lavage-du-tablier pending match approval
+https://kornne.com/kategori/equipements-dabattoir/1,/kategori/equipements-dabattoir/1,fr,category,Équipements d'abattoir,/fr/categorie/equipements-dabattoir,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/equipements-de-sacrifice/1,/kategori/equipements-de-sacrifice/1,fr,category,Équipements de sacrifice,/fr/categorie/equipements-de-sacrifice,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/systemes-robotiques/1,/kategori/systemes-robotiques/1,fr,category,Systèmes robotiques,/fr/categorie/systemes-robotiques,301,duplicate of page 1 (/1)
+https://kornne.com/kategori/all-products/1,/kategori/all-products/1,fr,category,All Products,/fr/categorie/tous-les-produits,301,duplicate of page 1 (/1) COLLISION: also used by another locale; first mapping kept
+https://kornne.com/lang-ru/,/lang-ru/,ru,home,ТЕХНОЛОГИЯ УБОЯ КОРННЕ,/ru,301,session-based language switch → prefixed locale home
+https://kornne.com/siparisim-ne-durumda,/siparisim-ne-durumda,ru,utility,Каков статус моего заказа?,/siparisim-ne-durumda,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/odeme-bildirimi,/odeme-bildirimi,ru,utility,Уведомление о платеже,/odeme-bildirimi,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/banka-hesaplari,/banka-hesaplari,ru,utility,Банковские счета,/banka-hesaplari,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/favorilerim,/favorilerim,ru,utility,мои любимые,/favorilerim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/blog,/blog,ru,blog,блог,/blog,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/sayfa/lang-russian-corparate,/sayfa/lang-russian-corparate,ru,cms_page,Корпоративная информация,/ru/stranica/o-kompanii,301,legacy corporate page (empty body on source)
+https://kornne.com/iletisim,/iletisim,ru,utility,Коммуникация,/ru/kontakty,n/a,same legacy URL for every language (session)
+https://kornne.com/sepetim,/sepetim,ru,utility,моя тележка,/sepetim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/giris-yap,/giris-yap,ru,utility,Авторизоваться,/giris-yap,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/kategori/lang-russian-equipments,/kategori/lang-russian-equipments,ru,category,Оборудование для скотобойни,/ru/kategoriya/oborudovanie-dlya-skotoboyni,301,legacy ru URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-russian-equipments2,/kategori/lang-russian-equipments2,ru,category,Снаряжение для жертвоприношения,/ru/kategoriya/oborudovanie-dlya-zhertvoprinosheniya,301,legacy ru URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-russian-equipments3,/kategori/lang-russian-equipments3,ru,category,Робототехнические системы,/ru/kategoriya/robototekhnicheskie-sistemy,301,legacy ru URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-russian-robotics,/kategori/lang-russian-robotics,ru,category,Все продукты,/ru/kategoriya/vse-produkty,301,legacy ru URL (only reachable with a session cookie)
+https://kornne.com/kayit-ol,/kayit-ol,ru,utility,регистр,/kayit-ol,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/sifremi-unuttum,/sifremi-unuttum,ru,utility,Я забыл свой пароль,/sifremi-unuttum,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/lang-arabic/,/lang-arabic/,ar,home,تقنية ذبح كورن,/ar,301,session-based language switch → prefixed locale home
+https://kornne.com/siparisim-ne-durumda,/siparisim-ne-durumda,ar,utility,ما هي حالة طلبي؟,/siparisim-ne-durumda,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/odeme-bildirimi,/odeme-bildirimi,ar,utility,إشعار الدفع,/odeme-bildirimi,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/banka-hesaplari,/banka-hesaplari,ar,utility,حسابات بنكية,/banka-hesaplari,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/favorilerim,/favorilerim,ar,utility,مفضلتي,/favorilerim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/blog,/blog,ar,blog,مدونة,/blog,planned,keep same path; feature lands in Sprint 7
+https://kornne.com/sayfa/lang-arabic-corparate,/sayfa/lang-arabic-corparate,ar,cms_page,معلومات الشركات,/ar/page/about-us,301,legacy corporate page (empty body on source)
+https://kornne.com/iletisim,/iletisim,ar,utility,تواصل,/ar/contact,n/a,same legacy URL for every language (session)
+https://kornne.com/sepetim,/sepetim,ar,utility,عربتي,/sepetim,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/giris-yap,/giris-yap,ar,utility,تسجيل الدخول,/giris-yap,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/kategori/lang-arabic-equipments,/kategori/lang-arabic-equipments,ar,category,معدات المسلخ,/ar/category/slaughterhouse-equipment,301,legacy ar URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-arabic-equipments2,/kategori/lang-arabic-equipments2,ar,category,معدات التضحية,/ar/category/sacrifice-equipment,301,legacy ar URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-arabic-robotics,/kategori/lang-arabic-robotics,ar,category,الأنظمة الروبوتية,/ar/category/robotic-systems,301,legacy ar URL (only reachable with a session cookie)
+https://kornne.com/kategori/lang-arabic-equipments3,/kategori/lang-arabic-equipments3,ar,category,جميع المنتجات,/ar/category/all-products,301,legacy ar URL (only reachable with a session cookie)
+https://kornne.com/kayit-ol,/kayit-ol,ar,utility,سجل,/kayit-ol,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/sifremi-unuttum,/sifremi-unuttum,ar,utility,لقد نسيت كلمة المرور,/sifremi-unuttum,planned,keep same path; feature lands in Sprint 5
+https://kornne.com/upload/*,/upload/*,*,media,,/upload/*,200-same,originals served byte-identical under the same path
+https://www.kornne.com/*,*,*,host,,https://kornne.com/*,301,keep: legacy host redirects www → apex (302 today; make it 301 at Nginx)

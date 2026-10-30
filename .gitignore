@@ -1,0 +1,53 @@
+# deps / build
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+next-env.d.ts
+
+# env & secrets — never commit
+.env
+.env.*
+!.env.example
+
+# generated prisma client
+src/generated/
+
+# source-site media mirror (large binaries; Sprint 2 decides object storage)
+public/upload/
+data/source-media/
+
+# raw crawl html (re-generatable, may contain session artefacts)
+data/source-crawl/html/
+
+# test output
+test-results/
+playwright-report/
+coverage/
+
+# secrets / dumps / backups (Sprint 2 isolation hardening)
+*.pem
+*.key
+*.p12
+*.dump
+*.sql.gz
+*.backup
+backups/
+data/import-runs/*.secret
+.dbcheck.cjs
+
+# local run logs (evidence stays on disk; e2e/server output can contain test identities)
+data/qa-logs/
+data/*.log
+
+# isolated local test PostgreSQL (disposable copy)
+.test-db/
+/.next-prodlike/
+/.pw-browsers/
+/data/backups/
+
+# QA artefacts (Lighthouse JSON runs, screenshots) — kept locally, reports (.md) are versioned
+docs/qa/lighthouse*/
+docs/qa/screenshots/
+docs/qa/screens-*/
+data/qa/

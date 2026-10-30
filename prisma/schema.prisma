@@ -1,0 +1,1183 @@
+// KORNNE — e-commerce data model (Sprint 1 draft, see docs/architecture/data-model.md).
+// Connection URL: prisma.config.ts (CLI) and src/lib/db.ts (app, adapter-pg). KORNNE-only database.
+//
+// Conventions
+//  - Money is stored as integer minor units (kuruş) in BigInt columns. Never use floats for prices.
+//  - Every record imported from the legacy shop keeps its provenance in LegacySourceRecord.
+//  - Fields marked "[ASSUMPTION]" model a commercial rule that is NOT yet confirmed by the client;
+//    they stay nullable/unused until confirmed (docs/audit/open-questions.md).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ───────────────────────────── Enums ─────────────────────────────
+
+enum Locale {
+  tr
+  en
+  fr
+  ru
+  ar
+}
+
+enum Role {
+  SUPER_ADMIN
+  ADMIN
+  PRODUCT_EDITOR
+  ORDER_OPERATOR
+  SEO_EDITOR
+}
+
+enum PublishStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum TranslationStatus {
+  MISSING
+  MACHINE_DRAFT
+  DRAFT
+  IN_REVIEW
+  APPROVED
+  /// Text exactly as published on the legacy kornne.com (sanitized copy; raw kept in LegacySourceRecord)
+  LEGACY_SOURCE
+}
+
+/// A price is shown to customers / used in Offer / cart / Merchant ONLY when VERIFIED (VAT, currency, amount confirmed).
+enum PriceStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
+}
+
+enum MatchStatus {
+  SUGGESTED
+  APPROVED
+  REJECTED
+}
+
+enum ImportRunStatus {
+  RUNNING
+  DRY_RUN
+  APPLIED
+  FAILED
+  ROLLED_BACK
+}
+
+enum VerificationStatus {
+  UNVERIFIED
+  VERIFIED
+  REJECTED
+}
+
+/// How a product can be bought. Heavy/custom machines are often quote-only.
+enum SaleMode {
+  CART
+  QUOTE_ONLY
+  CART_AND_QUOTE
+}
+
+enum Availability {
+  UNKNOWN
+  IN_STOCK
+  OUT_OF_STOCK
+  PREORDER
+  BACKORDER
+  MADE_TO_ORDER
+}
+
+enum ProductCondition {
+  NEW
+  REFURBISHED
+  USED
+}
+
+enum PriceSource {
+  LEGACY_IMPORT
+  ADMIN
+  CAMPAIGN
+}
+
+/// Technical order lifecycle (docs/architecture/order-payment-contract.md). DRAFT/FAILED added in Sprint 5.
+enum OrderStatus {
+  DRAFT
+  PENDING
+  AWAITING_PAYMENT
+  PAID
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  REFUNDED
+  FAILED
+}
+
+enum PaymentStatus {
+  UNPAID
+  NOTIFIED
+  PAID
+  FAILED
+  REFUNDED
+}
+
+enum OrderChannel {
+  WEB
+  WHATSAPP
+  PHONE
+  QUOTE
+}
+
+enum PageKind {
+  CORPORATE
+  LEGAL
+  INFO
+  LANDING
+  BLOG
+}
+
+enum RedirectSource {
+  LEGACY_AUDIT
+  ADMIN
+  SLUG_CHANGE
+}
+
+enum MerchantItemStatus {
+  UNKNOWN
+  PENDING
+  APPROVED
+  DISAPPROVED
+  NOT_SUBMITTED
+}
+
+// ───────────────────────────── Admin / security ─────────────────────────────
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  name         String
+  passwordHash String
+  role         Role      @default(PRODUCT_EDITOR)
+  active       Boolean   @default(true)
+  /// TOTP secret (encrypted at rest) — MFA enrolment lands with the admin sprint.
+  mfaSecretEnc String?
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  sessions       Session[]
+  auditLogs      AuditLog[]
+  prices         Price[]        @relation("PriceApprovedBy")
+  pricesProposed Price[]        @relation("PriceCreatedBy")
+  priceEvents    PriceEvent[]
+  assignedQuotes QuoteRequest[] @relation("QuoteAssignee")
+  quoteNotes     QuoteNote[]
+  invites        UserInvite[]   @relation("InviteFor")
+}
+
+/// One-time invitation / password-reset link (Sprint 6). Only the SHA-256 of the token is stored; the link is shown
+/// ONCE to the super admin and handed over out of band (no e-mail provider yet).
+model UserInvite {
+  id          String     @id @default(cuid())
+  userId      String
+  tokenHash   String     @unique
+  kind        InviteKind
+  expiresAt   DateTime
+  usedAt      DateTime?
+  createdById String?
+  createdAt   DateTime   @default(now())
+  user        User       @relation("InviteFor", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+enum InviteKind {
+  INVITE
+  RESET
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  /// SHA-256 of the random session token; the raw token only lives in the httpOnly cookie.
+  tokenHash String   @unique
+  userId    String
+  expiresAt DateTime
+  ipHash    String?
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  /// "email:<addr>" or "ip:<salted hash>"
+  key       String
+  createdAt DateTime @default(now())
+
+  @@index([key, createdAt])
+}
+
+model AuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  /// Redacted snapshots (no secrets / password hashes / tokens)
+  before     Json?
+  after      Json?
+  ipHash     String?
+  createdAt  DateTime @default(now())
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+}
+
+// ───────────────────────────── Catalog ─────────────────────────────
+
+model Brand {
+  id       String             @id @default(cuid())
+  name     String             @unique
+  slug     String             @unique
+  /// Brand values are never invented; legacy JSON-LD used two different spellings.
+  status   VerificationStatus @default(UNVERIFIED)
+  products Product[]
+}
+
+model Category {
+  id            String                @id @default(cuid())
+  /// Stable import key (legacy Turkish slug, e.g. "mezbaha-ekipmanlari")
+  key           String                @unique
+  parentId      String?
+  sortOrder     Int                   @default(0)
+  status        PublishStatus         @default(DRAFT)
+  /// Virtual "all products" listing on the legacy shop (kategori/tum-urunler)
+  isAllProducts Boolean               @default(false)
+  createdAt     DateTime              @default(now())
+  updatedAt     DateTime              @updatedAt
+  parent        Category?             @relation("CategoryTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children      Category[]            @relation("CategoryTree")
+  translations  CategoryTranslation[]
+  products      ProductCategory[]
+}
+
+model CategoryTranslation {
+  id             String            @id @default(cuid())
+  categoryId     String
+  locale         Locale
+  name           String
+  slug           String
+  description    String?
+  seoTitle       String?
+  seoDescription String?
+  status         TranslationStatus @default(DRAFT)
+  importChecksum String?
+  category       Category          @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+  @@unique([locale, slug])
+}
+
+model Product {
+  id                    String             @id @default(cuid())
+  /// Verified SKU (unique). Legacy "stock code" candidates stay in LegacySourceRecord until confirmed.
+  sku                   String?            @unique
+  brandId               String?
+  status                PublishStatus      @default(DRAFT)
+  saleMode              SaleMode           @default(CART_AND_QUOTE)
+  condition             ProductCondition   @default(NEW)
+  /// Only real, verified identifiers. Never generated.
+  gtin                  String?
+  mpn                   String?
+  /// [ASSUMPTION] whether a manufacturer identifier exists (Merchant identifier_exists)
+  identifierExists      Boolean?
+  googleProductCategory String?
+  productType           String?
+  /// Weight in grams (shipping) — [ASSUMPTION] unknown for all legacy products
+  weightGrams           Int?
+  verificationStatus    VerificationStatus @default(UNVERIFIED)
+  /// Stable import key: "<source>:<legacyId>", e.g. "kornne.com:78" (Turkish source record)
+  sourceKey             String?            @unique
+  /// Held back for a human decision (e.g. not listed in "Tüm Ürünler", conflicting data)
+  needsReview           Boolean            @default(false)
+  reviewReasons         String[]
+  sortOrder             Int                @default(0)
+  /// Set when an editor archives the product (products are never hard-deleted — quotes/history keep pointing at them)
+  archivedAt            DateTime?
+  createdAt             DateTime           @default(now())
+  updatedAt             DateTime           @updatedAt
+
+  documents        ProductDocument[]
+  faqItems         FaqItem[]
+  brand            Brand?                  @relation(fields: [brandId], references: [id], onDelete: SetNull)
+  translations     ProductTranslation[]
+  categories       ProductCategory[]
+  media            ProductMedia[]
+  variants         ProductVariant[]
+  prices           Price[]
+  inventory        Inventory[]
+  specs            ProductSpec[]
+  orderItems       OrderItem[]
+  merchantItems    MerchantItemMapping[]
+  matchSuggestions LegacyMatchSuggestion[]
+  quoteItems       QuoteItem[]
+  cartItems        CartItem[]
+  related          ProductRelation[]       @relation("RelFrom")
+  relatedTo        ProductRelation[]       @relation("RelTo")
+
+  @@index([status])
+}
+
+model ProductTranslation {
+  id               String            @id @default(cuid())
+  productId        String
+  locale           Locale
+  title            String
+  slug             String
+  shortDescription String?
+  /// Sanitized HTML (allow-list) — legacy HTML is sanitized on import, never rendered raw.
+  descriptionHtml  String?
+  seoTitle         String?
+  seoDescription   String?
+  status           TranslationStatus @default(DRAFT)
+  /// Hash of the values last written by the importer; a mismatch means an editor changed the row → importer skips it
+  importChecksum   String?
+  legacyRecordId   String?
+  updatedAt        DateTime          @updatedAt
+  product          Product           @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, locale])
+  @@unique([locale, slug])
+}
+
+model ProductCategory {
+  productId  String
+  categoryId String
+  isPrimary  Boolean  @default(false)
+  sortOrder  Int      @default(0)
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@id([productId, categoryId])
+  @@index([categoryId])
+}
+
+model ProductRelation {
+  fromId String
+  toId   String
+  kind   String  @default("related")
+  from   Product @relation("RelFrom", fields: [fromId], references: [id], onDelete: Cascade)
+  to     Product @relation("RelTo", fields: [toId], references: [id], onDelete: Cascade)
+
+  @@id([fromId, toId, kind])
+}
+
+model ProductVariant {
+  id            String                @id @default(cuid())
+  productId     String
+  sku           String?               @unique
+  /// Legacy variant key, e.g. "kornne.com:107:905"
+  sourceKey     String?               @unique
+  /// e.g. {"tr":"6'lı Kanca","en":"6-pack hook"} — option label per locale
+  labels        Json
+  sortOrder     Int                   @default(0)
+  active        Boolean               @default(true)
+  product       Product               @relation(fields: [productId], references: [id], onDelete: Cascade)
+  prices        Price[]
+  inventory     Inventory[]
+  orderItems    OrderItem[]
+  merchantItems MerchantItemMapping[]
+
+  @@index([productId])
+}
+
+model ProductSpec {
+  id         String             @id @default(cuid())
+  productId  String
+  /// Spec key (e.g. "power_kw"); label/value per locale
+  key        String
+  labels     Json
+  values     Json
+  unit       String?
+  sortOrder  Int                @default(0)
+  /// Specs are only published once verified from a real source (datasheet, manufacturer)
+  status     VerificationStatus @default(UNVERIFIED)
+  /// Source of a verified value (datasheet name/date) — required to mark a spec VERIFIED
+  source     String?
+  verifiedAt DateTime?
+  product    Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, key])
+}
+
+/// Technical document (PDF) of a product. Shown on the storefront only when VERIFIED (real datasheet).
+model ProductDocument {
+  id          String             @id @default(cuid())
+  productId   String
+  /// null = language-neutral document
+  locale      Locale?
+  title       String
+  storageKey  String             @unique
+  publicPath  String             @unique
+  sha256      String
+  mime        String
+  bytes       Int
+  status      VerificationStatus @default(UNVERIFIED)
+  sortOrder   Int                @default(0)
+  createdById String?
+  createdAt   DateTime           @default(now())
+  product     Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([productId])
+}
+
+/// Price rows are append-only: a change inserts a new row (price history = all rows).
+model Price {
+  id             String          @id @default(cuid())
+  productId      String
+  variantId      String?
+  currency       String          @default("TRY") @db.Char(3)
+  /// Selling price in minor units (kuruş)
+  amountMinor    BigInt
+  /// "Was" price; a discount label is shown only when compareAtMinor > amountMinor
+  compareAtMinor BigInt?
+  /// [ASSUMPTION] VAT handling of legacy prices is unknown
+  vatIncluded    Boolean?
+  vatRateBp      Int?
+  validFrom      DateTime        @default(now())
+  validTo        DateTime?
+  source         PriceSource     @default(ADMIN)
+  /// Customer-facing only when VERIFIED (VAT / currency / amount confirmed by the client)
+  status         PriceStatus     @default(UNVERIFIED)
+  /// Raw legacy strings exactly as captured ("1.807.479,94 TL" parsed) — never silently changed
+  rawAmount      String?
+  rawCompareAt   String?
+  sourceLocale   Locale?
+  reviewReasons  String[]
+  approvedById   String?
+  approvedAt     DateTime?
+  /// Sprint 6: who entered an admin price proposal (four-eyes rule: approver ≠ proposer)
+  createdById    String?
+  /// Where the figure comes from, e.g. "Müşteri fiyat listesi 2026-11 (e-posta)" — required for admin proposals
+  evidence       String?
+  note           String?
+  createdAt      DateTime        @default(now())
+  product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant        ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  approvedBy     User?           @relation("PriceApprovedBy", fields: [approvedById], references: [id], onDelete: SetNull)
+  createdBy      User?           @relation("PriceCreatedBy", fields: [createdById], references: [id], onDelete: SetNull)
+  events         PriceEvent[]
+
+  @@index([productId, variantId, validFrom])
+}
+
+/// Price decision history (proposed / approved / rejected / revoked). Price rows themselves are never deleted.
+model PriceEvent {
+  id        String   @id @default(cuid())
+  priceId   String
+  action    String
+  actorId   String?
+  note      String?
+  createdAt DateTime @default(now())
+  price     Price    @relation(fields: [priceId], references: [id], onDelete: Cascade)
+  actor     User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+
+  @@index([priceId])
+}
+
+model Inventory {
+  id           String          @id @default(cuid())
+  productId    String
+  variantId    String?
+  availability Availability    @default(UNKNOWN)
+  quantity     Int?
+  leadTimeDays Int?
+  updatedAt    DateTime        @updatedAt
+  product      Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant      ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, variantId])
+}
+
+// ───────────────────────────── Media ─────────────────────────────
+
+model MediaAsset {
+  id           String             @id @default(cuid())
+  /// Storage key of the untouched original (e.g. "originals/Kornne-Dairesel-Hucre-63.jpg")
+  storageKey   String             @unique
+  /// Public path kept stable for Google Images (legacy /upload/<name> preserved where possible)
+  publicPath   String             @unique
+  sourceUrl    String?
+  sha256       String
+  mime         String
+  bytes        Int
+  width        Int?
+  height       Int?
+  /// "legacy_import" (the 445 preserved originals) | "admin_upload"
+  origin       String             @default("legacy_import")
+  uploadedById String?
+  createdAt    DateTime           @default(now())
+  translations MediaTranslation[]
+  products     ProductMedia[]
+  banners      Banner[]
+
+  @@index([sha256])
+}
+
+model MediaTranslation {
+  id             String     @id @default(cuid())
+  mediaId        String
+  locale         Locale
+  alt            String
+  caption        String?
+  /// true = generated draft (e.g. "<title> – görsel 2"), must be reviewed by an editor
+  autoGenerated  Boolean    @default(false)
+  importChecksum String?
+  media          MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Cascade)
+
+  @@unique([mediaId, locale])
+}
+
+model ProductMedia {
+  productId String
+  mediaId   String
+  sortOrder Int        @default(0)
+  isPrimary Boolean    @default(false)
+  product   Product    @relation(fields: [productId], references: [id], onDelete: Cascade)
+  media     MediaAsset @relation(fields: [mediaId], references: [id], onDelete: Restrict)
+
+  @@id([productId, mediaId])
+}
+
+// ───────────────────────────── Customers / orders ─────────────────────────────
+
+model Customer {
+  id                 String    @id @default(cuid())
+  email              String    @unique
+  name               String?
+  phone              String?
+  /// null until the customer sets a password (legacy hashes are not migrated — reset flow instead)
+  passwordHash       String?
+  kvkkConsentAt      DateTime?
+  marketingConsentAt DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+  orders             Order[]
+}
+
+model Order {
+  id              String             @id @default(cuid())
+  number          String             @unique
+  customerId      String?
+  status          OrderStatus        @default(PENDING)
+  paymentStatus   PaymentStatus      @default(UNPAID)
+  channel         OrderChannel       @default(WEB)
+  currency        String             @default("TRY") @db.Char(3)
+  subtotalMinor   BigInt
+  shippingMinor   BigInt             @default(0)
+  taxMinor        BigInt             @default(0)
+  totalMinor      BigInt
+  /// Address/contact snapshots at order time (PII — access is role-restricted and audited)
+  billing         Json?
+  shipping        Json?
+  note            String?
+  /// Idempotency key for checkout submission / payment callbacks
+  idempotencyKey  String?            @unique
+  /// SHA-256 of the guest access token (guest order lookup without exposing sequential ids)
+  accessTokenHash String?            @unique
+  /// Rows created by isolated tests/fixtures — never shown on the storefront or admin lists
+  isTest          Boolean            @default(false)
+  placedAt        DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  customer        Customer?          @relation(fields: [customerId], references: [id], onDelete: SetNull)
+  items           OrderItem[]
+  payments        PaymentAttempt[]
+  statusEvents    OrderStatusEvent[]
+  /// "BANK_TRANSFER" (EFT/Havale, Sprint 12) — null for legacy/test orders
+  paymentMethod   String?
+  paymentNotices  PaymentNotice[]
+
+  @@index([status, placedAt])
+}
+
+model OrderItem {
+  id             String          @id @default(cuid())
+  orderId        String
+  productId      String?
+  variantId      String?
+  titleSnapshot  String
+  skuSnapshot    String?
+  unitPriceMinor BigInt
+  quantity       Int
+  lineTotalMinor BigInt
+  order          Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product        Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+  variant        ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@index([orderId])
+}
+
+// ───────────────────────────── Content / SEO ─────────────────────────────
+
+model Page {
+  id              String            @id @default(cuid())
+  kind            PageKind
+  /// Internal key, e.g. "kurumsal", "mesafeli-satis-sozlesmesi"
+  key             String            @unique
+  status          PublishStatus     @default(DRAFT)
+  /// Legal texts must be approved by the client/lawyer before publishing
+  legalApprovedAt DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  translations    PageTranslation[]
+}
+
+/// Working copy (draft) of a page in one language. The storefront never reads these fields directly: it serves the
+/// PUBLISHED revision (publishedRevision / publishedSlug) — editing a live page does not change it until republished.
+model PageTranslation {
+  id                  String            @id @default(cuid())
+  pageId              String
+  locale              Locale
+  title               String
+  slug                String
+  excerpt             String?
+  /// Sanitized HTML (allow-list); empty = no own text in this language (storefront shows the Turkish text + notice)
+  bodyHtml            String
+  seoTitle            String?
+  seoDescription      String?
+  /// Legacy column (Sprint 1), superseded by `state`
+  status              TranslationStatus @default(DRAFT)
+  state               ContentState      @default(DRAFT)
+  publishedRevisionId String?           @unique
+  publishedSlug       String?
+  publishedAt         DateTime?
+  authorId            String?
+  updatedById         String?
+  updatedAt           DateTime          @default(now()) @updatedAt
+  page                Page              @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  publishedRevision   PageRevision?     @relation("PublishedRevision", fields: [publishedRevisionId], references: [id], onDelete: SetNull)
+  revisions           PageRevision[]    @relation("Revisions")
+
+  @@unique([pageId, locale])
+  @@unique([locale, slug])
+  @@unique([locale, publishedSlug])
+}
+
+/// Immutable snapshot of a page translation, written on every save (history, preview, rollback).
+model PageRevision {
+  id                String           @id @default(cuid())
+  pageTranslationId String
+  title             String
+  slug              String
+  excerpt           String?
+  bodyHtml          String
+  seoTitle          String?
+  seoDescription    String?
+  authorId          String?
+  note              String?
+  createdAt         DateTime         @default(now())
+  translation       PageTranslation  @relation("Revisions", fields: [pageTranslationId], references: [id], onDelete: Cascade)
+  publishedFor      PageTranslation? @relation("PublishedRevision")
+
+  @@index([pageTranslationId, createdAt])
+}
+
+enum ContentState {
+  DRAFT
+  REVIEW
+  PUBLISHED
+  ARCHIVED
+}
+
+/// Question/answer content (site FAQ or product-specific Q&A for GEO). Published only with real, verified answers.
+model FaqItem {
+  id          String       @id @default(cuid())
+  locale      Locale
+  question    String
+  answerHtml  String
+  /// Optional: Q&A shown on a product page
+  productId   String?
+  sortOrder   Int          @default(0)
+  state       ContentState @default(DRAFT)
+  /// Where the answer comes from (datasheet, company statement) — shown to editors only
+  source      String?
+  updatedById String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  product     Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([locale, state])
+}
+
+enum BannerPlacement {
+  HOME_STRIP
+  TOPBAR
+}
+
+/// Time-boxed announcement / campaign. Visible only while PUBLISHED and inside [startsAt, endsAt].
+model Banner {
+  id           String              @id @default(cuid())
+  placement    BannerPlacement     @default(HOME_STRIP)
+  state        ContentState        @default(DRAFT)
+  startsAt     DateTime?
+  endsAt       DateTime?
+  /// Internal path ("/kategori/...") or https URL
+  linkPath     String?
+  mediaId      String?
+  sortOrder    Int                 @default(0)
+  updatedById  String?
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  media        MediaAsset?         @relation(fields: [mediaId], references: [id], onDelete: SetNull)
+  translations BannerTranslation[]
+}
+
+model BannerTranslation {
+  id       String  @id @default(cuid())
+  bannerId String
+  locale   Locale
+  title    String
+  text     String?
+  ctaLabel String?
+  banner   Banner  @relation(fields: [bannerId], references: [id], onDelete: Cascade)
+
+  @@unique([bannerId, locale])
+}
+
+enum MenuLocation {
+  HEADER
+  FOOTER_CORPORATE
+  FOOTER_LEGAL
+}
+
+/// Header / footer link. Target = a CMS page (by key), a category (by key) or a path. Links to pages that are not
+/// published in a language are not rendered (no broken links).
+model MenuItem {
+  id          String       @id @default(cuid())
+  location    MenuLocation
+  kind        String /// "page" | "category" | "path"
+  pageKey     String?
+  categoryKey String?
+  path        String?
+  /// {"tr":"Kurumsal","en":"Corporate",...}; missing language → Turkish label
+  labels      Json
+  sortOrder   Int          @default(0)
+  active      Boolean      @default(true)
+  updatedById String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  @@index([location, sortOrder])
+}
+
+/// Company / contact / commerce settings. Unverified values never appear on the storefront as confirmed facts.
+model SiteSetting {
+  key         String             @id
+  value       Json
+  status      VerificationStatus @default(UNVERIFIED)
+  /// Where the value comes from ("kornne.com 2026-10-21", "müşteri e-postası ...")
+  source      String?
+  updatedById String?
+  updatedAt   DateTime           @updatedAt
+}
+
+model Redirect {
+  id         String         @id @default(cuid())
+  /// Decoded path without origin, e.g. "/kategori/tum-urunler/1"
+  fromPath   String         @unique
+  toPath     String
+  statusCode Int            @default(301)
+  active     Boolean        @default(true)
+  source     RedirectSource @default(ADMIN)
+  note       String?
+  hits       Int            @default(0)
+  lastHitAt  DateTime?
+  createdAt  DateTime       @default(now())
+}
+
+// ───────────────────────────── Google Merchant ─────────────────────────────
+
+/// Keeps the EXISTING Merchant Center identifiers. offerId values are copied from the live account
+/// (read-only export) and must not change on migration.
+model MerchantItemMapping {
+  id                  String             @id @default(cuid())
+  productId           String
+  variantId           String?
+  offerId             String
+  contentLanguage     String             @db.VarChar(5)
+  feedLabel           String
+  /// Merchant API product resource name (accounts/{a}/products/{p}) once known
+  merchantProductName String?
+  dataSource          String?
+  status              MerchantItemStatus @default(UNKNOWN)
+  lastSyncedAt        DateTime?
+  note                String?
+  product             Product            @relation(fields: [productId], references: [id], onDelete: Cascade)
+  variant             ProductVariant?    @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  @@unique([offerId, contentLanguage, feedLabel])
+  @@index([productId])
+}
+
+model MerchantSyncRun {
+  id          String    @id @default(cuid())
+  /// "dry-run" | "feed-preview" | "mock" | "api" — "api" is impossible while MERCHANT_API_MODE is not "live"
+  mode        String
+  startedAt   DateTime  @default(now())
+  finishedAt  DateTime?
+  itemCount   Int       @default(0)
+  errorCount  Int       @default(0)
+  summary     Json?
+  /// Sprint 9: outcome label shown in the admin ("SIMULATED", "NOT_SENT", …) and who started it
+  status      String?
+  createdById String?
+}
+
+/// Technical SEO audit run (Admin › SEO QA). Results are URL-level findings — no personal data.
+model SeoAuditRun {
+  id           String    @id @default(cuid())
+  /// "dev" (current environment) | "prodlike" (offline production-like preview)
+  mode         String
+  baseUrl      String
+  startedAt    DateTime  @default(now())
+  finishedAt   DateTime?
+  urlCount     Int       @default(0)
+  errorCount   Int       @default(0)
+  warningCount Int       @default(0)
+  results      Json?
+  createdById  String?
+
+  @@index([startedAt])
+}
+
+// ───────────────────────────── Legacy provenance ─────────────────────────────
+
+/// One row per record captured from kornne.com (or a future admin/DB export).
+model LegacySourceRecord {
+  id              String   @id @default(cuid())
+  entityType      String /// "product" | "category" | "page" | "media"
+  legacyId        String
+  locale          Locale
+  sourceUrl       String
+  capturedAt      DateTime
+  pageSha256      String?
+  /// Raw captured values (price strings, stock code candidate, flags, ...)
+  payload         Json
+  /// New-system entity this record was imported into (null = not yet imported)
+  targetId        String?
+  migrationStatus String   @default("pending")
+
+  @@unique([entityType, legacyId, locale])
+}
+
+/// Suggested link between a legacy EN/FR product record (separate record on kornne.com) and the Turkish source product.
+/// Never applied automatically: an editor approves it in Admin › Catalog QA, which then creates the translation.
+model LegacyMatchSuggestion {
+  id                 String      @id @default(cuid())
+  sourceLocale       Locale
+  sourceLegacyId     String
+  productId          String
+  /// 0–100, see docs/data-migration/source-to-target-map.md
+  confidence         Int
+  method             String
+  evidence           Json
+  status             MatchStatus @default(SUGGESTED)
+  decidedById        String?
+  decidedAt          DateTime?
+  /// Editor's reason (reject / re-match), shown in the review history
+  note               String?
+  /// Redirect target of the legacy URL before the translation was published (restored on unpublish)
+  previousRedirectTo String?
+  createdAt          DateTime    @default(now())
+  product            Product     @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([sourceLocale, sourceLegacyId])
+  @@index([status])
+}
+
+/// One row per importer execution (dry-run or apply) with counts, planned/applied changes and created ids (rollback).
+model ImportRun {
+  id          String          @id @default(cuid())
+  mode        String
+  status      ImportRunStatus @default(RUNNING)
+  sourceHash  String
+  startedAt   DateTime        @default(now())
+  finishedAt  DateTime?
+  summary     Json?
+  createdRefs Json?
+}
+
+// ───────────────────────────── Quotes (Sprint 5 — live) ─────────────────────────────
+
+/// NEW → IN_REVIEW → QUOTE_PREPARED → RESPONDED (sent to the customer OUTSIDE the panel; noted by the operator) → CLOSED
+enum QuoteStatus {
+  NEW
+  IN_REVIEW
+  RESPONDED
+  CLOSED
+  SPAM
+  QUOTE_PREPARED
+}
+
+enum OutboxStatus {
+  /// no provider / recipient configured — kept, never shown as sent
+  BLOCKED
+  PENDING
+  SENT
+  FAILED
+  CANCELLED
+}
+
+/// Transactional outbox for notifications (provider-agnostic). Payloads carry references only, never PII.
+model NotificationOutbox {
+  id         String       @id @default(cuid())
+  kind       String /// e.g. "quote.created"
+  channel    String /// "email" | "sms" | "whatsapp"
+  entityType String
+  entityId   String
+  /// Filled only once a real recipient is configured
+  recipient  String?
+  payload    Json
+  status     OutboxStatus @default(BLOCKED)
+  attempts   Int          @default(0)
+  lastError  String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  sentAt     DateTime?
+
+  @@unique([kind, channel, entityId])
+  @@index([status, createdAt])
+}
+
+/// Internal note on a quote (never shown to the customer).
+model QuoteNote {
+  id             String       @id @default(cuid())
+  quoteRequestId String
+  authorId       String?
+  body           String
+  createdAt      DateTime     @default(now())
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  author         User?        @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  @@index([quoteRequestId])
+}
+
+enum QuoteSource {
+  PRODUCT_PAGE
+  QUOTE_LIST
+}
+
+/// A customer's request for a price quotation. Contains contact PII → role-restricted (quotes module), audited,
+/// with a retention date. Never contains a price (legacy prices are unverified).
+model QuoteRequest {
+  id                   String             @id @default(cuid())
+  /// Human-facing reference, e.g. "TKL-20261022-7K2QX9"
+  reference            String             @unique
+  status               QuoteStatus        @default(NEW)
+  source               QuoteSource        @default(QUOTE_LIST)
+  locale               Locale
+  name                 String
+  company              String?
+  email                String?
+  phone                String?
+  message              String?
+  /// Version of the privacy notice shown with the form (text pending legal approval → no "consent" claim)
+  privacyNoticeVersion String
+  /// Client-generated per form session; duplicate submissions return the original request
+  idempotencyKey       String             @unique
+  ipHash               String?
+  /// Draft retention date. No purge job runs: the legal retention period is not approved yet (Sprint 6 shows the
+  /// policy draft and the affected count only).
+  retainUntil          DateTime
+  isTest               Boolean            @default(false)
+  /// CRM (Sprint 6)
+  assignedToId         String?
+  followUpAt           DateTime?
+  /// "won" | "lost" | "no_response" | "duplicate" — set when CLOSED
+  outcome              String?
+  /// Optimistic concurrency token: every CRM write must match the version it read
+  version              Int                @default(0)
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  items                QuoteItem[]
+  events               QuoteStatusEvent[]
+  notes                QuoteNote[]
+  assignedTo           User?              @relation("QuoteAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([ipHash, createdAt])
+  @@index([email, createdAt])
+}
+
+/// Requested product line with a snapshot of what the customer saw (title/slug) — NO price snapshot.
+model QuoteItem {
+  id             String       @id @default(cuid())
+  quoteRequestId String
+  productId      String?
+  /// Product.sourceKey at request time (e.g. "kornne.com:78")
+  sourceKey      String
+  variantId      String?
+  variantLabel   String?
+  titleSnapshot  String
+  slugSnapshot   String
+  quantity       Int
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+  product        Product?     @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  @@index([quoteRequestId])
+}
+
+model QuoteStatusEvent {
+  id             String       @id @default(cuid())
+  quoteRequestId String
+  fromStatus     QuoteStatus?
+  toStatus       QuoteStatus
+  actorId        String?
+  note           String?
+  createdAt      DateTime     @default(now())
+  quoteRequest   QuoteRequest @relation(fields: [quoteRequestId], references: [id], onDelete: Cascade)
+
+  @@index([quoteRequestId])
+}
+
+// ───────────────────────────── Cart / payments (Sprint 5 — LOCKED: ENABLE_PAID_CHECKOUT=false) ─────────────────────────────
+
+enum CartStatus {
+  ACTIVE
+  CONVERTED
+  ABANDONED
+}
+
+/// Priced-commerce cart. Only products with a VERIFIED price can enter (enforced in src/lib/commerce/cart.ts).
+model Cart {
+  id         String     @id @default(cuid())
+  /// SHA-256 of the cart cookie token
+  tokenHash  String     @unique
+  customerId String?
+  status     CartStatus @default(ACTIVE)
+  currency   String     @default("TRY") @db.Char(3)
+  isTest     Boolean    @default(false)
+  expiresAt  DateTime
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  items      CartItem[]
+}
+
+model CartItem {
+  id         String  @id @default(cuid())
+  cartId     String
+  productId  String
+  /// "" for products without variants (keeps the unique constraint simple)
+  variantKey String  @default("")
+  quantity   Int
+  cart       Cart    @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product    Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, productId, variantKey])
+}
+
+/// Company bank accounts shown for EFT/Havale (Sprint 12). Shown publicly ONLY when active AND the IBAN passes the
+/// TR mod-97 check — placeholder IBANs ("TR00 0000 …") are never published.
+model BankAccount {
+  id            String          @id @default(cuid())
+  bankName      String
+  accountHolder String
+  /// normalised (no spaces, upper case); empty until entered by an admin
+  iban          String          @default("")
+  branch        String?
+  currency      String          @default("TRY") @db.Char(3)
+  active        Boolean         @default(false)
+  sortOrder     Int             @default(0)
+  updatedById   String?
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  notices       PaymentNotice[]
+}
+
+enum PaymentNoticeStatus {
+  PENDING
+  MATCHED
+  REJECTED
+}
+
+/// Customer's "I have paid" notice for an EFT/Havale order (legacy /odeme-bildirimi). Never marks the order paid by
+/// itself — an admin confirms the incoming transfer.
+model PaymentNotice {
+  id            String              @id @default(cuid())
+  orderId       String
+  bankAccountId String?
+  payerName     String
+  amountMinor   BigInt?
+  paidAt        DateTime?
+  note          String?
+  status        PaymentNoticeStatus @default(PENDING)
+  ipHash        String?
+  reviewedById  String?
+  reviewedAt    DateTime?
+  createdAt     DateTime            @default(now())
+  order         Order               @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  bankAccount   BankAccount?        @relation(fields: [bankAccountId], references: [id], onDelete: SetNull)
+
+  @@index([status, createdAt])
+  @@index([orderId])
+}
+
+model OrderStatusEvent {
+  id         String       @id @default(cuid())
+  orderId    String
+  fromStatus OrderStatus?
+  toStatus   OrderStatus
+  actor      String
+  reason     String?
+  createdAt  DateTime     @default(now())
+  order      Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+enum PaymentAttemptStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+}
+
+/// One payment try at a provider. Amount/currency are copied from the order and re-checked on every callback.
+model PaymentAttempt {
+  id             String               @id @default(cuid())
+  orderId        String
+  provider       String
+  /// Provider-side reference (unique per provider)
+  providerRef    String               @unique
+  amountMinor    BigInt
+  currency       String               @db.Char(3)
+  status         PaymentAttemptStatus @default(PENDING)
+  idempotencyKey String               @unique
+  failureReason  String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  order          Order                @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+/// Every received provider callback (also invalid ones) — replay protection via (provider, eventId).
+model PaymentWebhookEvent {
+  id             String    @id @default(cuid())
+  provider       String
+  eventId        String
+  signatureValid Boolean
+  payload        Json
+  outcome        String
+  receivedAt     DateTime  @default(now())
+  processedAt    DateTime?
+
+  @@unique([provider, eventId])
+}

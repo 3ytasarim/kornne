@@ -1,0 +1,186 @@
+{
+ "mode": "apply",
+ "runId": "cmviqg53g00008cp6zelxpuzw",
+ "database": {
+  "endpoint": "ep-silent-dew-b9g275pf",
+  "database": "neondb"
+ },
+ "sourceHash": "f260e3c222690d938e18c0aea869a35b80ebe1c4b59bdead6ec313968ae12f42",
+ "startedAt": "2026-10-21T23:17:35.680Z",
+ "finishedAt": "2026-10-21T23:17:57.283Z",
+ "before": {
+  "products": 41,
+  "productTranslations": 41,
+  "categories": 4,
+  "categoryTranslations": 20,
+  "productCategories": 79,
+  "mediaAssets": 445,
+  "mediaTranslations": 114,
+  "productMedia": 118,
+  "variants": 2,
+  "prices": 41,
+  "inventory": 41,
+  "legacyRecords": 594,
+  "matchSuggestions": 74,
+  "redirects": 125
+ },
+ "after": {
+  "products": 41,
+  "productTranslations": 41,
+  "categories": 4,
+  "categoryTranslations": 20,
+  "productCategories": 79,
+  "mediaAssets": 445,
+  "mediaTranslations": 114,
+  "productMedia": 118,
+  "variants": 2,
+  "prices": 41,
+  "inventory": 41,
+  "legacyRecords": 594,
+  "matchSuggestions": 74,
+  "redirects": 125
+ },
+ "changes": {
+  "category": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 4,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "categoryTranslation": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 20,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "mediaAsset": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 445,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "product": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 41,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "productTranslation": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 41,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "productCategory": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 79,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "productMedia": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 118,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "mediaTranslation": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 118,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "price": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 41,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "inventory": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 41,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "variant": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 2,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "legacySourceRecord": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 594,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "matchSuggestion": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 74,
+   "skippedEdited": 0,
+   "conflict": 0
+  },
+  "redirect": {
+   "create": 0,
+   "update": 0,
+   "unchanged": 125,
+   "skippedEdited": 0,
+   "conflict": 0
+  }
+ },
+ "checks": {
+  "products": 41,
+  "publishedProducts": 40,
+  "heldForReview": [
+   "208 İkizray Kurban Kancası"
+  ],
+  "duplicateSourceKeys": [],
+  "duplicateTrSlugs": [],
+  "duplicateMediaKeys": [],
+  "duplicateMediaPaths": [],
+  "productsWithoutImages": [],
+  "productsWithoutPrice": [],
+  "invalidDiscounts": [
+   "104",
+   "135",
+   "136",
+   "208",
+   "209",
+   "217"
+  ],
+  "brokenProductImages": [
+   "80: https://kornne.com/upload/Kornne-Klasik-Kesim-Hucre-61.jpg"
+  ],
+  "missingMedia": 6,
+  "mojibake": 0,
+  "nonNfc": 0,
+  "arabicCategoryNames": 4,
+  "matchSuggestions": 74,
+  "matchConfidence": {
+   "high": 51,
+   "medium": 15,
+   "low": 8
+  },
+  "unmatchedLegacy": [],
+  "legacyRecords": 594,
+  "redirects": 125,
+  "mediaAssets": 445,
+  "productMediaLinks": 118,
+  "productCategoryLinks": 79,
+  "variants": 2
+ },
+ "notes": [],
+ "createdRefCounts": {}
+}
