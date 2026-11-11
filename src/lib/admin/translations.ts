@@ -2,7 +2,7 @@ import type { Locale, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { translationChecksum } from "@/lib/catalog/checksum";
 import { sanitizeRichText } from "@/lib/catalog/sanitize";
-import { localizePath } from "@/lib/i18n/routes";
+import { localizePath, pathVariants } from "@/lib/i18n/routes";
 import { AdminError } from "./action-state";
 
 /**
@@ -116,7 +116,7 @@ export async function publishProductTranslation(db: PrismaClient, actor: Actor, 
     const flipped = await tx.productTranslation.updateMany({ where: { id: t.id, status: t.status }, data: { status: "APPROVED" } });
     if (flipped.count !== 1) throw new AdminError("Bu sürüm aynı anda yayınlandı.");
     const path = localizePath(locale, `/urun/${t.slug}`);
-    const shadow = await tx.redirect.findUnique({ where: { fromPath: path } });
+    const shadow = await tx.redirect.findFirst({ where: { fromPath: { in: pathVariants(locale, `/urun/${t.slug}`) }, active: true } });
     if (shadow?.active) throw new AdminError(`“${path}” bir yönlendirmenin kaynağı; ürün adresini değiştirin.`);
     let redirect: { fromPath: string; from: string; to: string } | null = null;
     const m = t.legacyRecordId ? await tx.legacyMatchSuggestion.findFirst({ where: { productId, sourceLocale: locale, status: "APPROVED" } }) : null;
@@ -162,7 +162,7 @@ export async function unpublishProductTranslation(db: PrismaClient, actor: Actor
 
 /** Per-language coverage (Admin › Çeviriler). */
 export async function coverageReport(db: PrismaClient) {
-  const LOCALES: Locale[] = ["tr", "en", "fr", "ru", "ar"];
+  const LOCALES: Locale[] = ["tr", "en", "de", "fr", "ru", "ar"];
   const [products, categories, pages, menus, media, matches] = await Promise.all([
     db.product.findMany({ where: { status: "PUBLISHED", needsReview: false }, select: { translations: { select: { locale: true, status: true, seoTitle: true, seoDescription: true } } } }),
     db.category.findMany({ where: { status: "PUBLISHED" }, select: { translations: { select: { locale: true, status: true, seoTitle: true } } } }),

@@ -133,23 +133,22 @@ describe("SEO language policy (buildMetadata)", () => {
     }
   });
 
-  it("default: only Turkish is indexable; no hreflang towards unapproved languages", () => {
+  it("default (2026-11): every enabled language is indexable, hreflang between all, x-default = English", () => {
     process.env.SITE_INDEXABLE = "true";
     delete process.env.SEO_LOCALES;
-    expect(seoLocales()).toEqual(["tr"]);
-    const tr = buildMetadata({ title: "t", description: "d", path: "/", locale: "tr" });
-    const en = buildMetadata({ title: "t", description: "d", path: "/", locale: "en" });
-    expect(tr.robots).toMatchObject({ index: true });
-    expect(en.robots).toMatchObject({ index: false });
-    expect(tr.alternates?.languages).toBeUndefined();
+    expect(seoLocales().sort()).toEqual(["ar", "de", "en", "fr", "ru", "tr"]);
+    const de = buildMetadata({ title: "t", description: "d", path: "/sss", locale: "de" });
+    expect(de.robots).toMatchObject({ index: true });
+    expect(Object.keys(de.alternates?.languages ?? {}).sort()).toEqual(["ar", "de", "en", "fr", "ru", "tr", "x-default"]);
+    expect(String((de.alternates?.languages as Record<string, string>)["x-default"])).toMatch(/\/faq$/);
   });
 
-  it("with approved languages: reciprocal hreflang + x-default (Turkish) only between them", () => {
+  it("an environment can restrict the indexable languages: hreflang only between them", () => {
     process.env.SITE_INDEXABLE = "true";
     process.env.SEO_LOCALES = "tr,en";
     const m = buildMetadata({ title: "t", description: "d", path: "/sss", locale: "en" });
     expect(Object.keys(m.alternates?.languages ?? {}).sort()).toEqual(["en", "tr", "x-default"]);
-    expect(String((m.alternates?.languages as Record<string, string>)["x-default"])).toMatch(/\/sss$/);
+    expect(buildMetadata({ title: "t", description: "d", path: "/", locale: "de" }).robots).toMatchObject({ index: false });
     expect(m.robots).toMatchObject({ index: true });
   });
 

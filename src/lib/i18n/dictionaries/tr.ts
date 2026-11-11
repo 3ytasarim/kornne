@@ -4,6 +4,7 @@ import { shopTr } from "./shop/tr";
 export const tr = {
   meta: {
     siteName: "KORNNE",
+    homeTitle: "Mezbaha, Kurban ve Robotik Kesim Ekipmanları | KORNNE",
     tagline: "Mezbaha ekipmanları, kurban ekipmanları ve robotik sistemler",
     defaultDescription: "KORNNE mezbaha ekipmanları, kurban ekipmanları ve robotik kesim sistemleri. Ürünleri inceleyin, WhatsApp veya telefonla teklif alın.",
   },

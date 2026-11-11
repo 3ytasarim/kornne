@@ -104,7 +104,7 @@ export default async function PricingPage({ searchParams }: PageProps<"/admin/pr
                 <span className="text-xs text-steel">uyumlu / kayıt yok</span>
               ),
           },
-          { key: "live", header: "Vitrindeki fiyat", cell: (r) => (r.live ? <span className="font-semibold text-success">{formatMoney(r.live.amountMinor)} {r.live.vatIncluded ? "KDV dahil" : "+KDV"}</span> : <span className="text-steel">Teklif alın</span>) },
+          { key: "live", header: "Vitrindeki fiyat", cell: (r) => (r.live ? <span className="font-semibold text-success">{formatMoney(r.live.amountMinor, r.live.currency)} {r.live.vatIncluded ? "KDV dahil" : "+KDV"}</span> : <span className="text-steel">Teklif alın</span>) },
           { key: "s", header: "Durum", cell: (r) => <div className="flex flex-wrap gap-1">{r.live ? <Badge tone="success">Onaylı</Badge> : <Badge tone="warning">Onaysız</Badge>}{r.pending.length ? <Badge tone="brand">{r.pending.length} öneri</Badge> : null}{r.invalidDiscount ? <Badge tone="outline">Hatalı indirim</Badge> : null}{!r.visible ? <Badge tone="outline">Vitrinde değil</Badge> : null}</div> },
           { key: "x", header: "İşlemler", align: "end", cell: (r) => <RowActions id={String(r.id)} editHref={`/admin/products/${r.id}`} editLabel="Fiyatı düzenle" /> },
         ]}

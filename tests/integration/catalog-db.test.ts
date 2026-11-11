@@ -38,16 +38,19 @@ describe.skipIf(!db)("catalog in Neon matches the import plan", () => {
     expect(keys.sort()).toEqual(plan.products.map((p) => p.sourceKey).sort());
   });
 
-  it("no price is verified and raw legacy strings are stored", async () => {
-    expect(await db!.price.count({ where: { status: { not: "UNVERIFIED" } } })).toBe(0);
-    expect(await db!.price.count({ where: { rawAmount: null } })).toBe(0);
+  // the site is live since 2026-10: prices are approved in the admin, so only the invariants are checked here
+  it("every verified price carries its VAT treatment; legacy rows keep their raw strings", async () => {
+    expect(await db!.price.count({ where: { status: "VERIFIED", OR: [{ vatIncluded: null }, { vatRateBp: null }] } })).toBe(0);
+    expect(await db!.price.count({ where: { source: "LEGACY_IMPORT", rawAmount: null } })).toBe(0);
   });
 
-  it("#208 stays held for review; 40 products are public", async () => {
-    expect(await db!.product.count({ where: { status: "PUBLISHED", needsReview: false } })).toBe(40);
-    const held = await db!.product.findUnique({ where: { sourceKey: "kornne.com:208" } });
-    expect(held?.needsReview).toBe(true);
-    expect(held?.status).toBe("DRAFT");
+  // live data since 2026-10 (editors publish / hold products in the admin) → invariants instead of fixed counts
+  it("there are public products and every held product is excluded from the storefront list", async () => {
+    expect(await db!.product.count({ where: { status: "PUBLISHED", needsReview: false } })).toBeGreaterThan(0);
+    const { prismaRepository } = await import("@/lib/catalog/prisma-repository");
+    const held = (await db!.product.findMany({ where: { needsReview: true }, select: { sourceKey: true } })).map((p) => (p.sourceKey ?? "").split(":").pop());
+    const listed = (await prismaRepository.listProducts("tr")).map((p) => p.sourceId);
+    expect(listed.filter((id) => held.includes(id))).toEqual([]);
   });
 
   it("media rows carry the original file hashes", async () => {
@@ -62,14 +65,13 @@ describe.skipIf(!db)("catalog in Neon matches the import plan", () => {
 });
 
 describe.skipIf(!db)("Sprint 8+9 on the REAL data (read-only session)", () => {
-  it("Merchant readiness: 0 of 40 storefront products READY, #208 held, every product with its reasons", async () => {
+  it("Merchant readiness: no storefront product READY (availability unknown), #208 held, every product with its reasons", async () => {
     const { evaluateCatalog } = await import("@/lib/merchant/facts");
     const { candidates, ready, held, byReason } = await evaluateCatalog(db!, {});
-    expect(candidates).toHaveLength(40);
+    expect(candidates.length).toBeGreaterThan(0);
     expect(ready).toHaveLength(0);
-    expect(held.map((h) => h.ref)).toEqual(["208"]);
-    expect(byReason.PRICE_UNVERIFIED).toBe(40);
-    expect(byReason.AVAILABILITY_UNKNOWN).toBe(40);
+    expect(held.length).toBe(await db!.product.count({ where: { needsReview: true, status: { not: "ARCHIVED" } } }));
+    expect(byReason.AVAILABILITY_UNKNOWN).toBe(candidates.length);
     expect(candidates.every((c) => c.reasons.some((r) => r.severity === "blocking"))).toBe(true);
   });
 
@@ -83,11 +85,12 @@ describe.skipIf(!db)("Sprint 8+9 on the REAL data (read-only session)", () => {
     expect(rows.every((r) => /^[0-9a-f]{64}$/.test(r.sha256))).toBe(true);
   });
 
-  it("route inventory: 40 public products, 125 legacy 301 redirects, #208 as a 307", async () => {
+  it("route inventory: every public product, 125 legacy 301 redirects, held products as 307", async () => {
     const { buildInventory } = await import("@/lib/seo/inventory");
     const inv = await buildInventory(db!, { seoLocales: ["tr"], verified: true });
-    expect(inv.filter((e) => e.kind === "product")).toHaveLength(40);
+    const publicTr = await db!.productTranslation.count({ where: { locale: "tr", product: { status: "PUBLISHED", needsReview: false } } });
+    expect(inv.filter((e) => e.kind === "product" && e.path.startsWith("/tr/urun/"))).toHaveLength(publicTr);
     expect(inv.filter((e) => e.kind === "legacy-redirect" && e.status === 301)).toHaveLength(125);
-    expect(inv.filter((e) => e.kind === "held-product").map((e) => e.status)).toEqual([307]);
+    expect(inv.filter((e) => e.kind === "held-product").every((e) => e.status === 307)).toBe(true);
   });
 });

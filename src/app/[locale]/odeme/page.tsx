@@ -46,8 +46,8 @@ export default async function CheckoutPage({ params }: PageProps<"/[locale]/odem
           notice: href("/odeme-bildirimi"),
           status: href("/siparisim-ne-durumda"),
           // legal texts exist only in Turkish (legal approval pending)
-          terms: "/sayfa/mesafeli-satis-sozlesmesi",
-          privacy: "/sayfa/kisisel-verilenin-korunmasi-kanunu",
+          terms: "/tr/sayfa/mesafeli-satis-sozlesmesi",
+          privacy: "/tr/sayfa/kisisel-verilenin-korunmasi-kanunu",
           browse: all ? href(`/kategori/${all.slug}`) : href("/"),
         }}
       />

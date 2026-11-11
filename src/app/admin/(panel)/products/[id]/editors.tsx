@@ -7,13 +7,13 @@ import { ActionForm, FormMessage, SubmitButton } from "@/components/admin/forms"
 import { buttonClass } from "@/components/ui/Button";
 import { saveProductMediaAction, saveVariantsAction } from "../actions";
 
-type VariantRow = { key: string; id?: string; tr: string; en: string; fr: string; ru: string; ar: string; active: boolean; sortOrder: number; sourceKey?: string | null };
-const LANGS = ["tr", "en", "fr", "ru", "ar"] as const;
+type VariantRow = { key: string; id?: string; tr: string; en: string; de: string; fr: string; ru: string; ar: string; active: boolean; sortOrder: number; sourceKey?: string | null };
+const LANGS = ["tr", "en", "de", "fr", "ru", "ar"] as const;
 
 /** Options editor: rename / translate / (de)activate existing options, add new ones. No delete (quotes reference them). */
 export function VariantsEditor({ productId, initial, disabled }: { productId: string; initial: VariantRow[]; disabled?: boolean }) {
   const [rows, setRows] = useState(initial);
-  const add = () => setRows((r) => [...r, { key: `n${Date.now()}`, tr: "", en: "", fr: "", ru: "", ar: "", active: true, sortOrder: r.length }]);
+  const add = () => setRows((r) => [...r, { key: `n${Date.now()}`, tr: "", en: "", de: "", fr: "", ru: "", ar: "", active: true, sortOrder: r.length }]);
   return (
     <ActionForm action={saveVariantsAction} className="space-y-4" aria-label="Seçenekler">
       <input type="hidden" name="productId" value={productId} />

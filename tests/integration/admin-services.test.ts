@@ -118,9 +118,9 @@ describe.skipIf(!hasTestDb)("Sprint 6/7 services (isolated test schema)", () => 
       const t0 = await db.product.findUniqueOrThrow({ where: { id: p.product.id } });
       await expect(saveProductTranslation(db, editor, { id: p.product.id, expectedUpdatedAt: t0.updatedAt.toISOString(), locale: "tr", title: "Yeni ad", slug: `taken-${p.ref}` })).rejects.toThrow(/yönlendirme/);
       const r = await saveProductTranslation(db, editor, { id: p.product.id, expectedUpdatedAt: t0.updatedAt.toISOString(), locale: "tr", title: "TEST ürün yeni", slug: `test-urun-yeni-${p.ref}`, descriptionHtml: "<p>ok</p><script>alert(1)</script>" });
-      expect(r.moved?.newPath).toBe(`/urun/test-urun-yeni-${p.ref}`);
-      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/urun/${oldSlug}` } })).toPath).toBe(`/urun/test-urun-yeni-${p.ref}`);
-      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/urun/legacy-${p.ref}` } })).toPath).toBe(`/urun/test-urun-yeni-${p.ref}`); // still single hop
+      expect(r.moved?.newPath).toBe(`/tr/urun/test-urun-yeni-${p.ref}`);
+      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/tr/urun/${oldSlug}` } })).toPath).toBe(`/tr/urun/test-urun-yeni-${p.ref}`);
+      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/urun/legacy-${p.ref}` } })).toPath).toBe(`/tr/urun/test-urun-yeni-${p.ref}`); // still single hop (old-scheme target matched too)
       expect(r.translation.descriptionHtml).not.toContain("script");
       // stale form → refused (optimistic lock)
       await expect(saveProductTranslation(db, editor, { id: p.product.id, expectedUpdatedAt: t0.updatedAt.toISOString(), locale: "tr", title: "x yy", slug: `test-urun-yeni-${p.ref}` })).rejects.toThrow(/başka biri/);
@@ -212,7 +212,7 @@ describe.skipIf(!hasTestDb)("Sprint 6/7 services (isolated test schema)", () => 
       await publishPage(db, publisher, page.id, "tr");
       await savePageDraft(db, publisher, { pageId: page.id, locale: "tr", title: "Bilgi", slug: `${key}-b`, bodyHtml: "<p>x</p>" });
       await publishPage(db, publisher, page.id, "tr");
-      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/sayfa/${key}-a` } })).toPath).toBe(`/sayfa/${key}-b`);
+      expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: `/tr/sayfa/${key}-a` } })).toPath).toBe(`/tr/sayfa/${key}-b`);
     });
     it("banners need an end date to go live; FAQ answers need a source; non-publishers land in review", async () => {
       const seo = { id: (await makeUser(db, "SEO_EDITOR")).id, canPublish: false };

@@ -6,6 +6,7 @@ import type { Dictionary } from "./tr";
 export const ar: DeepPartial<Dictionary> = {
   meta: {
     siteName: "كورن",
+    homeTitle: "معدات المسالخ والأضاحي والتقطيع الروبوتي | كورن",
     tagline: "معدات المسالخ ومعدات الأضاحي والأنظمة الروبوتية",
     defaultDescription: "كورن: معدات المسالخ ومعدات الأضاحي وأنظمة التقطيع الروبوتية. تصفّح المنتجات واطلب عرض سعر عبر واتساب أو الهاتف.",
   },

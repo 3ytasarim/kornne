@@ -3,6 +3,8 @@ import type { ShopDictionary } from "./tr";
 /** French shop strings — draft, native review pending. */
 export const shopFr: ShopDictionary = {
   utility: {
+    fxTitle: "Taux de change",
+    fxSource: "BCRT vente",
     transfer: "Paiement par virement bancaire (EFT / Havale)",
     vat: "Prix TVA incluse",
   },
@@ -106,6 +108,7 @@ export const shopFr: ShopDictionary = {
     legalDraft: "Les textes contractuels sont en cours de validation juridique.",
   },
   errors: {
+    noAccount: "Aucun compte bancaire en dollars US n'est encore configuré pour les virements. Contactez-nous ou demandez un devis pour votre panier.",
     required: "Ce champ est obligatoire.",
     tooLong: "Le texte saisi est trop long.",
     invalid: "Valeur invalide.",
@@ -178,7 +181,7 @@ export const shopFr: ShopDictionary = {
     payerName: "Émetteur (nom et prénom ou société)",
     bank: "Banque du paiement",
     chooseBank: "Sélectionnez une banque",
-    amount: "Montant envoyé (TL)",
+    amount: "Montant envoyé",
     paidAt: "Date du paiement",
     note: "Référence (facultatif)",
     send: "Envoyer l'avis",

@@ -7,16 +7,16 @@ export function getSiteUrl(): string {
  * Indexing gate. Only a production cutover with SITE_INDEXABLE=true may be indexed; every other environment
  * (local, staging, preview) is noindex via meta robots, X-Robots-Tag (proxy) and robots.txt.
  */
-import { isEnabledLocale, type Locale } from "@/lib/i18n/config";
+import { ENABLED_LOCALES, isEnabledLocale, type Locale } from "@/lib/i18n/config";
 
 /**
- * Languages whose pages may be indexed (Sprint 8 SEO policy). EN/FR/RU/AR currently have UI translations only — the
- * catalog/CMS texts are not approved (74 legacy matches pending, no RU/AR content) — so their pages stay noindex and
- * out of hreflang until the client approves real translations. Per environment: SEO_LOCALES="tr,en".
+ * Languages whose pages may be indexed. Since 2026-11 every enabled language has full catalogue translations, so the
+ * default is ALL enabled locales; an environment can still restrict it (SEO_LOCALES="en,tr").
  */
 export function seoLocales(): Locale[] {
-  const list = (process.env.SEO_LOCALES ?? "tr").split(",").map((s) => s.trim()).filter(isEnabledLocale);
-  return list.length ? list : ["tr"];
+  const raw = process.env.SEO_LOCALES?.trim();
+  const list = (raw ? raw.split(",") : [...ENABLED_LOCALES]).map((s) => s.trim()).filter(isEnabledLocale);
+  return list.length ? list : [...ENABLED_LOCALES];
 }
 
 export function isIndexable(): boolean {

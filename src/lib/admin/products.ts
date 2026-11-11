@@ -2,8 +2,9 @@ import type { Locale, Prisma, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { translationChecksum } from "@/lib/catalog/checksum";
 import { sanitizeRichText } from "@/lib/catalog/sanitize";
-import { localizePath } from "@/lib/i18n/routes";
+import { localizePath, pathVariants } from "@/lib/i18n/routes";
 import { AdminError } from "./action-state";
+import { LOCALES } from "@/lib/i18n/config";
 
 /**
  * Catalog editing (Sprint 6). Rules:
@@ -51,9 +52,9 @@ export async function moveProductUrl(tx: Tx, locale: Locale, oldSlug: string, ne
   const oldPath = localizePath(locale, `/urun/${oldSlug}`);
   const newPath = localizePath(locale, `/urun/${newSlug}`);
   if (oldPath === newPath) return null;
-  const shadow = await tx.redirect.findUnique({ where: { fromPath: newPath } });
+  const shadow = await tx.redirect.findFirst({ where: { fromPath: { in: pathVariants(locale, `/urun/${newSlug}`) }, active: true } });
   if (shadow?.active) throw new AdminError(`“${newPath}” adresi bir yönlendirmenin kaynağı (${shadow.source}); bu adres kullanılamaz.`, { slug: "Bu adres bir yönlendirmede kullanılıyor." });
-  const repointed = await tx.redirect.updateMany({ where: { toPath: oldPath }, data: { toPath: newPath } });
+  const repointed = await tx.redirect.updateMany({ where: { toPath: { in: pathVariants(locale, `/urun/${oldSlug}`) } }, data: { toPath: newPath } });
   await tx.redirect.upsert({
     where: { fromPath: oldPath },
     create: { fromPath: oldPath, toPath: newPath, statusCode: 301, source: "SLUG_CHANGE", note: `slug changed ${new Date().toISOString().slice(0, 10)}` },
@@ -65,7 +66,7 @@ export async function moveProductUrl(tx: Tx, locale: Locale, oldSlug: string, ne
 export const translationSchema = z.object({
   id: z.string().min(10).max(40),
   expectedUpdatedAt: z.string().min(10),
-  locale: z.enum(["tr", "en", "fr", "ru", "ar"]),
+  locale: z.enum(LOCALES),
   title: z.string().trim().min(2, "Ürün adı en az 2 karakter olmalı.").max(200),
   slug: slugSchema,
   shortDescription: z.string().trim().max(500).optional(),
@@ -201,7 +202,7 @@ export async function setRelatedProducts(db: PrismaClient, actor: Actor, raw: un
   });
 }
 
-const variantRow = z.object({ id: z.string().max(40).optional(), tr: z.string().trim().max(120), en: z.string().trim().max(120).optional(), fr: z.string().trim().max(120).optional(), ru: z.string().trim().max(120).optional(), ar: z.string().trim().max(120).optional(), active: z.boolean(), sortOrder: z.coerce.number().int() });
+const variantRow = z.object({ id: z.string().max(40).optional(), tr: z.string().trim().max(120), en: z.string().trim().max(120).optional(), de: z.string().trim().max(120).optional(), fr: z.string().trim().max(120).optional(), ru: z.string().trim().max(120).optional(), ar: z.string().trim().max(120).optional(), active: z.boolean(), sortOrder: z.coerce.number().int() });
 
 /**
  * Options (variants). Existing variants are never deleted (quotes reference them) — only renamed / deactivated.
@@ -213,7 +214,7 @@ export async function saveVariants(db: PrismaClient, actor: Actor, raw: unknown)
     const existing = await tx.productVariant.findMany({ where: { productId: v.productId } });
     const before = existing.map((x) => ({ id: x.id, labels: x.labels, active: x.active }));
     for (const row of v.variants) {
-      const labels = Object.fromEntries((["tr", "en", "fr", "ru", "ar"] as const).filter((l) => row[l]).map((l) => [l, row[l]!.normalize("NFC")]));
+      const labels = Object.fromEntries((["tr", "en", "de", "fr", "ru", "ar"] as const).filter((l) => row[l]).map((l) => [l, row[l]!.normalize("NFC")]));
       if (row.id) {
         const ex = existing.find((x) => x.id === row.id);
         if (!ex) throw new AdminError("Seçenek bu ürüne ait değil.");
@@ -311,7 +312,7 @@ export async function bulkProducts(db: PrismaClient, actor: Actor, raw: unknown)
 
 export const categorySchema = z.object({
   id: z.string().min(10).max(40),
-  locale: z.enum(["tr", "en", "fr", "ru", "ar"]),
+  locale: z.enum(LOCALES),
   name: z.string().trim().min(2).max(120),
   slug: slugSchema,
   description: z.string().trim().max(2000).optional(),

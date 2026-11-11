@@ -26,7 +26,7 @@ export const proposalSchema = z
     productId: z.string().min(10).max(40),
     amount: z.string().trim().min(1, "Satış fiyatını girin."),
     compareAt: z.string().trim().optional(),
-    currency: z.enum(["TRY"], { message: "Şimdilik yalnız TRY desteklenir." }),
+    currency: z.enum(["USD", "TRY", "EUR"], { message: "Para birimi seçin." }),
     vatMode: z.enum(["included", "excluded"], { message: "KDV dahil mi hariç mi seçin." }),
     vatRate: z.string().trim().min(1, "KDV oranını girin."),
     validFrom: dateInput,
@@ -166,6 +166,7 @@ export const directPriceSchema = z
   .object({
     productId: z.string().min(10).max(40),
     amount: z.string().trim().min(1, "Satış fiyatını girin."),
+    currency: z.enum(["USD", "TRY", "EUR"]).default("USD"),
     vatMode: z.enum(["included", "excluded"], { message: "KDV dahil mi hariç mi seçin." }),
     vatRate: z.string().trim().min(1, "KDV oranını girin."),
     note: z.string().trim().max(300).optional(),
@@ -187,7 +188,7 @@ export async function setPriceDirect(db: PrismaClient, actor: Actor, raw: unknow
     const now = new Date();
     const evidence = "Ürün sayfasından güncellendi";
     const price = await tx.price.create({
-      data: { productId: v.productId, currency: "TRY", amountMinor: v.amountMinor, compareAtMinor: null, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, validFrom: now, source: "ADMIN", status: "VERIFIED", createdById: actor.id, approvedById: actor.id, approvedAt: now, evidence, note: v.note || null },
+      data: { productId: v.productId, currency: v.currency, amountMinor: v.amountMinor, compareAtMinor: null, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, validFrom: now, source: "ADMIN", status: "VERIFIED", createdById: actor.id, approvedById: actor.id, approvedAt: now, evidence, note: v.note || null },
     });
     const previous = await tx.price.findMany({ where: { productId: v.productId, variantId: null, status: "VERIFIED", id: { not: price.id }, OR: [{ validTo: null }, { validTo: { gt: now } }] }, select: { id: true } });
     for (const old of previous) {
@@ -195,7 +196,7 @@ export async function setPriceDirect(db: PrismaClient, actor: Actor, raw: unknow
       await event(tx, old.id, "superseded", actor.id, `yerini ${price.id} aldı`);
     }
     await event(tx, price.id, "approved", actor.id, v.note || "doğrudan güncelleme (ürün sayfası)");
-    await audit(tx, actor.id, "price.set_direct", price.id, { productId: v.productId, amountMinor: v.amountMinor, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, superseded: previous.map((x) => x.id) });
+    await audit(tx, actor.id, "price.set_direct", price.id, { productId: v.productId, currency: v.currency, amountMinor: v.amountMinor, vatIncluded: v.vatMode === "included", vatRateBp: v.vatRateBp, superseded: previous.map((x) => x.id) });
     return price;
   });
 }

@@ -54,7 +54,7 @@ test("s67 admin screens", async ({ page }) => {
     // a proposal for the four-eyes view (removed by cleanup)
     await page.goto(`/admin/pricing/${product.id}`);
     const pf = page.getByRole("form", { name: "Fiyat önerisi" });
-    await pf.getByLabel("Satış fiyatı (TL)").fill("1.807.479,94");
+    await pf.getByLabel("Satış fiyatı").fill("1.807.479,94");
     await pf.locator('select[name="vatMode"]').selectOption("included");
     await pf.getByLabel("KDV oranı (%)").fill("20");
     await pf.getByLabel("Fiyatın kaynağı").fill("E2E ekran görüntüsü — örnek öneri (silinir)");
@@ -86,11 +86,11 @@ test("s67 admin screens", async ({ page }) => {
 
 test("s67 quote CRM screens (test request)", async ({ page }) => {
   test.setTimeout(300_000);
-  await page.goto("/urun/dairesel-kesim-hucresi");
+  await page.goto("/tr/urun/dairesel-kesim-hucresi");
   await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
-  await page.goto("/urun/sulu-sterilizator");
+  await page.goto("/tr/urun/sulu-sterilizator");
   await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
-  await page.goto("/teklif-listem");
+  await page.goto("/tr/teklif-listem");
   await page.getByLabel("Ad soyad").fill("Örnek Test Müşteri");
   await page.getByLabel("Firma (isteğe bağlı)").fill("Test Et Entegre (örnek)");
   await page.getByLabel("E-posta").fill(`shot-crm-${Date.now()}@kornne.test`);
@@ -122,9 +122,9 @@ test("s67 quote CRM screens (test request)", async ({ page }) => {
 test("s67 storefront after Sprint 7 (DB menus / CMS pages / RTL / dark)", async ({ page }) => {
   test.setTimeout(240_000);
   await shot(page, "s67-store-home-ar-375", "/ar", 375);
-  await shot(page, "s67-store-corporate-1440", "/sayfa/kurumsal", 1440);
-  await shot(page, "s67-store-corporate-en-768", "/en/page/corporate-information", 768);
-  await shot(page, "s67-store-legal-320", "/sayfa/mesafeli-satis-sozlesmesi", 320);
-  await shot(page, "s67-store-product-dark-1440", "/urun/dairesel-kesim-hucresi", 1440, { dark: true });
+  await shot(page, "s67-store-corporate-1440", "/tr/sayfa/kurumsal", 1440);
+  await shot(page, "s67-store-corporate-en-768", "/page/corporate-information", 768);
+  await shot(page, "s67-store-legal-320", "/tr/sayfa/mesafeli-satis-sozlesmesi", 320);
+  await shot(page, "s67-store-product-dark-1440", "/tr/urun/dairesel-kesim-hucresi", 1440, { dark: true });
   await shot(page, "s67-store-footer-ar-1440", "/ar", 1440);
 });

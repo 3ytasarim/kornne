@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { resolvePublicPath } from "@/lib/i18n/routes";
+import { canonicalRedirectTarget, resolvePublicPath } from "@/lib/i18n/routes";
 
 /**
  * Old Merchant item_id → new product mapping PREVIEW (Sprint 9). Input: a CSV exported read-only from the existing
@@ -80,7 +80,8 @@ export async function previewMapping(db: PrismaClient, text: string): Promise<Ma
   const bySlug = new Map(products.flatMap((p) => p.translations.map((t) => [`${t.locale}:${t.slug}`, p] as const)));
   const redirect = new Map(redirects.map((r) => [r.fromPath, r.toPath]));
   const productForPath = (path: string) => {
-    const target = redirect.get(path) ?? redirect.get(path.replace(/\/$/, "")) ?? path;
+    // feed links / redirect targets may use the pre-2026-11 scheme (bare Turkish paths) → today's URL first
+    const target = canonicalRedirectTarget(redirect.get(path) ?? redirect.get(path.replace(/\/$/, "")) ?? path);
     const { locale, internalPath } = resolvePublicPath(target);
     const m = internalPath.match(/^\/urun\/([^/]+)$/);
     return m ? bySlug.get(`${locale}:${m[1]}`) : undefined;

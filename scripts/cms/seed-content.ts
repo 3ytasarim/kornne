@@ -17,6 +17,7 @@ import catalog from "../../src/data/source-snapshot/catalog.json";
 import { sanitizeRichText } from "../../src/lib/catalog/sanitize";
 import { SETTING_DEFS } from "../../src/lib/cms/settings";
 import { ar } from "../../src/lib/i18n/dictionaries/ar";
+import { de } from "../../src/lib/i18n/dictionaries/de";
 import { en } from "../../src/lib/i18n/dictionaries/en";
 import { fr } from "../../src/lib/i18n/dictionaries/fr";
 import { ru } from "../../src/lib/i18n/dictionaries/ru";
@@ -37,8 +38,8 @@ const PAGES: { key: string; kind: PageKind; slugs: Partial<Record<Locale, string
   { key: "mesafeli-satis-sozlesmesi", kind: "LEGAL", slugs: { tr: "mesafeli-satis-sozlesmesi" }, legacySlugs: { tr: "mesafeli-satis-sozlesmesi" } },
   { key: "kisisel-verilenin-korunmasi-kanunu", kind: "LEGAL", slugs: { tr: "kisisel-verilenin-korunmasi-kanunu" }, legacySlugs: { tr: "kisisel-verilenin-korunmasi-kanunu" } },
 ];
-const D = { tr, en, fr, ru, ar } as const;
-const L: Locale[] = ["tr", "en", "fr", "ru", "ar"];
+const D = { tr, en, de, fr, ru, ar } as const;
+const L: Locale[] = ["tr", "en", "de", "fr", "ru", "ar"];
 const labels = (pick: (d: (typeof D)["tr"]) => string) => Object.fromEntries(L.map((l) => [l, pick(D[l] as (typeof D)["tr"])]));
 const MENUS = [
   { location: "HEADER" as const, kind: "page", pageKey: "kurumsal", labels: labels((d) => d.nav.corporate), sortOrder: 10 },

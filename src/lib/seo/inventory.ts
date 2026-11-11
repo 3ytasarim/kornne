@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { ENABLED_LOCALES, dirOf, type Locale } from "@/lib/i18n/config";
-import { localizePath } from "@/lib/i18n/routes";
+import { canonicalRedirectTarget, localizePath } from "@/lib/i18n/routes";
 import { PAGE_SIZE } from "@/lib/catalog/pagination";
 import type { PageExpect } from "./audit";
 
@@ -84,7 +84,8 @@ export async function buildInventory(db: PrismaClient, opts: { seoLocales: Local
   }
 
   const reds = opts.redirectSample ? redirects.slice(0, opts.redirectSample) : redirects;
-  for (const r of reds) out.push({ path: r.fromPath, kind: "legacy-redirect", status: r.statusCode, location: r.toPath });
+  // stored targets may use the pre-2026-11 scheme; the proxy answers with today's URL (canonicalRedirectTarget)
+  for (const r of reds) out.push({ path: r.fromPath, kind: "legacy-redirect", status: r.statusCode, location: canonicalRedirectTarget(r.toPath) });
 
   page({ path: "/admin/login", kind: "admin", status: 200, indexable: false });
   return out;

@@ -22,11 +22,11 @@ test("s1011 storefront per engine", async ({ page, browserName }, info) => {
     await page.screenshot({ path: `${DIR}/s1011-${name}-${tag}.png`, fullPage: false });
   };
   await shot("home-1440", "/", 1440);
-  await shot("product-375", "/urun/dairesel-kesim-hucresi", 375);
+  await shot("product-375", "/tr/urun/dairesel-kesim-hucresi", 375);
   await shot("home-ar-375", "/ar", 375);
   if (tag === "chrome") {
     await shot("home-ru-320", "/ru", 320);
-    await shot("product-dark-375", "/urun/dairesel-kesim-hucresi", 375, true);
+    await shot("product-dark-375", "/tr/urun/dairesel-kesim-hucresi", 375, true);
     await shot("category-ar-1440", "/ar/category/all-products", 1440);
     const admin = readTestAdmin();
     await login(page, admin.email, admin.password);

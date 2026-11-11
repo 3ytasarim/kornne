@@ -24,7 +24,7 @@ async function count(sql: string, params: unknown[] = []) {
 const formFields = (form: Locator) => form.evaluate((f: HTMLFormElement) => Object.fromEntries(Array.from(new FormData(f).entries()).filter(([, v]) => typeof v === "string")) as Record<string, string>);
 
 test("security headers on storefront, admin and API; no framework fingerprint", async ({ request }) => {
-  for (const path of ["/", "/urun/dairesel-kesim-hucresi", "/admin/login", "/api/health"]) {
+  for (const path of ["/tr", "/tr/urun/dairesel-kesim-hucresi", "/admin/login", "/api/health"]) {
     const h = (await request.get(path)).headers();
     expect(h["content-security-policy"], path).toMatch(/default-src 'self'.*frame-ancestors 'none'.*object-src 'none'/);
     expect(h["x-frame-options"], path).toBe("DENY");
@@ -98,7 +98,7 @@ test("reflected XSS: hostile search terms render as text, no script runs", async
     dialog = true;
     await d.dismiss();
   });
-  await page.goto(`/arama?q=${encodeURIComponent('"><script>alert(1)</script><img src=x onerror=alert(2)>')}`);
+  await page.goto(`/tr/arama?q=${encodeURIComponent('"><script>alert(1)</script><img src=x onerror=alert(2)>')}`);
   await page.waitForTimeout(500);
   expect(dialog).toBe(false);
   expect(await page.locator("img[src='x']").count()).toBe(0);

@@ -17,7 +17,7 @@ export function ProductMarquee({ items, label }: { items: MarqueeItem[]; label: 
             <Image src={p.image} alt="" fill sizes="64px" quality={60} className="object-contain p-1.5 mix-blend-multiply transition-transform duration-500 group-hover:scale-110 dark:mix-blend-normal" />
           </span>
           <span className="min-w-0">
-            <span className="line-clamp-2 text-sm leading-snug font-semibold text-ink">{p.title}</span>
+            <span className="line-clamp-2 text-sm leading-snug font-semibold [overflow-wrap:anywhere] hyphens-auto text-ink">{p.title}</span>
             {p.price ? (
               <span className="mt-0.5 block text-sm font-bold text-brand-700 tabular-nums dark:text-brand-300" dir="ltr">
                 {p.price}

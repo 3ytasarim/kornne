@@ -22,7 +22,7 @@ const run = (cmd, a, e = env) => {
   if (r.status !== 0) process.exit(r.status ?? 1);
 };
 if (!noBuild) {
-  run("npx", ["next", "build"], { ...env, ...LOCAL_COMMERCE_ENV });
+  run("npx", ["next", "build"], { ...env, ...LOCAL_COMMERCE_ENV, FX_FIXTURE: "USD:50.1981,EUR:56.3795" });
   run("npx", ["next", "build"], { ...env, ...PRODLIKE_ENV });
 }
 run("npx", ["playwright", "test", ...pw]);

@@ -1,6 +1,8 @@
 /** B2B shop strings (Sprint 12: KDV dahil TL fiyat, sepet, EFT/Havale sipariş, ödeme bildirimi, sipariş takibi). */
 export const shopTr = {
   utility: {
+    fxTitle: "Döviz kurları",
+    fxSource: "TCMB satış",
     transfer: "EFT / Havale ile ödeme",
     vat: "Fiyatlara KDV dahildir",
   },
@@ -104,6 +106,7 @@ export const shopTr = {
     legalDraft: "Sözleşme metinleri hukuki onay sürecindedir.",
   },
   errors: {
+    noAccount: "Dolar (USD) ile ödeme için banka hesabı henüz tanımlanmadı. Lütfen bizimle iletişime geçin veya sepetiniz için teklif isteyin.",
     required: "Bu alan zorunlu.",
     tooLong: "Girilen metin çok uzun.",
     invalid: "Geçersiz değer.",
@@ -176,7 +179,7 @@ export const shopTr = {
     payerName: "Gönderen (ad soyad veya firma)",
     bank: "Ödeme yapılan banka",
     chooseBank: "Banka seçin",
-    amount: "Gönderilen tutar (TL)",
+    amount: "Gönderilen tutar",
     paidAt: "Ödeme tarihi",
     note: "Açıklama (isteğe bağlı)",
     send: "Bildirimi gönder",

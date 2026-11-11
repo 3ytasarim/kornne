@@ -23,6 +23,7 @@ enum Locale {
   fr
   ru
   ar
+  de
 }
 
 enum Role {
@@ -603,6 +604,9 @@ model Order {
   statusEvents    OrderStatusEvent[]
   /// "BANK_TRANSFER" (EFT/Havale, Sprint 12) — null for legacy/test orders
   paymentMethod   String?
+  /// Exchange rate frozen at order time (TCMB ForexSelling, TRY per unit × 10000) when a price was converted
+  fxCurrency      String?            @db.Char(3)
+  fxRate4         Int?
   paymentNotices  PaymentNotice[]
 
   @@index([status, placedAt])
@@ -1180,4 +1184,14 @@ model PaymentWebhookEvent {
   processedAt    DateTime?
 
   @@unique([provider, eventId])
+}
+
+/// Daily TCMB exchange rates (ForexSelling, TRY per 1 unit × 10000). Checked every 5 minutes; the last known value is
+/// kept so prices stay visible when TCMB is unreachable.
+model FxRate {
+  currency     String   @id @db.Char(3)
+  rate4        Int
+  bulletinDate String
+  source       String   @default("TCMB")
+  fetchedAt    DateTime @default(now()) @updatedAt
 }

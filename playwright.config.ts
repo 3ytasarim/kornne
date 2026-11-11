@@ -45,7 +45,7 @@ export default defineConfig({
       url: `http://localhost:${PORT}/api/health`,
       reuseExistingServer: false,
       timeout: 120_000,
-      env: { DATABASE_URL: DB, DIRECT_URL: DB, KORNNE_TEST_DB: "local-e2e", ...LOCAL_COMMERCE_ENV },
+      env: { DATABASE_URL: DB, DIRECT_URL: DB, KORNNE_TEST_DB: "local-e2e", ...LOCAL_COMMERCE_ENV, FX_FIXTURE: "USD:50.1981,EUR:56.3795" },
     },
     {
       command: `npx next start -p ${PRODLIKE_PORT}`,

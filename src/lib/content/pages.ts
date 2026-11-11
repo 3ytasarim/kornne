@@ -13,7 +13,7 @@ export type CmsPageKey = "kurumsal" | "iade-ve-geri-odeme-politikalari" | "mesaf
 export const CMS_PAGES: Record<CmsPageKey, { kind: "CORPORATE" | "LEGAL"; slugs: Partial<Record<Locale, string>>; legacySlugs: Partial<Record<Locale, string>> }> = {
   kurumsal: {
     kind: "CORPORATE",
-    slugs: { tr: "kurumsal", en: "corporate-information", fr: "information-dentreprise", ru: "o-kompanii", ar: "about-us" },
+    slugs: { tr: "kurumsal", en: "corporate-information", de: "unternehmen", fr: "information-dentreprise", ru: "o-kompanii", ar: "about-us" },
     legacySlugs: { tr: "kurumsal", en: "corporate-information", fr: "information-dentreprise", ru: "lang-russian-corparate", ar: "lang-arabic-corparate" },
   },
   "iade-ve-geri-odeme-politikalari": { kind: "LEGAL", slugs: { tr: "iade-ve-geri-odeme-politikalari" }, legacySlugs: { tr: "iade-ve-geri-odeme-politikalari" } },

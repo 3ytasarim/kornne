@@ -9,10 +9,10 @@ import { revalidateStorefront } from "@/lib/admin/revalidate";
 import { formObject, runAction } from "@/lib/admin/run-action";
 import { createPage, deleteMenuItem, publishPage, restoreRevision, saveBanner, saveFaq, saveMenuItem, savePageDraft, setLegalApproval, setPageArchived, submitForReview, unpublishPage } from "@/lib/cms/service";
 import { requireDb } from "@/lib/db";
+import { LOCALES } from "@/lib/i18n/config";
 
-const LOCALES = ["tr", "en", "fr", "ru", "ar"];
 const loc = (v: FormDataEntryValue | null): Locale => {
-  if (typeof v === "string" && LOCALES.includes(v)) return v as Locale;
+  if (typeof v === "string" && (LOCALES as readonly string[]).includes(v)) return v as Locale;
   throw new AdminError("Geçersiz dil.");
 };
 const s = (f: FormData, k: string) => String(f.get(k) ?? "");

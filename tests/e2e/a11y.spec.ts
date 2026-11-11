@@ -18,7 +18,7 @@ async function scan(page: Page, label: string) {
   return r.violations.length;
 }
 
-const STOREFRONT = ["/", "/kategori/tum-urunler", "/urun/dairesel-kesim-hucresi", "/arama?q=kesim", "/teklif-listem", "/iletisim", "/sayfa/kurumsal", "/bu-sayfa-yok-a11y", "/en", "/ar", "/ar/category/all-products"];
+const STOREFRONT = ["/tr", "/tr/kategori/tum-urunler", "/tr/urun/dairesel-kesim-hucresi", "/tr/arama?q=kesim", "/tr/teklif-listem", "/tr/iletisim", "/tr/sayfa/kurumsal", "/bu-sayfa-yok-a11y", "/", "/de", "/ar", "/ar/category/all-products"];
 
 test.describe("axe — storefront", () => {
   for (const path of STOREFRONT) {
@@ -29,7 +29,7 @@ test.describe("axe — storefront", () => {
       await scan(page, path);
     });
   }
-  for (const path of ["/", "/urun/dairesel-kesim-hucresi", "/ar"]) {
+  for (const path of ["/tr", "/tr/urun/dairesel-kesim-hucresi", "/ar"]) {
     test(`${path} (dark, 375)`, async ({ page }) => {
       await page.setViewportSize({ width: 375, height: 812 });
       await page.emulateMedia({ colorScheme: "dark", reducedMotion: "reduce" });

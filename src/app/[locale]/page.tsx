@@ -28,7 +28,8 @@ export const revalidate = 300;
 
 export async function generateMetadata({ params }: PageProps<"/[locale]">) {
   const { locale, d } = getI18n((await params).locale);
-  return buildMetadata({ title: `${d.meta.siteName} — ${d.meta.tagline}`, description: d.meta.defaultDescription, path: "/", locale, noindex: !CATALOG_DATA_VERIFIED });
+  // ≤ 60 characters per language (search result titles get cut beyond that)
+  return buildMetadata({ title: d.meta.homeTitle, description: d.meta.defaultDescription, path: "/", locale, noindex: !CATALOG_DATA_VERIFIED });
 }
 
 // Editorial groupings of REAL catalog items (by legacy Turkish slug); missing/hidden items simply drop out.
@@ -219,8 +220,8 @@ export default async function HomePage({ params }: PageProps<"/[locale]">) {
                   </span>
                   <span className="mt-3 flex items-start justify-between gap-2">
                     <span className="min-w-0">
-                      <span className="block text-[0.625rem] font-semibold tracking-[0.14em] text-white/55 uppercase">{g.group && g.group !== g.alt ? g.group : s.motion.onSite}</span>
-                      <span className="block text-sm font-semibold text-white group-hover:underline">{g.alt}</span>
+                      <span className="block text-[0.625rem] font-semibold tracking-[0.14em] [overflow-wrap:anywhere] hyphens-auto text-white/55 uppercase">{g.group && g.group !== g.alt ? g.group : s.motion.onSite}</span>
+                      <span className="block text-sm font-semibold [overflow-wrap:anywhere] hyphens-auto text-white group-hover:underline">{g.alt}</span>
                     </span>
                     <ArrowRight aria-hidden="true" className="mt-1 size-4 shrink-0 text-white/60 transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100" />
                   </span>

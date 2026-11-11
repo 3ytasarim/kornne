@@ -20,9 +20,9 @@ export async function SiteFooter({ localeParam }: { localeParam: string }) {
     ? [...(await getMenu(locale, "FOOTER_CORPORATE", categorySlugs)), ...(await getMenu(locale, "FOOTER_LEGAL", categorySlugs))]
     : [
         { label: d.nav.corporate, href: href("/sayfa/kurumsal") },
-        { label: d.footer.returns, href: "/sayfa/iade-ve-geri-odeme-politikalari", hrefLang: "tr" },
-        { label: d.footer.distanceSales, href: "/sayfa/mesafeli-satis-sozlesmesi", hrefLang: "tr" },
-        { label: d.footer.kvkk, href: "/sayfa/kisisel-verilenin-korunmasi-kanunu", hrefLang: "tr" },
+        { label: d.footer.returns, href: "/tr/sayfa/iade-ve-geri-odeme-politikalari", hrefLang: "tr" },
+        { label: d.footer.distanceSales, href: "/tr/sayfa/mesafeli-satis-sozlesmesi", hrefLang: "tr" },
+        { label: d.footer.kvkk, href: "/tr/sayfa/kisisel-verilenin-korunmasi-kanunu", hrefLang: "tr" },
       ];
 
   return (

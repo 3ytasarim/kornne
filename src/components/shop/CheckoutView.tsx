@@ -12,6 +12,7 @@ import { TextArea, TextField } from "@/components/ui/Field";
 import { EmptyState, Skeleton } from "@/components/ui/States";
 import type { PublicBankAccount } from "@/lib/commerce/bank-accounts";
 import { money } from "@/lib/commerce/money-client";
+import { displayCurrency } from "@/lib/fx/convert";
 import type { Dictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
 import { format } from "@/lib/i18n/format";
@@ -33,7 +34,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
   const [placing, startPlace] = useTransition();
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
-  const [done, setDone] = useState<{ number: string; totalMinor: string } | null>(null);
+  const [done, setDone] = useState<{ number: string; totalMinor: string; currency: string } | null>(null);
   const [sameShipping, setSameShipping] = useState(true);
   const keyRef = useRef<string | null>(null);
   const startedRef = useRef<number | null>(null);
@@ -42,7 +43,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
 
   useEffect(() => {
     if (!lines.length) return;
-    start(async () => setPriced(await priceCartAction(lines.map((l) => ({ productRef: l.productRef, variantId: l.variantId, quantity: l.quantity }))).catch((): PricedCart => ({ ok: false, code: "error" }))));
+    start(async () => setPriced(await priceCartAction(lines.map((l) => ({ productRef: l.productRef, variantId: l.variantId, quantity: l.quantity })), locale).catch((): PricedCart => ({ ok: false, code: "error" }))));
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-price only when refs/quantities change
   }, [key]);
 
@@ -60,6 +61,9 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
   if (!lines.length) return <EmptyState icon={<ShoppingCart aria-hidden="true" className="size-7" />} title={s.cart.empty} text={s.cart.emptyText} action={<ButtonLink href={hrefs.browse}>{s.cart.browse}</ButtonLink>} />;
 
   const ok = priced?.ok ? priced : null;
+  const cur = ok?.currency ?? displayCurrency(locale);
+  // foreign-language orders are paid in USD → only possible once a USD account is published (Admin › Banka hesapları)
+  const noAccount = cur !== "TRY" && !banks.some((b) => b.currency === cur);
   const err = (k: string) => (errors[k] ? ((s.errors as Record<string, string>)[errors[k]!] ?? s.errors.invalid) : undefined);
   const touch = () => {
     startedRef.current ??= Date.now();
@@ -95,7 +99,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
       }).catch((): PlaceOrderState => ({ ok: false, code: "error" }));
       if (res.ok) {
         quoteList.clear();
-        setDone({ number: res.number, totalMinor: res.totalMinor });
+        setDone({ number: res.number, totalMinor: res.totalMinor, currency: res.currency });
         window.scrollTo({ top: 0 });
         return;
       }
@@ -106,7 +110,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
         else if (first) formRef.current?.querySelector<HTMLElement>(`[name="${first}"]`)?.focus();
         return;
       }
-      setFormError(res.code === "rate" ? s.errors.rate : res.code === "closed" ? s.errors.closed : res.code === "not_purchasable" ? s.errors.notPurchasable : s.errors.generic);
+      setFormError(res.code === "rate" ? s.errors.rate : res.code === "closed" ? s.errors.closed : res.code === "not_purchasable" ? s.errors.notPurchasable : res.code === "no_account" ? s.errors.noAccount : s.errors.generic);
     });
   };
 
@@ -115,6 +119,11 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
     {header(1)}
     <div className="grid grid-cols-1 items-start gap-8 lg:grid-cols-[minmax(0,1fr)_400px]">
       <form ref={formRef} onSubmit={submit} onFocus={touch} noValidate className="space-y-6" data-checkout-form>
+        {noAccount ? (
+          <p role="alert" className="rounded-[var(--radius-md)] border border-warning/40 bg-warning-50 px-4 py-3 text-sm text-ink">
+            {s.errors.noAccount}
+          </p>
+        ) : null}
         {formError ? (
           <p role="alert" className="rounded-[var(--radius-md)] border border-signal/30 bg-signal-50 px-4 py-3 text-sm text-signal-ink">
             {formError}
@@ -181,7 +190,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
             <ArrowLeft aria-hidden="true" className="size-4 rtl:-scale-x-100" />
             {s.checkout.backToCart}
           </Link>
-          <Button type="submit" size="lg" disabled={placing || !ok} icon={placing ? <Loader2 aria-hidden="true" className="size-5 animate-spin" /> : <Lock aria-hidden="true" className="size-4" />}>
+          <Button type="submit" size="lg" disabled={placing || !ok || noAccount} icon={placing ? <Loader2 aria-hidden="true" className="size-5 animate-spin" /> : <Lock aria-hidden="true" className="size-4" />}>
             {placing ? s.checkout.placing : s.checkout.place}
           </Button>
         </div>
@@ -202,7 +211,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
                   <span className="text-xs text-steel">× {l.quantity}</span>
                 </span>
                 <span className="shrink-0 text-sm font-semibold text-ink tabular-nums" dir="ltr">
-                  {p ? money(p.lineMinor, locale) : "—"}
+                  {p ? money(p.lineMinor, locale, cur) : "—"}
                 </span>
               </li>
             );
@@ -212,19 +221,19 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
           <div className="flex justify-between gap-4">
             <dt className="text-steel">{s.cart.net}</dt>
             <dd className="text-ink tabular-nums" dir="ltr">
-              {ok ? money(ok.netMinor, locale) : "—"}
+              {ok ? money(ok.netMinor, locale, cur) : "—"}
             </dd>
           </div>
           <div className="flex justify-between gap-4">
             <dt className="text-steel">{format(s.cart.vat, { rate: ok?.lines[0] ? ok.lines[0].vatRateBp / 100 : 20 })}</dt>
             <dd className="text-ink tabular-nums" dir="ltr">
-              {ok ? money(ok.vatMinor, locale) : "—"}
+              {ok ? money(ok.vatMinor, locale, cur) : "—"}
             </dd>
           </div>
           <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
             <dt className="font-semibold text-ink">{s.cart.total}</dt>
             <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="checkout-total">
-              {ok ? money(ok.totalMinor, locale) : s.cart.calculating}
+              {ok ? money(ok.totalMinor, locale, cur) : s.cart.calculating}
             </dd>
           </div>
         </dl>
@@ -243,7 +252,9 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
   );
 }
 
-function OrderPlaced({ locale, s, banks, order, hrefs }: { locale: Locale; s: Shop; banks: PublicBankAccount[]; order: { number: string; totalMinor: string }; hrefs: { notice: string; status: string } }) {
+function OrderPlaced({ locale, s, banks, order, hrefs }: { locale: Locale; s: Shop; banks: PublicBankAccount[]; order: { number: string; totalMinor: string; currency: string }; hrefs: { notice: string; status: string } }) {
+  // only accounts in the order currency (TRY for Turkish orders, USD for the other languages)
+  const payTo = banks.filter((b) => b.currency === order.currency);
   const [copied, setCopied] = useState(false);
   return (
     <div className="mx-auto max-w-4xl space-y-8" data-testid="order-placed">
@@ -277,7 +288,7 @@ function OrderPlaced({ locale, s, banks, order, hrefs }: { locale: Locale; s: Sh
           <div className="rounded-[var(--radius-lg)] bg-surface p-5 text-start shadow-sm">
             <dt className="text-sm text-steel">{s.success.amount}</dt>
             <dd className="mt-1 text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="order-total">
-              {money(order.totalMinor, locale)}
+              {money(order.totalMinor, locale, order.currency)}
             </dd>
           </div>
         </dl>
@@ -288,7 +299,7 @@ function OrderPlaced({ locale, s, banks, order, hrefs }: { locale: Locale; s: Sh
         <h2 id="pay-to" className="mb-4 text-h3 font-bold text-ink">
           {s.banks.title}
         </h2>
-        {banks.length ? <BankAccountList accounts={banks} labels={s.banks} /> : <p className="rounded-[var(--radius-lg)] border border-line bg-surface-2 p-5 text-ink-2">{s.banks.pending}</p>}
+        {payTo.length ? <BankAccountList accounts={payTo} labels={s.banks} /> : <p className="rounded-[var(--radius-lg)] border border-line bg-surface-2 p-5 text-ink-2">{s.banks.pending}</p>}
       </section>
 
       <div className="rounded-[var(--radius-lg)] border border-line bg-surface p-6">

@@ -54,7 +54,7 @@ describe.skipIf(!hasTestDb)("translation approval workflow (isolated test schema
 
   it("publish makes it public and points the legacy URL at it; unpublish restores the previous target", async () => {
     const path = await publishProductTranslation(db, actor, product.product.id, "en");
-    expect(path).toBe("/en/product/e2e-legacy-9901");
+    expect(path).toBe("/product/e2e-legacy-9901");
     expect((await db.productTranslation.findUniqueOrThrow({ where: { productId_locale: { productId: product.product.id, locale: "en" } } })).status).toBe("APPROVED");
     expect((await db.redirect.findUniqueOrThrow({ where: { fromPath: "/urun/e2e-legacy-9901" } })).toPath).toBe(path);
     await unpublishProductTranslation(db, actor, product.product.id, "en");

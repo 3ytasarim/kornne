@@ -37,7 +37,7 @@ export default async function QuoteListPage({ params }: PageProps<"/[locale]/tek
         list={d.quoteList}
         form={d.quoteForm}
         // the privacy notice exists only in Turkish (legal approval pending)
-        privacyHref="/sayfa/kisisel-verilenin-korunmasi-kanunu"
+        privacyHref="/tr/sayfa/kisisel-verilenin-korunmasi-kanunu"
         browseHref={all ? href(`/kategori/${all.slug}`) : href("/")}
       />
     </div>

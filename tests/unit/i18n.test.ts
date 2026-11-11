@@ -1,18 +1,30 @@
 import { describe, expect, it } from "vitest";
 import { dirOf, ENABLED_LOCALES, LOCALES } from "@/lib/i18n/config";
 import { getDictionary, missingKeys } from "@/lib/i18n/dictionaries";
-import { localizePath, resolvePublicPath } from "@/lib/i18n/routes";
+import { canonicalRedirectTarget, legacyTurkishPath, localizePath, resolvePublicPath } from "@/lib/i18n/routes";
 
 describe("locale routing", () => {
-  it("keeps legacy Turkish URLs unprefixed", () => {
-    expect(localizePath("tr", "/urun/dairesel-kesim-hucresi")).toBe("/urun/dairesel-kesim-hucresi");
-    expect(localizePath("tr", "/")).toBe("/");
+  it("English is the unprefixed default (since 2026-11); Turkish lives under /tr", () => {
+    expect(localizePath("en", "/urun/circular-cutting-cell")).toBe("/product/circular-cutting-cell");
+    expect(localizePath("en", "/")).toBe("/");
+    expect(localizePath("tr", "/urun/dairesel-kesim-hucresi")).toBe("/tr/urun/dairesel-kesim-hucresi");
+    expect(localizePath("tr", "/")).toBe("/tr");
   });
 
   it("prefixes and translates the first segment for other locales", () => {
-    expect(localizePath("en", "/urun/circular-cutting-cell")).toBe("/en/product/circular-cutting-cell");
+    expect(localizePath("de", "/urun/karkassen-spaltsaege")).toBe("/de/produkt/karkassen-spaltsaege");
     expect(localizePath("ru", "/kategori/vse-produkty")).toBe("/ru/kategoriya/vse-produkty");
     expect(localizePath("ar", "/")).toBe("/ar");
+  });
+
+  it("old unprefixed Turkish URLs map to /tr; English and prefixed URLs do not", () => {
+    expect(legacyTurkishPath("/urun/dairesel-kesim-hucresi")).toBe("/tr/urun/dairesel-kesim-hucresi");
+    expect(legacyTurkishPath("/kategori/tum-urunler/2")).toBe("/tr/kategori/tum-urunler/2");
+    expect(legacyTurkishPath("/sayfa/kurumsal")).toBe("/tr/sayfa/kurumsal");
+    for (const p of ["/", "/product/x", "/blog/x", "/tr/urun/x", "/de/produkt/x"]) expect(legacyTurkishPath(p), p).toBeNull();
+    expect(canonicalRedirectTarget("/en/category/all-products")).toBe("/category/all-products");
+    expect(canonicalRedirectTarget("/kategori/mezbaha-ekipmanlari")).toBe("/tr/kategori/mezbaha-ekipmanlari");
+    expect(canonicalRedirectTarget("/en")).toBe("/");
   });
 
   it("round-trips public ↔ internal paths for every locale", () => {
@@ -26,8 +38,9 @@ describe("locale routing", () => {
     }
   });
 
-  it("detects a redundant /tr prefix", () => {
-    expect(resolvePublicPath("/tr/urun/x")).toEqual({ locale: "tr", internalPath: "/urun/x", redundantPrefix: true });
+  it("detects a redundant /en prefix", () => {
+    expect(resolvePublicPath("/en/product/x")).toEqual({ locale: "en", internalPath: "/urun/x", redundantPrefix: true });
+    expect(resolvePublicPath("/tr/urun/x")).toEqual({ locale: "tr", internalPath: "/urun/x", redundantPrefix: false });
   });
 
   it("Arabic is RTL, the rest LTR", () => {
@@ -61,8 +74,10 @@ describe("client boundary strings (Sprint 10 bundle fix)", () => {
       const d = getDictionary(l);
       expect(BOUNDARY_STRINGS[l].error).toEqual(d.error);
       expect(BOUNDARY_STRINGS[l].notFound).toEqual(d.notFound);
-      const slug = (localeMap.categories.find((c) => c.isAllProducts)?.locales as Record<string, { slug: string }>)[l]?.slug ?? null;
-      expect(BOUNDARY_STRINGS[l].allProductsSlug).toBe(slug);
+      // legacy languages keep the old site's slug; languages added later (de) use the imported translation's slug
+      const slug = (localeMap.categories.find((c) => c.isAllProducts)?.locales as Record<string, { slug: string }>)[l]?.slug;
+      if (slug) expect(BOUNDARY_STRINGS[l].allProductsSlug).toBe(slug);
+      else expect(BOUNDARY_STRINGS[l].allProductsSlug).toMatch(/^[a-z0-9-]+$/);
     }
   });
 });

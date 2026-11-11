@@ -3,6 +3,8 @@ import type { ShopDictionary } from "./tr";
 /** English shop strings — draft, native review pending. */
 export const shopEn: ShopDictionary = {
   utility: {
+    fxTitle: "Exchange rates",
+    fxSource: "CBRT selling",
     transfer: "Pay by bank transfer (EFT / Havale)",
     vat: "Prices include VAT",
   },
@@ -106,6 +108,7 @@ export const shopEn: ShopDictionary = {
     legalDraft: "The contract texts are under legal review.",
   },
   errors: {
+    noAccount: "No US dollar bank account is set up yet for bank transfers. Please contact us or request a quote for your cart.",
     required: "This field is required.",
     tooLong: "The text entered is too long.",
     invalid: "Invalid value.",
@@ -178,7 +181,7 @@ export const shopEn: ShopDictionary = {
     payerName: "Sender (full name or company)",
     bank: "Bank paid to",
     chooseBank: "Select a bank",
-    amount: "Amount sent (TL)",
+    amount: "Amount sent",
     paidAt: "Payment date",
     note: "Description (optional)",
     send: "Send notification",

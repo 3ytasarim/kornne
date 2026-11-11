@@ -28,7 +28,7 @@ async function addFromProductPage(page: Page, path: string, qty = 1) {
 test.describe("Sprint 4 — product detail", () => {
   test("premium layout with only real data", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await page.goto("/urun/dairesel-kesim-hucresi");
+    await page.goto("/tr/urun/dairesel-kesim-hucresi");
     await expect(page.getByRole("group", { name: "Ürün görselleri" })).toBeVisible();
     await expect(page.getByRole("navigation", { name: "Ürün bölümleri" })).toBeVisible();
     const facts = page.locator("#bilgiler");
@@ -43,17 +43,17 @@ test.describe("Sprint 4 — product detail", () => {
   });
 
   test("a product with real options requires a choice before it is added", async ({ page }) => {
-    await page.goto("/urun/kucuk-bas-stoklama-kancasi");
+    await page.goto("/tr/urun/kucuk-bas-stoklama-kancasi");
     await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
     await expect(page.getByRole("alert").filter({ hasText: "Bir seçenek seçin" })).toBeVisible();
     await page.getByText("8 li Kanca", { exact: true }).click();
     await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
-    await page.goto("/teklif-listem");
+    await page.goto("/tr/teklif-listem");
     await expect(page.getByText("Seçenek: 8 li Kanca")).toBeVisible();
   });
 
   test("gallery lightbox opens with keyboard and closes with Esc", async ({ page }) => {
-    await page.goto("/urun/dairesel-kesim-hucresi");
+    await page.goto("/tr/urun/dairesel-kesim-hucresi");
     await page.getByRole("button", { name: /Görseli büyüt/ }).focus();
     await page.keyboard.press("Enter");
     await expect(page.getByRole("dialog")).toBeVisible();
@@ -63,7 +63,7 @@ test.describe("Sprint 4 — product detail", () => {
 
   test("mobile sticky quote bar appears after scrolling and hides the WhatsApp bubble", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 812 });
-    await page.goto("/urun/dairesel-kesim-hucresi");
+    await page.goto("/tr/urun/dairesel-kesim-hucresi");
     const bar = page.getByRole("button", { name: "Teklif al" });
     await expect(bar).toBeHidden();
     // scroll until the real quote panel has fully left the viewport (top edge)
@@ -80,16 +80,16 @@ test.describe("Sprint 4 — product detail", () => {
 
 test.describe("Sprint 5 — quote list and live quote requests", () => {
   test("empty state", async ({ page }) => {
-    await page.goto("/teklif-listem");
+    await page.goto("/tr/teklif-listem");
     await expect(page.getByText("Teklif listeniz boş.")).toBeVisible();
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
   });
 
   test("end-to-end: list → quantities → validation → request stored in Neon → visible to admin", async ({ page }) => {
-    await addFromProductPage(page, "/urun/dairesel-kesim-hucresi", 2);
-    await addFromProductPage(page, "/urun/sulu-sterilizator");
-    await addFromProductPage(page, "/urun/testere-serit");
-    await page.goto("/teklif-listem");
+    await addFromProductPage(page, "/tr/urun/dairesel-kesim-hucresi", 2);
+    await addFromProductPage(page, "/tr/urun/sulu-sterilizator");
+    await addFromProductPage(page, "/tr/urun/testere-serit");
+    await page.goto("/tr/teklif-listem");
     await expect(page.getByRole("heading", { name: "3 ürün" })).toBeVisible();
     // quantity +/−, manual entry clamps, remove
     const first = page.getByRole("listitem").filter({ hasText: "Dairesel Kesim Hücresi" });
@@ -130,7 +130,7 @@ test.describe("Sprint 5 — quote list and live quote requests", () => {
     }
 
     // list cleared after success
-    await page.goto("/teklif-listem");
+    await page.goto("/tr/teklif-listem");
     await expect(page.getByText("Teklif listeniz boş.")).toBeVisible();
 
     // admin sees it; the list has no PII, the detail is audited and renders the note as text
@@ -152,8 +152,8 @@ test.describe("Sprint 5 — quote list and live quote requests", () => {
   });
 
   test("double submit creates a single request", async ({ page }) => {
-    await addFromProductPage(page, "/urun/hijyen-geciti");
-    await page.goto("/teklif-listem");
+    await addFromProductPage(page, "/tr/urun/hijyen-geciti");
+    await page.goto("/tr/teklif-listem");
     const email = `e2e-dbl-${Date.now()}@kornne.test`;
     await page.getByLabel("Ad soyad").fill("E2E Çift");
     await page.getByLabel("E-posta").fill(email);
@@ -170,7 +170,7 @@ test.describe("Sprint 5 — quote list and live quote requests", () => {
   });
 
   test("Arabic quote list is RTL and fits 375 px", async ({ page }) => {
-    await addFromProductPage(page, "/urun/sulu-sterilizator");
+    await addFromProductPage(page, "/tr/urun/sulu-sterilizator");
     await page.setViewportSize({ width: 375, height: 812 });
     await page.goto("/ar/quote-list");
     await expect(page.locator("html")).toHaveAttribute("dir", "rtl");
@@ -185,7 +185,7 @@ test.describe("Sprint 5 — quote list and live quote requests", () => {
 // commerce-locked.prodlike.spec.ts. Card payment never exists.
 test.describe("Sprint 5/12 — no card payment, cart pages render", () => {
   test("cart and checkout pages render without any card payment wording", async ({ page }) => {
-    for (const path of ["/sepetim", "/odeme", "/en/cart", "/ar/checkout"]) {
+    for (const path of ["/tr/sepetim", "/tr/odeme", "/cart", "/de/warenkorb", "/ar/checkout"]) {
       const res = await page.goto(path);
       expect(res?.status(), path).toBe(200);
       const text = await page.locator("main").innerText();

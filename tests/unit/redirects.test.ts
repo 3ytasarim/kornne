@@ -1,21 +1,24 @@
 import { describe, expect, it } from "vitest";
 import redirects from "@/data/redirects.json";
-import { localizePath, resolvePublicPath } from "@/lib/i18n/routes";
+import { canonicalRedirectTarget, localizePath, resolvePublicPath } from "@/lib/i18n/routes";
 
 const map = redirects as Record<string, string>;
 
 describe("legacy redirect map", () => {
+  // targets were written when Turkish was unprefixed; the proxy upgrades them with canonicalRedirectTarget (2026-11)
   it("has no chains and no loops (single-hop 301s)", () => {
     for (const [from, to] of Object.entries(map)) {
-      expect(to, from).not.toBe(from);
-      expect(map[to], `${from} → ${to} chains`).toBeUndefined();
+      const target = canonicalRedirectTarget(to);
+      expect(target, from).not.toBe(from);
+      expect(map[target], `${from} → ${target} chains`).toBeUndefined();
     }
   });
 
-  it("targets are canonical public URLs of the new site", () => {
+  it("upgraded targets are canonical public URLs of the new site", () => {
     for (const to of Object.values(map)) {
-      const { locale, internalPath } = resolvePublicPath(to);
-      expect(localizePath(locale, internalPath)).toBe(to);
+      const target = canonicalRedirectTarget(to);
+      const { locale, internalPath } = resolvePublicPath(target.split(/[?#]/)[0]!);
+      expect(localizePath(locale, internalPath)).toBe(target.split(/[?#]/)[0]);
     }
   });
 

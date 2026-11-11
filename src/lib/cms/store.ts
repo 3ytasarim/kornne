@@ -142,7 +142,7 @@ export async function getMenu(locale: Locale, location: MenuLocation, categorySl
   const out: MenuLink[] = [];
   for (const m of raw.menus.filter((x) => x.location === location)) {
     const labels = m.labels as Partial<Record<Locale, string>>;
-    const label = labels[locale] || labels.tr;
+    const label = labels[locale] || labels.en || labels.tr;
     if (!label) continue;
     if (m.kind === "page") {
       const rows = raw.pages.filter((p) => p.page.key === m.pageKey);

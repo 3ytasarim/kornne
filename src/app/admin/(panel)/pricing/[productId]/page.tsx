@@ -52,7 +52,7 @@ export default async function ProductPricePage({ params }: PageProps<"/admin/pri
           Ürünü düzenle
         </Link>
       </p>
-      <PageHeader title={`Fiyat: ${title}`} description={`Eski site no #${p.sourceKey?.split(":").pop() ?? "—"}`} actions={live ? <Badge tone="success">Vitrinde: {formatMoney(live.amountMinor)}</Badge> : <Badge tone="warning">Vitrinde fiyat yok</Badge>} />
+      <PageHeader title={`Fiyat: ${title}`} description={`Eski site no #${p.sourceKey?.split(":").pop() ?? "—"}`} actions={live ? <Badge tone="success">Vitrinde: {formatMoney(live.amountMinor, live.currency)}</Badge> : <Badge tone="warning">Vitrinde fiyat yok</Badge>} />
       <div className="grid gap-6 xl:grid-cols-[1fr_24rem]">
         <div className="space-y-6">
           <Card title="Eski siteden gelen ham kayıt" description="Değiştirilmez ve doğrudan onaylanamaz; KDV durumu bilinmiyor.">
@@ -60,7 +60,7 @@ export default async function ProductPricePage({ params }: PageProps<"/admin/pri
               <KeyValues
                 key={l.id}
                 rows={[
-                  ["Satış fiyatı (ham)", l.rawAmount ?? formatMoney(l.amountMinor)],
+                  ["Satış fiyatı (ham)", l.rawAmount ?? formatMoney(l.amountMinor, l.currency)],
                   ["Eski fiyat (ham)", l.rawCompareAt ? <span className={l.compareAtMinor !== null && l.compareAtMinor <= l.amountMinor ? "text-signal" : ""}>{l.rawCompareAt}{l.compareAtMinor !== null && l.compareAtMinor <= l.amountMinor ? " — eski fiyat ≤ satış: indirim gösterilmez" : ""}</span> : "—"],
                   ["Para birimi / dil", `${l.currency} / ${l.sourceLocale?.toUpperCase() ?? "—"}`],
                   ["KDV", "Bilinmiyor"],
@@ -88,7 +88,7 @@ export default async function ProductPricePage({ params }: PageProps<"/admin/pri
                   <li key={x.id} className="rounded-[var(--radius-md)] border border-line p-4">
                     <div className="flex flex-wrap items-center justify-between gap-2">
                       <p className="text-lg font-bold text-ink tabular-nums">
-                        {formatMoney(x.amountMinor)} <span className="text-sm font-medium text-steel">{x.vatIncluded === null ? "KDV ?" : x.vatIncluded ? "KDV dahil" : "KDV hariç"} · %{((x.vatRateBp ?? 0) / 100).toLocaleString("tr-TR")}</span>
+                        {formatMoney(x.amountMinor, x.currency)} <span className="text-sm font-medium text-steel">{x.vatIncluded === null ? "KDV ?" : x.vatIncluded ? "KDV dahil" : "KDV hariç"} · %{((x.vatRateBp ?? 0) / 100).toLocaleString("tr-TR")}</span>
                       </p>
                       <div className="flex gap-1">
                         {x.status === "VERIFIED" ? <Badge tone="success">{isLive ? "Onaylı · vitrinde" : "Onaylı (süresi dışında)"}</Badge> : x.status === "REJECTED" ? <Badge tone="outline">Reddedildi / geri alındı</Badge> : <Badge tone="brand">Onay bekliyor</Badge>}
@@ -96,7 +96,7 @@ export default async function ProductPricePage({ params }: PageProps<"/admin/pri
                     </div>
                     <KeyValues
                       rows={[
-                        ["Eski fiyat", x.compareAtMinor !== null ? `${formatMoney(x.compareAtMinor)}${pct ? ` (−%${pct})` : ""}` : "—"],
+                        ["Eski fiyat", x.compareAtMinor !== null ? `${formatMoney(x.compareAtMinor, x.currency)}${pct ? ` (−%${pct})` : ""}` : "—"],
                         ["Geçerlilik", `${fmtDate(x.validFrom)} → ${x.validTo ? fmtDate(x.validTo) : "süresiz"}`],
                         ["Kaynak", x.evidence ?? "—"],
                         ["Öneren", `${x.createdBy?.name ?? "—"} · ${fmtDateTime(x.createdAt)}`],
@@ -156,8 +156,12 @@ export default async function ProductPricePage({ params }: PageProps<"/admin/pri
             <Card title="Yeni fiyat önerisi" description="Müşteriden alınan doğrulanmış bilgiyle girin.">
               <ActionForm action={proposePriceAction} className="space-y-4" aria-label="Fiyat önerisi" resetOnOk>
                 <input type="hidden" name="productId" value={p.id} />
-                <input type="hidden" name="currency" value="TRY" />
-                <Input name="amount" label="Satış fiyatı (TL)" defaultValue={prefill} required hint="Örn. 1.250.000,00 — ham eski fiyat ön doldurulmuştur, kontrol edin." inputMode="decimal" />
+                <Select name="currency" label="Para birimi" defaultValue="USD">
+                  <option value="USD">USD $</option>
+                  <option value="TRY">TL ₺</option>
+                  <option value="EUR">EUR €</option>
+                </Select>
+                <Input name="amount" label="Satış fiyatı" defaultValue={prefill} required hint="Örn. 1.250.000,00 — ham eski fiyat ön doldurulmuştur, kontrol edin." inputMode="decimal" />
                 <Input name="compareAt" label="Eski fiyat (isteğe bağlı)" hint="Yalnız gerçek indirimde ve satış fiyatından yüksekse." inputMode="decimal" />
                 <Select name="vatMode" label="KDV" required defaultValue="">
                   <option value="" disabled>

@@ -25,7 +25,7 @@ const events = async (page: Page) => (await dataLayer(page)).filter((x): x is [s
 test.describe("consent banner (Consent Mode v2, basic mode)", () => {
   test("first visit: banner, focus on a choice, no Google script, no cookie, no dataLayer", async ({ page }) => {
     const hits = await watchGoogle(page);
-    await page.goto("/");
+    await page.goto("/tr");
     const banner = page.getByTestId("consent-banner");
     await expect(banner).toBeVisible();
     await expect(banner.getByRole("heading", { name: "Çerez tercihleri" })).toBeVisible();
@@ -39,13 +39,13 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
 
   test("reject: cookie a0, nothing loaded now or on the next visit", async ({ page }) => {
     const hits = await watchGoogle(page);
-    await page.goto("/");
+    await page.goto("/tr");
     await page.getByRole("button", { name: "Yalnız zorunlu" }).click();
     await expect(page.getByTestId("consent-banner")).toBeHidden();
     const cookie = (await page.context().cookies()).find((c) => c.name === "kornne_consent");
     expect(cookie?.value).toMatch(/^v1\.a0\.m0\.\d+$/);
     expect(cookie?.sameSite).toBe("Lax");
-    await page.goto("/urun/dairesel-kesim-hucresi");
+    await page.goto("/tr/urun/dairesel-kesim-hucresi");
     await expect(page.getByTestId("consent-banner")).toHaveCount(0);
     await page.waitForTimeout(500);
     expect(hits).toEqual([]);
@@ -54,7 +54,7 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
 
   test("accept: defaults denied THEN update granted, script requested (aborted), PII-free page_view / view_item", async ({ page }) => {
     const hits = await watchGoogle(page);
-    await page.goto("/arama?q=kesim");
+    await page.goto("/tr/arama?q=kesim");
     await page.getByRole("button", { name: "Tümünü kabul et" }).click();
     await expect.poll(() => hits.some((u) => u.includes("gtag/js?id=G-KORNNETEST0"))).toBe(true);
     const dl = await dataLayer(page);
@@ -62,8 +62,8 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
     expect(consent[0]).toEqual(["consent", "default", { analytics_storage: "denied", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied", wait_for_update: 500 }]);
     expect(consent[1]).toEqual(["consent", "update", { analytics_storage: "granted", ad_storage: "granted", ad_user_data: "granted", ad_personalization: "granted" }]);
     const pv = (await events(page)).find((e) => e[1] === "page_view");
-    expect(pv?.[2].page_location).toBe("http://localhost:3471/arama"); // no query string
-    await page.goto("/urun/dairesel-kesim-hucresi");
+    expect(pv?.[2].page_location).toBe("http://localhost:3471/tr/arama"); // no query string
+    await page.goto("/tr/urun/dairesel-kesim-hucresi");
     await expect.poll(async () => (await events(page)).map((e) => e[1])).toEqual(expect.arrayContaining(["page_view", "view_item"]));
     const vi = (await events(page)).find((e) => e[1] === "view_item")!;
     expect(vi[2]).toMatchObject({ items: [expect.objectContaining({ item_id: expect.stringMatching(/^\d+$/), item_name: "Dairesel Kesim Hücresi" })] });
@@ -72,13 +72,13 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
 
   test("search terms that look personal are dropped; analytics-only choice keeps ad signals denied", async ({ page }) => {
     await watchGoogle(page);
-    await page.goto("/");
+    await page.goto("/tr");
     await page.getByRole("button", { name: "Tercihleri ayarla" }).click();
     await page.getByRole("checkbox", { name: /Analitik/ }).check();
     await page.getByRole("button", { name: "Seçimi kaydet" }).click();
     const consent = (await dataLayer(page)).filter((x): x is unknown[] => Array.isArray(x) && x[0] === "consent");
     expect(consent[1]).toEqual(["consent", "update", { analytics_storage: "granted", ad_storage: "denied", ad_user_data: "denied", ad_personalization: "denied" }]);
-    await page.goto(`/arama?q=${encodeURIComponent("ali.veli@example.com")}`);
+    await page.goto(`/tr/arama?q=${encodeURIComponent("ali.veli@example.com")}`);
     await expect.poll(async () => (await events(page)).some((e) => e[1] === "search")).toBe(true);
     const s = (await events(page)).find((e) => e[1] === "search")!;
     expect(s[2]).not.toHaveProperty("search_term");
@@ -88,11 +88,11 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
   test("generate_lead exactly once per stored quote (double click), without any personal data or the reference", async ({ page }) => {
     test.setTimeout(90_000);
     await watchGoogle(page);
-    await page.goto("/urun/hijyen-geciti");
+    await page.goto("/tr/urun/hijyen-geciti");
     await page.getByRole("button", { name: "Tümünü kabul et" }).click();
     await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
     await expect.poll(async () => (await events(page)).some((e) => e[1] === "add_to_quote_list")).toBe(true);
-    await page.goto("/teklif-listem");
+    await page.goto("/tr/teklif-listem");
     const email = `e2e-lead-${Date.now()}@kornne.test`;
     await page.getByLabel("Ad soyad").fill("E2E Analitik");
     await page.getByLabel("E-posta").fill(email);
@@ -109,7 +109,7 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
 
   test("withdrawal from the footer: consent update denied, _ga cookies removed, choice persists", async ({ page, context }) => {
     await watchGoogle(page);
-    await page.goto("/");
+    await page.goto("/tr");
     await page.getByRole("button", { name: "Tümünü kabul et" }).click();
     await context.addCookies([{ name: "_ga", value: "GA1.1.test", url: "http://localhost:3471" }]);
     await page.getByRole("contentinfo").getByRole("button", { name: "Çerez tercihleri" }).click();

@@ -6,6 +6,9 @@ import { writeAuditLogVia } from "@/lib/audit-log";
 import { LOCALES } from "@/lib/i18n/config";
 import type { GateResult } from "./gate";
 import { assertTransition, type Actor, type OrderState } from "./order-state";
+import { convertMinor, displayCurrency, type Rates } from "@/lib/fx/convert";
+import { getRates } from "@/lib/fx/rates";
+import { isValidTrIban } from "./iban";
 import { computeTotals, lineTotals, MAX_LINE_QTY } from "./totals";
 
 /**
@@ -48,7 +51,7 @@ export const b2bCheckoutSchema = z.object({
   startedAt: z.number().int(),
 });
 export type B2BCheckoutInput = z.input<typeof b2bCheckoutSchema>;
-export type PlaceOrderResult = { ok: true; number: string; accessToken: string; totalMinor: bigint; duplicate: boolean } | { ok: false; code: "validation"; fields: Record<string, string> } | { ok: false; code: "spam" | "rate" | "closed" | "not_purchasable" | "error" };
+export type PlaceOrderResult = { ok: true; number: string; accessToken: string; totalMinor: bigint; currency: string; duplicate: boolean } | { ok: false; code: "validation"; fields: Record<string, string> } | { ok: false; code: "spam" | "rate" | "closed" | "not_purchasable" | "no_account" | "error" };
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 export function newOrderNumber(now = new Date()): string {
@@ -77,7 +80,14 @@ export type ResolvedLine = { productRef: string; productId: string; variantId: s
  * Merges duplicate lines, resolves products by legacy ref and re-prices every line from VERIFIED database prices.
  * Shared by the cart preview and order placement so the customer sees exactly what the order will charge.
  */
-export async function resolveCartLines(db: Db, items: CartItemInput[], now = new Date()): Promise<{ ok: true; lines: ResolvedLine[] } | { ok: false; code: "not_purchasable" | "variant"; productRef: string }> {
+export async function resolveCartLines(
+  db: Db,
+  items: CartItemInput[],
+  now = new Date(),
+  /** display/payment currency of the page language (TRY on Turkish pages, USD elsewhere) and the rates to reach it */
+  target: { currency: string; rates: Pick<Rates, "USD" | "EUR"> | null } = { currency: "TRY", rates: null },
+): Promise<{ ok: true; lines: ResolvedLine[]; converted: boolean } | { ok: false; code: "not_purchasable" | "variant"; productRef: string }> {
+  let converted = false;
   const merged = new Map<string, CartItemInput>();
   for (const it of items) {
     const k = `${it.productRef}|${it.variantId ?? ""}`;
@@ -93,13 +103,17 @@ export async function resolveCartLines(db: Db, items: CartItemInput[], now = new
     if (!l.variantId && p.variants.length) return { ok: false, code: "variant", productRef: l.productRef };
     const price = (l.variantId ? await purchasable(db, p.id, l.variantId, now) : null) ?? (await purchasable(db, p.id, null, now));
     if (!price) return { ok: false, code: "not_purchasable", productRef: l.productRef };
+    // unit price in the order currency (same rounding as the storefront display, so cart = page price)
+    const unit = convertMinor(price.amountMinor, price.currency, target.currency, target.rates);
+    if (unit === null || unit <= 0n) return { ok: false, code: "not_purchasable", productRef: l.productRef };
+    if (price.currency !== target.currency) converted = true;
     const vLabel = variant ? ((variant.labels as Record<string, string>).tr ?? "") : "";
-    lines.push({ productRef: l.productRef, productId: p.id, variantId: variant?.id ?? null, title: `${p.translations[0]?.title ?? p.sourceKey}${vLabel ? ` — ${vLabel}` : ""}`, sku: p.sku, unitPriceMinor: price.amountMinor, quantity: l.quantity, vatRateBp: price.vatRateBp!, vatIncluded: price.vatIncluded! });
+    lines.push({ productRef: l.productRef, productId: p.id, variantId: variant?.id ?? null, title: `${p.translations[0]?.title ?? p.sourceKey}${vLabel ? ` — ${vLabel}` : ""}`, sku: p.sku, unitPriceMinor: unit, quantity: l.quantity, vatRateBp: price.vatRateBp!, vatIncluded: price.vatIncluded! });
   }
-  return { ok: true, lines };
+  return { ok: true, lines, converted };
 }
 
-export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BCheckoutInput, ctx: { ipHash: string | null; now?: Date; isTest?: boolean }): Promise<PlaceOrderResult> {
+export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BCheckoutInput, ctx: { ipHash: string | null; now?: Date; isTest?: boolean; rates?: Pick<Rates, "USD" | "EUR"> | null }): Promise<PlaceOrderResult> {
   if (!gate.enabled) return { ok: false, code: "closed" };
   const now = ctx.now ?? new Date();
   const parsed = b2bCheckoutSchema.safeParse(raw);
@@ -115,12 +129,20 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
   const age = now.getTime() - input.startedAt;
   if (input.website || age < ORDER_LIMITS.minFillMs || age > ORDER_LIMITS.maxFormAgeMs) return { ok: false, code: "spam" };
 
-  const existing = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true } });
-  if (existing) return { ok: true, number: existing.number, accessToken: "", totalMinor: existing.totalMinor, duplicate: true };
+  const existing = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true, currency: true } });
+  if (existing) return { ok: true, number: existing.number, accessToken: "", totalMinor: existing.totalMinor, currency: existing.currency, duplicate: true };
   if ((ctx.ipHash && (await limited(db, `order:ip:${ctx.ipHash}`, ORDER_LIMITS.perIpPerHour, 3_600_000))) || (await limited(db, `order:email:${sha(input.email)}`, ORDER_LIMITS.perEmailPerHour, 3_600_000))) return { ok: false, code: "rate" };
 
-  const resolved = await resolveCartLines(db, input.items, now);
+  // Turkish pages order and pay in TRY, every other language in USD (client decision 11.11.2026)
+  const currency = displayCurrency(input.locale);
+  if (currency !== "TRY") {
+    const accounts = await db.bankAccount.findMany({ where: { active: true, currency }, select: { iban: true } });
+    if (!accounts.some((a) => isValidTrIban(a.iban))) return { ok: false, code: "no_account" };
+  }
+  const rates = ctx.rates !== undefined ? ctx.rates : await getRates(db);
+  const resolved = await resolveCartLines(db, input.items, now, { currency, rates });
   if (!resolved.ok) return resolved.code === "variant" ? { ok: false, code: "validation", fields: { items: "variantRequired" } } : { ok: false, code: "not_purchasable" };
+  const fx = resolved.converted && rates ? { fxCurrency: currency === "TRY" ? "USD" : currency, fxRate4: currency === "EUR" ? rates.EUR : rates.USD } : { fxCurrency: null, fxRate4: null };
   const lines = resolved.lines;
   const totals = computeTotals(lines);
   const accessToken = randomBytes(24).toString("base64url");
@@ -136,7 +158,8 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
               paymentStatus: "UNPAID",
               paymentMethod: "BANK_TRANSFER",
               channel: "WEB",
-              currency: "TRY",
+              currency,
+              ...fx,
               subtotalMinor: totals.netMinor,
               taxMinor: totals.vatMinor,
               shippingMinor: 0n,
@@ -160,11 +183,11 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
     });
     // transactional outbox: sales notification (reference + total only; customer data stays in the admin)
     await db.notificationOutbox.create({ data: { kind: "order.created", channel: "email", entityType: "Order", entityId: order.id, payload: { number: order.number, total: order.totalMinor.toString(), lines: lines.length }, status: "BLOCKED", lastError: "Bildirim sağlayıcısı ve alıcı adresi tanımlı değil" } }).catch(() => {});
-    return { ok: true, number: order.number, accessToken, totalMinor: order.totalMinor, duplicate: false };
+    return { ok: true, number: order.number, accessToken, totalMinor: order.totalMinor, currency: order.currency, duplicate: false };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
-      const again = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true } });
-      if (again) return { ok: true, number: again.number, accessToken: "", totalMinor: again.totalMinor, duplicate: true };
+      const again = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true, currency: true } });
+      if (again) return { ok: true, number: again.number, accessToken: "", totalMinor: again.totalMinor, currency: again.currency, duplicate: true };
     }
     return { ok: false, code: "error" };
   }
@@ -173,7 +196,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
 // ── public lookups (number + e-mail) ───────────────────────────────────────────────────────────────────────────────
 const lookupSchema = z.object({ number: z.string().trim().toUpperCase().regex(/^(TEST-)?KRN-\d{6}-[A-Z0-9]{5}$/, "invalidNumber"), email: z.string().trim().toLowerCase().pipe(z.email("invalidEmail")) });
 
-export type PublicOrderStatus = { number: string; placedAt: Date; status: string; paymentStatus: string; totalMinor: bigint; itemCount: number; notified: boolean; lines: { title: string; quantity: number; lineTotalMinor: bigint }[] };
+export type PublicOrderStatus = { number: string; placedAt: Date; status: string; paymentStatus: string; totalMinor: bigint; currency: string; itemCount: number; notified: boolean; lines: { title: string; quantity: number; lineTotalMinor: bigint }[] };
 
 async function findByNumberAndEmail(db: Db, number: string, email: string) {
   const order = await db.order.findUnique({ where: { number }, include: { items: { select: { titleSnapshot: true, quantity: true, lineTotalMinor: true } }, paymentNotices: { select: { id: true } } } });
@@ -187,7 +210,7 @@ export async function lookupOrderStatus(db: Db, raw: { number: string; email: st
   if (ctx.ipHash && (await limited(db, `order-lookup:ip:${ctx.ipHash}`, ORDER_LIMITS.lookupsPerIpPerHour, 3_600_000))) return { ok: false, code: "rate" };
   const o = await findByNumberAndEmail(db, p.data.number, p.data.email);
   if (!o) return { ok: false, code: "not_found" }; // same answer for "no such order" and "wrong e-mail"
-  return { ok: true, order: { number: o.number, placedAt: o.placedAt, status: o.status, paymentStatus: o.paymentStatus, totalMinor: o.totalMinor, itemCount: o.items.length, notified: o.paymentNotices.length > 0, lines: o.items.map((i) => ({ title: i.titleSnapshot, quantity: i.quantity, lineTotalMinor: i.lineTotalMinor })) } };
+  return { ok: true, order: { number: o.number, placedAt: o.placedAt, status: o.status, paymentStatus: o.paymentStatus, totalMinor: o.totalMinor, currency: o.currency, itemCount: o.items.length, notified: o.paymentNotices.length > 0, lines: o.items.map((i) => ({ title: i.titleSnapshot, quantity: i.quantity, lineTotalMinor: i.lineTotalMinor })) } };
 }
 
 /** Order page after checkout: guest access token (sent only to the browser that placed the order). */
@@ -216,7 +239,7 @@ export async function submitPaymentNotice(db: Db, raw: PaymentNoticeInput, ctx: 
   const o = await findByNumberAndEmail(db, p.data.number, p.data.email);
   if (!o) return { ok: false, code: "not_found" };
   if (o.status !== "AWAITING_PAYMENT") return { ok: false, code: "state" };
-  const bank = await db.bankAccount.findFirst({ where: { id: p.data.bankAccountId, active: true }, select: { id: true } });
+  const bank = await db.bankAccount.findFirst({ where: { id: p.data.bankAccountId, active: true, currency: o.currency }, select: { id: true } });
   if (!bank) return { ok: false, code: "validation", fields: { bankAccountId: "required" } };
   const paidAt = new Date(`${p.data.paidAt}T12:00:00Z`);
   const now = ctx.now ?? new Date();

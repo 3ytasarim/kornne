@@ -32,6 +32,7 @@ const accountSchema = z.object({
   accountHolder: z.string().trim().min(2, "Hesap sahibi gerekli").max(160),
   iban: z.string().trim().max(40).transform(normalizeIban),
   branch: z.string().trim().max(120).optional().transform((v) => v || null),
+  currency: z.enum(["TRY", "USD", "EUR"]).default("TRY"),
   sortOrder: z.coerce.number().int().min(0).max(999).default(0),
   active: z.boolean().default(false),
 });
@@ -42,7 +43,7 @@ export async function saveBankAccount(db: PrismaClient, actor: { id: string }, r
   const v = parsed.data;
   if (v.iban && !isValidTrIban(v.iban)) throw new AdminError("IBAN geçersiz.", { iban: "TR ile başlayan 26 karakterlik geçerli bir IBAN girin (kontrol hanesi tutmuyor)" });
   if (v.active && !v.iban) throw new AdminError("IBAN girilmeden hesap yayına alınamaz.", { iban: "IBAN gerekli" });
-  const data = { bankName: v.bankName, accountHolder: v.accountHolder, iban: v.iban, branch: v.branch, sortOrder: v.sortOrder, active: v.active, updatedById: actor.id };
+  const data = { bankName: v.bankName, accountHolder: v.accountHolder, iban: v.iban, branch: v.branch, currency: v.currency, sortOrder: v.sortOrder, active: v.active, updatedById: actor.id };
   const before = v.id ? await db.bankAccount.findUnique({ where: { id: v.id } }) : null;
   const row = v.id ? await db.bankAccount.update({ where: { id: v.id }, data }) : await db.bankAccount.create({ data });
   await writeAuditLogVia(db, { actorId: actor.id, action: v.id ? "bank_account.updated" : "bank_account.created", entityType: "BankAccount", entityId: row.id, after: { bankName: row.bankName, active: row.active, ibanSet: !!row.iban, ibanChanged: before ? before.iban !== row.iban : true } });

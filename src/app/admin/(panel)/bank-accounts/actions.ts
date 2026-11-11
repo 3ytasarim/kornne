@@ -16,6 +16,7 @@ export async function saveBankAccountAction(_p: ActionState, f: FormData): Promi
       accountHolder: String(f.get("accountHolder") ?? ""),
       iban: String(f.get("iban") ?? ""),
       branch: String(f.get("branch") ?? ""),
+      currency: (String(f.get("currency") ?? "TRY") || "TRY") as "TRY" | "USD" | "EUR",
       sortOrder: Number(f.get("sortOrder") ?? 0),
       active: f.get("active") === "on",
     });

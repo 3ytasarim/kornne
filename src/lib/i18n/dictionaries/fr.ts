@@ -6,6 +6,7 @@ import type { Dictionary } from "./tr";
 export const fr: DeepPartial<Dictionary> = {
   meta: {
     siteName: "KORNNE",
+    homeTitle: "Équipements d'abattoir et découpe robotisée | KORNNE",
     tagline: "Équipements d'abattoir, équipements de sacrifice et systèmes robotiques",
     defaultDescription: "KORNNE : équipements d'abattoir, équipements de sacrifice et systèmes de découpe robotisés. Découvrez les produits et demandez un devis par WhatsApp ou téléphone.",
   },

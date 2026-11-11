@@ -13,7 +13,10 @@ function createPrismaClient(): PrismaClient | null {
   const url = process.env.DATABASE_URL;
   if (!url) return null;
   // pg treats sslmode=require like verify-full today; make it explicit so a future pg change cannot weaken it.
-  const adapter = new PrismaPg({ connectionString: url.replace(/sslmode=require\b/, "sslmode=verify-full") });
+  // Pool size per process: the build prerenders 6 languages in parallel worker processes, so a small pool keeps the
+  // total under the database's connection limit (DB_POOL_MAX overrides; 5 is plenty for one Node server process).
+  const max = Number(process.env.DB_POOL_MAX) || 5;
+  const adapter = new PrismaPg({ connectionString: url.replace(/sslmode=require\b/, "sslmode=verify-full"), max });
   // Neon may need a few seconds to wake a suspended compute: generous wait for a transaction slot (P2028 otherwise)
   return new PrismaClient({ adapter, transactionOptions: { maxWait: 10_000, timeout: 20_000 } });
 }

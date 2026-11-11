@@ -68,7 +68,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           {d.a11y.skipToContent}
         </a>
         <ToastProvider closeLabel={d.a11y.close}>
-          {analytics.enabled ? <AnalyticsRoot mode={analytics.mode!} id={analytics.id!} labels={d.consent} policyHref="/sayfa/kisisel-verilenin-korunmasi-kanunu" legalApproved={analytics.legalApproved} /> : null}
+          {analytics.enabled ? <AnalyticsRoot mode={analytics.mode!} id={analytics.id!} labels={d.consent} policyHref="/tr/sayfa/kisisel-verilenin-korunmasi-kanunu" legalApproved={analytics.legalApproved} /> : null}
           <TopAnnouncement locale={locale} label={d.cms.announcement} />
           <SiteHeader localeParam={locale} />
           <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">

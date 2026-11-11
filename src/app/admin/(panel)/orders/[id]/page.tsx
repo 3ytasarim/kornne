@@ -80,6 +80,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
                 ["Ara toplam (KDV hariç)", formatMoney(o.subtotalMinor, o.currency)],
                 ["KDV", formatMoney(o.taxMinor, o.currency)],
                 ["Genel toplam", <strong key="t">{total}</strong>],
+                ...(o.fxRate4 ? ([["Sipariş kuru (TCMB satış)", `1 ${o.fxCurrency} = ${(o.fxRate4 / 10_000).toLocaleString("tr-TR", { minimumFractionDigits: 4 })} TL`]] as [string, string][]) : []),
               ]}
             />
           </Card>

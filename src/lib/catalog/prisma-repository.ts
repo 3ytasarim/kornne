@@ -95,7 +95,7 @@ function toProduct(locale: Locale, p: Raw["products"][number]): CatalogProduct {
     translatedLocales: LOCALES.filter(hasPage),
     pageLocale: translated || locale === "tr" ? locale : "tr",
     images,
-    currency: "TRY",
+    currency: price ? price.currency : "TRY",
     priceMinor: price ? price.amountMinor : null,
     compareAtMinor: price ? price.compareAtMinor : null,
     priceVerified: !!price,

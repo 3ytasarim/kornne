@@ -3,8 +3,9 @@ import { z } from "zod";
 import { AdminError } from "@/lib/admin/action-state";
 import { slugSchema } from "@/lib/admin/products";
 import { sanitizeRichText } from "@/lib/catalog/sanitize";
-import { localizePath } from "@/lib/i18n/routes";
+import { localizePath, pathVariants } from "@/lib/i18n/routes";
 import { isSettingKey, SETTING_DEFS, settingProblem, type SettingKey } from "./settings";
+import { LOCALES } from "@/lib/i18n/config";
 
 /**
  * CMS writes (Sprint 7, docs/cms/content-management-guide.md).
@@ -13,9 +14,9 @@ import { isSettingKey, SETTING_DEFS, settingProblem, type SettingKey } from "./s
  * Rich text is sanitized on the server (allow-list) — what the editor sends is never trusted.
  */
 export type Actor = { id: string; canPublish: boolean };
-const LOCALES = ["tr", "en", "fr", "ru", "ar"] as const;
 type Tx = Prisma.TransactionClient;
-const pagePath = (kind: PageKind, locale: Locale, slug: string) => localizePath(locale, kind === "BLOG" ? `/blog/${slug}` : `/sayfa/${slug}`);
+const pageInternal = (kind: PageKind, slug: string) => (kind === "BLOG" ? `/blog/${slug}` : `/sayfa/${slug}`);
+const pagePath = (kind: PageKind, locale: Locale, slug: string) => localizePath(locale, pageInternal(kind, slug));
 
 async function auditLog(tx: Tx | PrismaClient, actorId: string, action: string, entityType: string, entityId: string, after?: object, before?: object) {
   await tx.auditLog.create({ data: { actorId, action, entityType, entityId, after: after as Prisma.InputJsonValue, before: before as Prisma.InputJsonValue } });
@@ -111,11 +112,11 @@ export async function publishPage(db: PrismaClient, actor: Actor, pageId: string
     const clash = await tx.pageTranslation.findFirst({ where: { locale, publishedSlug: rev.slug, id: { not: t.id } } });
     if (clash) throw new AdminError("Bu adres bu dilde yayında olan başka bir içerikte kullanılıyor.");
     const newPath = pagePath(t.page.kind, locale, rev.slug);
-    const shadow = await tx.redirect.findUnique({ where: { fromPath: newPath } });
+    const shadow = await tx.redirect.findFirst({ where: { fromPath: { in: pathVariants(locale, pageInternal(t.page.kind, rev.slug)) }, active: true } });
     if (shadow?.active) throw new AdminError(`“${newPath}” bir yönlendirmenin kaynağı; başka adres seçin.`);
     if (t.publishedSlug && t.publishedSlug !== rev.slug) {
       const oldPath = pagePath(t.page.kind, locale, t.publishedSlug);
-      await tx.redirect.updateMany({ where: { toPath: oldPath }, data: { toPath: newPath } });
+      await tx.redirect.updateMany({ where: { toPath: { in: pathVariants(locale, pageInternal(t.page.kind, t.publishedSlug)) } }, data: { toPath: newPath } });
       await tx.redirect.upsert({ where: { fromPath: oldPath }, create: { fromPath: oldPath, toPath: newPath, source: "SLUG_CHANGE", note: "content slug changed" }, update: { toPath: newPath, active: true } });
     }
     await tx.pageTranslation.update({ where: { id: t.id }, data: { state: "PUBLISHED", publishedRevisionId: rev.id, publishedSlug: rev.slug, publishedAt: new Date(), status: "APPROVED" } });

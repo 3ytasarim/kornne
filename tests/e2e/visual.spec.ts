@@ -16,37 +16,37 @@ const SHOTS: [string, string, number, ("light" | "dark")?][] = [
   ["home-320", "/", 320],
   ["home-dark-1440", "/", 1440, "dark"],
   ["home-ar-375", "/ar", 375],
-  ["category-1440", "/kategori/mezbaha-ekipmanlari", 1440],
-  ["category-1024", "/kategori/tum-urunler", 1024],
-  ["category-768", "/kategori/robotik-sistemler", 768],
-  ["category-375", "/kategori/tum-urunler", 375],
-  ["category-filtered-1440", "/kategori/tum-urunler?kategori=kurban-ekipmanlari&siralama=ad-artan", 1440],
-  ["category-en-1440", "/en/category/all-products", 1440],
-  ["product-1440", "/urun/dairesel-kesim-hucresi", 1440],
-  ["product-375", "/urun/kurban-yatirma-kabini", 375],
-  ["search-results-1024", "/arama?q=testere", 1024],
-  ["search-empty-375", "/arama?q=xyzxyz", 375],
+  ["category-1440", "/tr/kategori/mezbaha-ekipmanlari", 1440],
+  ["category-1024", "/tr/kategori/tum-urunler", 1024],
+  ["category-768", "/tr/kategori/robotik-sistemler", 768],
+  ["category-375", "/tr/kategori/tum-urunler", 375],
+  ["category-filtered-1440", "/tr/kategori/tum-urunler?kategori=kurban-ekipmanlari&siralama=ad-artan", 1440],
+  ["category-en-1440", "/category/all-products", 1440],
+  ["product-1440", "/tr/urun/dairesel-kesim-hucresi", 1440],
+  ["product-375", "/tr/urun/kurban-yatirma-kabini", 375],
+  ["search-results-1024", "/tr/arama?q=testere", 1024],
+  ["search-empty-375", "/tr/arama?q=xyzxyz", 375],
   ["404-1440", "/olmayan-sayfa", 1440],
   // Sprint 4 + 5
-  ["s45-product-1440", "/urun/dairesel-kesim-hucresi", 1440],
-  ["s45-product-dark-1440", "/urun/sulu-sterilizator", 1440, "dark"],
-  ["s45-product-variant-1024", "/urun/kucuk-bas-stoklama-kancasi", 1024],
-  ["s45-product-375", "/urun/hijyen-geciti", 375],
-  ["s45-quote-empty-375", "/teklif-listem", 375],
-  ["s12-cart-empty-1440", "/sepetim", 1440],
-  ["s12-checkout-empty-375", "/odeme", 375],
+  ["s45-product-1440", "/tr/urun/dairesel-kesim-hucresi", 1440],
+  ["s45-product-dark-1440", "/tr/urun/sulu-sterilizator", 1440, "dark"],
+  ["s45-product-variant-1024", "/tr/urun/kucuk-bas-stoklama-kancasi", 1024],
+  ["s45-product-375", "/tr/urun/hijyen-geciti", 375],
+  ["s45-quote-empty-375", "/tr/teklif-listem", 375],
+  ["s12-cart-empty-1440", "/tr/sepetim", 1440],
+  ["s12-checkout-empty-375", "/tr/odeme", 375],
 ];
 
 /** Fills the quote list through the real UI (localStorage only, nothing is sent). */
 async function fillQuoteList(page: import("@playwright/test").Page) {
-  for (const p of ["/urun/dairesel-kesim-hucresi", "/urun/sulu-sterilizator", "/urun/hijyen-geciti"]) {
+  for (const p of ["/tr/urun/dairesel-kesim-hucresi", "/tr/urun/sulu-sterilizator", "/tr/urun/hijyen-geciti"]) {
     await page.goto(p);
     await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
     await expect(page.getByRole("status").filter({ hasText: /Teklif listesine eklendi|Sepete eklendi/ })).toBeVisible();
   }
 }
 
-for (const [name, path, width] of [["s45-quote-list-1440", "/teklif-listem", 1440], ["s45-quote-list-375", "/teklif-listem", 375], ["s45-quote-list-ar-375", "/ar/quote-list", 375]] as const) {
+for (const [name, path, width] of [["s45-quote-list-1440", "/tr/teklif-listem", 1440], ["s45-quote-list-375", "/tr/teklif-listem", 375], ["s45-quote-list-ar-375", "/ar/quote-list", 375]] as const) {
   test(`shot ${name}`, async ({ page }) => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await fillQuoteList(page);
@@ -60,7 +60,7 @@ for (const [name, path, width] of [["s45-quote-list-1440", "/teklif-listem", 144
 test("shot s45-sticky-bar-375", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.setViewportSize({ width: 375, height: 812 });
-  await page.goto("/urun/dairesel-kesim-hucresi");
+  await page.goto("/tr/urun/dairesel-kesim-hucresi");
   await page.evaluate(() => window.scrollBy(0, document.getElementById("quote-cta")!.getBoundingClientRect().bottom + 300));
   await expect(page.getByRole("button", { name: "Teklif al" })).toBeVisible();
   await page.screenshot({ path: `${DIR}/s45-sticky-bar-375.png` });
@@ -68,7 +68,7 @@ test("shot s45-sticky-bar-375", async ({ page }) => {
 
 test("shot s45-variant-error-1024", async ({ page }) => {
   await page.setViewportSize({ width: 1024, height: 900 });
-  await page.goto("/urun/kucuk-bas-stoklama-kancasi");
+  await page.goto("/tr/urun/kucuk-bas-stoklama-kancasi");
   await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
   await page.locator("#quote-cta").scrollIntoViewIfNeeded();
   await page.screenshot({ path: `${DIR}/s45-variant-error-1024.png` });
@@ -79,7 +79,7 @@ test("shot s45-quote-success + admin quotes", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await fillQuoteList(page);
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/teklif-listem");
+  await page.goto("/tr/teklif-listem");
   await page.getByRole("button", { name: "Teklif talebini gönder" }).click(); // invalid → field errors
   await expect(page.getByText("E-posta veya telefon girin.")).toBeVisible();
   await page.screenshot({ path: `${DIR}/s45-quote-errors-1440.png`, fullPage: true });
@@ -124,7 +124,7 @@ for (const [name, path, width, scheme] of SHOTS) {
 
 test("shot mobile-drawer-375", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 844 });
-  await page.goto("/");
+  await page.goto("/tr");
   await page.getByRole("button", { name: "Menüyü aç" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
   await page.screenshot({ path: `${DIR}/mobile-drawer-375.png` });
@@ -132,7 +132,7 @@ test("shot mobile-drawer-375", async ({ page }) => {
 
 test("shot megamenu-1440", async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/");
+  await page.goto("/tr");
   await page.getByRole("navigation", { name: "Ana menü" }).getByRole("button", { name: "Ürünler" }).click();
   await page.waitForTimeout(300);
   await page.screenshot({ path: `${DIR}/megamenu-1440.png` });

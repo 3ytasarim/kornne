@@ -2,7 +2,7 @@ import type { Locale } from "./config";
 
 /**
  * Strings for the CLIENT error / not-found boundaries. These components are part of every route's client bundle,
- * so importing the dictionaries there shipped all five languages (~110 KB of JS) to every visitor (Sprint 10
+ * so importing the dictionaries there shipped all languages (~110 KB of JS) to every visitor (Sprint 10
  * finding). Values are copied from the dictionaries; tests/unit/i18n.test.ts asserts they stay identical.
  */
 export type BoundaryStrings = {
@@ -39,6 +39,20 @@ export const BOUNDARY_STRINGS: Record<Locale, BoundaryStrings> = {
       products: "Browse products"
     },
     allProductsSlug: "all-products"
+  },
+  de: {
+    error: {
+      title: "Etwas ist schiefgelaufen",
+      lead: "Beim Laden der Seite ist ein unerwarteter Fehler aufgetreten.",
+      retry: "Erneut versuchen"
+    },
+    notFound: {
+      title: "Seite nicht gefunden",
+      lead: "Die gesuchte Seite wurde möglicherweise verschoben oder entfernt.",
+      home: "Zurück zur Startseite",
+      products: "Produkte ansehen"
+    },
+    allProductsSlug: "alle-produkte"
   },
   fr: {
     error: {

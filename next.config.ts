@@ -35,6 +35,9 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     globalNotFound: true,
+    // 6 languages ≈ 360 prerendered pages: a few build workers keep memory and DB connections bounded on small servers
+    // (NEXT_BUILD_CPUS overrides; Next's default is every core minus one)
+    cpus: Number(process.env.NEXT_BUILD_CPUS) || 4,
     // inlineCss was measured OFF in Sprint 4+5: inlining duplicated the whole stylesheet into the RSC payload (HTML 51→24 KiB,
     // TBT 170–210→30–40 ms, mobile perf +3 when off). The single stylesheet is small and immutable-cached.
     inlineCss: false,

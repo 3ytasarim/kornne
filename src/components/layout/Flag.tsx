@@ -1,8 +1,8 @@
 import { cn } from "@/lib/cn";
 
 /**
- * Small inline SVG flags for the language switcher (same set as the legacy kornne.com language bar: TR, GB, FR, RU and
- * the pan-Arab tricolour for Arabic). Decorative — the language name is always next to it as text.
+ * Small inline SVG flags for the language switcher (TR, GB, DE, FR, RU and the pan-Arab tricolour for Arabic, as on the
+ * legacy kornne.com language bar). Decorative — the language name is always next to it as text.
  */
 export function Flag({ locale, className }: { locale: string; className?: string }) {
   const cls = cn("inline-block h-[0.9em] w-[1.35em] shrink-0 overflow-hidden rounded-[2px] shadow-[0_0_0_1px_rgb(0_0_0/0.12)]", className);
@@ -27,6 +27,14 @@ export function Flag({ locale, className }: { locale: string; className?: string
           <path d="M0 0l60 30m0-30L0 30" clipPath="url(#flag-gb-t)" stroke="#C8102E" strokeWidth="4" />
           <path d="M30 0v30M0 15h60" stroke="#fff" strokeWidth="10" />
           <path d="M30 0v30M0 15h60" stroke="#C8102E" strokeWidth="6" />
+        </svg>
+      );
+    case "de":
+      return (
+        <svg aria-hidden="true" viewBox="0 0 5 3" className={cls}>
+          <rect width="5" height="1" fill="#000" />
+          <rect y="1" width="5" height="1" fill="#DD0000" />
+          <rect y="2" width="5" height="1" fill="#FFCE00" />
         </svg>
       );
     case "fr":

@@ -145,7 +145,7 @@ describe.skipIf(!hasTestDb)("Merchant readiness + sync (isolated DB)", () => {
   it("SEO audit run is stored with findings (no PII) and audited; image rows load from the DB", async () => {
     const p = await makeProduct(db);
     const inv = await buildInventory(db, { seoLocales: ["tr"], verified: true });
-    expect(inv.find((e) => e.path === `/urun/test-urun-${p.ref}`)).toMatchObject({ kind: "product", status: 200, indexable: true });
+    expect(inv.find((e) => e.path === `/tr/urun/test-urun-${p.ref}`)).toMatchObject({ kind: "product", status: 200, indexable: true });
     expect(inv.filter((e) => e.kind === "product-missing-locale").every((e) => e.status === 404)).toBe(true);
     const fetchImpl = (async (url: string) => {
       const path = new URL(url).pathname;

@@ -6,6 +6,7 @@ import type { Dictionary } from "./tr";
 export const en: DeepPartial<Dictionary> = {
   meta: {
     siteName: "KORNNE",
+    homeTitle: "Slaughterhouse & Robotic Cutting Equipment | KORNNE",
     tagline: "Slaughterhouse equipment, sacrifice equipment and robotic systems",
     defaultDescription: "KORNNE slaughterhouse equipment, sacrifice equipment and robotic cutting systems. Browse the products and request a quote via WhatsApp or phone.",
   },

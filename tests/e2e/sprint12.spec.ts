@@ -25,13 +25,13 @@ const fillCheckout = async (page: import("@playwright/test").Page, email: string
 };
 
 test("header: client wordmark, cart button, order self-service links", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/tr");
   const logo = page.getByRole("link", { name: /KORNNE — Anasayfa/ }).locator("img").first();
   await expect(logo).toHaveAttribute("src", /kornne-wordmark/);
   const box = await logo.boundingBox();
   expect(box!.height).toBeGreaterThanOrEqual(40); // desktop: never a tiny badge
   expect(box!.height).toBeLessThanOrEqual(56); // …and never oversized
-  await expect(page.locator("header").getByRole("link", { name: "Sepetim" })).toHaveAttribute("href", "/sepetim");
+  await expect(page.locator("header").getByRole("link", { name: "Sepetim" })).toHaveAttribute("href", "/tr/sepetim");
   for (const name of ["Siparişim Ne Durumda", "Ödeme Bildirimi", "Banka Hesapları"]) await expect(page.locator("header").getByRole("link", { name }).first()).toBeVisible();
   // no decorative grid pattern in the hero any more
   expect(await page.content()).not.toContain("background-size:56px_56px");
@@ -40,7 +40,7 @@ test("header: client wordmark, cart button, order self-service links", async ({ 
 test("full B2B order: cart → checkout → notice → lookup → admin confirms", async ({ page, browser }) => {
   test.setTimeout(120_000);
   const email = `e2e-order-${Date.now()}@kornne.test`;
-  await page.goto("/urun/dos-acma-testeresi");
+  await page.goto("/tr/urun/dos-acma-testeresi");
   await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: "Adedi artır" }).first().click();
   await page.getByRole("button", { name: "Hemen sipariş ver" }).click();
@@ -66,7 +66,7 @@ test("full B2B order: cart → checkout → notice → lookup → admin confirms
   await expect(page.locator("header").getByRole("link", { name: "Sepetim" })).toHaveAccessibleName("Sepetim"); // cart emptied
 
   // status lookup: wrong e-mail reveals nothing
-  await page.goto("/siparisim-ne-durumda");
+  await page.goto("/tr/siparisim-ne-durumda");
   await page.waitForLoadState("networkidle");
   await page.getByLabel("Sipariş numarası").fill(number);
   await page.getByLabel("E-posta").fill("someone-else@kornne.test");
@@ -77,13 +77,13 @@ test("full B2B order: cart → checkout → notice → lookup → admin confirms
   await expect(page.getByTestId("order-status-label")).toHaveText("Ödeme bekleniyor");
 
   // payment notice
-  await page.goto("/odeme-bildirimi");
+  await page.goto("/tr/odeme-bildirimi");
   await page.waitForLoadState("networkidle");
   await page.getByLabel("Sipariş numarası").fill(number);
   await page.getByLabel("E-posta").fill(email);
   await page.getByLabel("Gönderen (ad soyad veya firma)").fill("E2E Et Sanayi");
   await page.getByLabel("Ödeme yapılan banka").selectOption({ index: 1 });
-  await page.getByLabel("Gönderilen tutar (TL)").fill(total.replace(" TL", ""));
+  await page.getByLabel("Gönderilen tutar").fill(total.replace(" TL", ""));
   await page.getByRole("button", { name: "Bildirimi gönder" }).click();
   await expect(page.getByTestId("notice-success")).toBeVisible();
 
@@ -102,7 +102,7 @@ test("full B2B order: cart → checkout → notice → lookup → admin confirms
   await expect(ap.getByRole("button", { name: "Ödemeyi onayla" })).toHaveCount(0);
   await ctx.close();
 
-  await page.goto("/siparisim-ne-durumda");
+  await page.goto("/tr/siparisim-ne-durumda");
   await page.waitForLoadState("networkidle");
   await page.getByLabel("Sipariş numarası").fill(number);
   await page.getByLabel("E-posta").fill(email);
@@ -111,17 +111,17 @@ test("full B2B order: cart → checkout → notice → lookup → admin confirms
 });
 
 test("bank accounts page lists only active accounts with valid IBANs + copy button", async ({ page }) => {
-  await page.goto("/banka-hesaplari");
+  await page.goto("/tr/banka-hesaplari");
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Banka hesaplarımız");
   expect(await page.getByRole("button", { name: /IBAN'ı kopyala/ }).count()).toBe(6);
   await expect(page.getByText("Mezbaha Teknolojileri A.Ş.").first()).toBeVisible();
 });
 
 test("a11y (axe): cart, checkout, status, notice, banks", async ({ page }) => {
-  await page.goto("/urun/dos-acma-testeresi");
+  await page.goto("/tr/urun/dos-acma-testeresi");
   await page.waitForLoadState("networkidle");
   await page.getByRole("button", { name: "Sepete ekle", exact: true }).click();
-  for (const path of ["/sepetim", "/odeme", "/siparisim-ne-durumda", "/odeme-bildirimi", "/banka-hesaplari"]) {
+  for (const path of ["/tr/sepetim", "/tr/odeme", "/tr/siparisim-ne-durumda", "/tr/odeme-bildirimi", "/tr/banka-hesaplari"]) {
     await page.goto(path);
     await page.waitForLoadState("networkidle");
     const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]).analyze();
@@ -131,7 +131,7 @@ test("a11y (axe): cart, checkout, status, notice, banks", async ({ page }) => {
 
 test("mobile 375: no horizontal overflow on shop pages", async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
-  for (const path of ["/", "/kategori/tum-urunler", "/urun/dos-acma-testeresi", "/sepetim", "/odeme", "/siparisim-ne-durumda", "/banka-hesaplari"]) {
+  for (const path of ["/tr", "/tr/kategori/tum-urunler", "/tr/urun/dos-acma-testeresi", "/tr/sepetim", "/tr/odeme", "/tr/siparisim-ne-durumda", "/tr/banka-hesaplari"]) {
     await page.goto(path);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
     expect(overflow, path).toBeLessThanOrEqual(0);

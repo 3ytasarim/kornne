@@ -10,6 +10,7 @@ import { bulkProducts, createProduct, deleteSpec, saveCategoryTranslation, saveP
 import { revalidateStorefront } from "@/lib/admin/revalidate";
 import { formObject, runAction } from "@/lib/admin/run-action";
 import { requireDb } from "@/lib/db";
+import { LOCALES } from "@/lib/i18n/config";
 
 const str = (f: FormData, k: string) => (typeof f.get(k) === "string" ? (f.get(k) as string) : "");
 const done = (msg: string, failed: string[]) => (failed.length ? { ok: `${msg} Uyarı: önbellek yenilenemedi (${failed.join(", ")}); değişiklik en geç 5 dk içinde görünür.` } : msg);
@@ -105,7 +106,7 @@ export async function uploadDocumentAction(_p: ActionState, f: FormData): Promis
     const file = f.get("file");
     if (!(file instanceof File)) throw new AdminError("Dosya seçin.", { file: "Dosya seçin." });
     const locale = str(f, "locale");
-    await uploadDocument(requireDb(), user, str(f, "productId"), file, str(f, "title"), (["tr", "en", "fr", "ru", "ar"].includes(locale) ? locale : null) as Locale | null);
+    await uploadDocument(requireDb(), user, str(f, "productId"), file, str(f, "title"), ((LOCALES as readonly string[]).includes(locale) ? locale : null) as Locale | null);
     return "Doküman yüklendi (doğrulanana kadar vitrinde görünmez).";
   });
 }

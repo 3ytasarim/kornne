@@ -3,6 +3,8 @@ import type { ShopDictionary } from "./tr";
 /** Arabic shop strings — draft, native review pending. */
 export const shopAr: ShopDictionary = {
   utility: {
+    fxTitle: "أسعار الصرف",
+    fxSource: "البنك المركزي التركي، بيع",
     transfer: "الدفع بحوالة بنكية (EFT / Havale)",
     vat: "الأسعار شاملة ضريبة القيمة المضافة",
   },
@@ -106,6 +108,7 @@ export const shopAr: ShopDictionary = {
     legalDraft: "نصوص العقود قيد المراجعة القانونية.",
   },
   errors: {
+    noAccount: "لم يتم إعداد حساب بنكي بالدولار الأمريكي للتحويلات بعد. يرجى التواصل معنا أو طلب عرض سعر لسلتك.",
     required: "هذا الحقل مطلوب.",
     tooLong: "النص المدخل طويل جدًا.",
     invalid: "قيمة غير صالحة.",
@@ -178,7 +181,7 @@ export const shopAr: ShopDictionary = {
     payerName: "المرسِل (الاسم الكامل أو الشركة)",
     bank: "البنك الذي تم الدفع عبره",
     chooseBank: "اختاروا البنك",
-    amount: "المبلغ المرسَل (TL)",
+    amount: "المبلغ المرسل",
     paidAt: "تاريخ الدفع",
     note: "البيان (اختياري)",
     send: "إرسال الإشعار",

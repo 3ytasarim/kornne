@@ -31,7 +31,7 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
   useEffect(() => {
     if (!lines.length) return;
     start(async () => {
-      const r = await priceCartAction(lines.map((l) => ({ productRef: l.productRef, variantId: l.variantId, quantity: l.quantity }))).catch((): PricedCart => ({ ok: false, code: "error" }));
+      const r = await priceCartAction(lines.map((l) => ({ productRef: l.productRef, variantId: l.variantId, quantity: l.quantity })), locale).catch((): PricedCart => ({ ok: false, code: "error" }));
       setPriced(r);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-price only when refs/quantities change
@@ -50,6 +50,7 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
   }
 
   const ok = priced?.ok ? priced : null;
+  const cur = ok?.currency ?? "TRY";
   const lineOf = (ref: string, variantId: string | null) => ok?.lines.find((x) => x.productRef === ref && x.variantId === variantId);
   const badRef = priced && !priced.ok ? priced.productRef : undefined;
   const vatRate = ok?.lines[0] ? ok.lines[0].vatRateBp / 100 : 20;
@@ -79,12 +80,12 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
                         <p className="mt-1 text-sm text-steel">
                           {labels.unitPrice}:{" "}
                           <span className="font-medium text-ink-2 tabular-nums" dir="ltr">
-                            {p ? money(p.unitMinor, locale) : "—"}
+                            {p ? money(p.unitMinor, locale, cur) : "—"}
                           </span>
                         </p>
                       </div>
                       <p className="shrink-0 text-end font-bold text-ink tabular-nums" dir="ltr" data-testid="cart-line-total">
-                        {p ? money(p.lineMinor, locale) : pending ? <Loader2 aria-hidden="true" className="ms-auto size-4 animate-spin text-steel" /> : "—"}
+                        {p ? money(p.lineMinor, locale, cur) : pending ? <Loader2 aria-hidden="true" className="ms-auto size-4 animate-spin text-steel" /> : "—"}
                       </p>
                     </div>
                     <div className="mt-auto flex flex-wrap items-center gap-3">
@@ -121,19 +122,19 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
             <div className="flex justify-between gap-4">
               <dt className="text-steel">{labels.net}</dt>
               <dd className="font-medium text-ink tabular-nums" dir="ltr">
-                {ok ? money(ok.netMinor, locale) : "—"}
+                {ok ? money(ok.netMinor, locale, cur) : "—"}
               </dd>
             </div>
             <div className="flex justify-between gap-4">
               <dt className="text-steel">{format(labels.vat, { rate: vatRate })}</dt>
               <dd className="font-medium text-ink tabular-nums" dir="ltr">
-                {ok ? money(ok.vatMinor, locale) : "—"}
+                {ok ? money(ok.vatMinor, locale, cur) : "—"}
               </dd>
             </div>
             <div className="flex items-baseline justify-between gap-4 border-t border-line pt-4">
               <dt className="text-base font-semibold text-ink">{labels.total}</dt>
               <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="cart-total">
-                {ok ? money(ok.totalMinor, locale) : pending ? labels.calculating : "—"}
+                {ok ? money(ok.totalMinor, locale, cur) : pending ? labels.calculating : "—"}
               </dd>
             </div>
           </dl>

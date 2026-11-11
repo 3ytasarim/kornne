@@ -171,11 +171,18 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
                 ) : null}
               </ActionForm>
             </Card>
-            <Card title="Fiyat" description={live ? `Vitrinde: ${formatMoney(live.amountMinor)} (${live.vatIncluded ? "KDV dahil" : "KDV hariç"})` : "Vitrinde fiyat yok — “Fiyat için teklif alın” gösteriliyor."} actions={<Link href={`/admin/pricing/${p.id}`} className="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">Fiyat geçmişi →</Link>}>
+            <Card title="Fiyat" description={live ? `Vitrinde: ${formatMoney(live.amountMinor, live.currency)} (${live.vatIncluded ? "KDV dahil" : "KDV hariç"})` : "Vitrinde fiyat yok — “Fiyat için teklif alın” gösteriliyor."} actions={<Link href={`/admin/pricing/${p.id}`} className="text-sm font-semibold text-brand-700 hover:underline dark:text-brand-300">Fiyat geçmişi →</Link>}>
               {can("price.approve") || can("price.propose") ? (
                 <ActionForm action={quickPriceAction} className="space-y-3" aria-label="Fiyatı güncelle">
                   <input type="hidden" name="productId" value={p.id} />
-                  <Input name="amount" label="Satış fiyatı (TL)" required inputMode="decimal" defaultValue={live ? toDecimalString(live.amountMinor).replace(".", ",") : ""} hint="Örn. 1250000 veya 1.250.000,00" />
+                  <div className="grid grid-cols-[1fr_7rem] gap-3">
+                    <Input name="amount" label="Satış fiyatı" required inputMode="decimal" defaultValue={live ? toDecimalString(live.amountMinor).replace(".", ",") : ""} hint="Örn. 12500 veya 12.500,00" />
+                    <Select name="currency" label="Para birimi" defaultValue={live?.currency ?? "USD"}>
+                      <option value="USD">USD $</option>
+                      <option value="TRY">TL ₺</option>
+                      <option value="EUR">EUR €</option>
+                    </Select>
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <Select name="vatMode" label="KDV" defaultValue={live?.vatIncluded === false ? "excluded" : "included"}>
                       <option value="included">KDV dahil</option>
@@ -187,7 +194,7 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
                     <SubmitButton pendingText="Kaydediliyor…">{can("price.approve") ? "Fiyatı kaydet" : "Fiyat öner"}</SubmitButton>
                     <FormMessage className="w-full" />
                   </div>
-                  <p className="text-xs text-steel">{can("price.approve") ? "Kaydedince vitrindeki fiyat hemen değişir; önceki fiyat geçmişte saklanır." : "Öneriniz bir yönetici onaylayınca vitrine yansır."}</p>
+                  <p className="text-xs text-steel">{can("price.approve") ? "Kaydedince vitrindeki fiyat hemen değişir; önceki fiyat geçmişte saklanır." : "Öneriniz bir yönetici onaylayınca vitrine yansır."} Dolar fiyat Türkçe sayfada güncel TCMB satış kuruyla TL, diğer dillerde $ olarak görünür.</p>
                 </ActionForm>
               ) : (
                 <p className="text-sm text-steel">Fiyat değiştirme yetkiniz yok.</p>
@@ -208,7 +215,7 @@ export default async function ProductEditPage({ params, searchParams }: PageProp
             disabled={!can("product.edit")}
             initial={p.variants.map((v) => {
               const l = v.labels as Record<string, string>;
-              return { key: v.id, id: v.id, tr: l.tr ?? "", en: l.en ?? "", fr: l.fr ?? "", ru: l.ru ?? "", ar: l.ar ?? "", active: v.active, sortOrder: v.sortOrder, sourceKey: v.sourceKey };
+              return { key: v.id, id: v.id, tr: l.tr ?? "", en: l.en ?? "", de: l.de ?? "", fr: l.fr ?? "", ru: l.ru ?? "", ar: l.ar ?? "", active: v.active, sortOrder: v.sortOrder, sourceKey: v.sourceKey };
             })}
           />
           <p className="mt-3 text-xs text-steel">Seçenek bazında fiyat bu sprintte yok; fiyat ürün düzeyinde onaylanır.</p>
@@ -497,7 +504,7 @@ async function TechTab({ product, canEdit, canVerify, canDocs }: { product: P & 
             <Input name="title" label="Başlık" placeholder="Teknik föy" required />
             <Select name="locale" label="Dil" defaultValue="">
               <option value="">Dil bağımsız</option>
-              {(["tr", "en", "fr", "ru", "ar"] as const).map((l) => (
+              {(["tr", "en", "de", "fr", "ru", "ar"] as const).map((l) => (
                 <option key={l} value={l}>
                   {LOCALE_META[l].nativeName}
                 </option>

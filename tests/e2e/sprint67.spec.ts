@@ -45,7 +45,7 @@ test.describe("Sprint 6 — catalog editing is real and audited", () => {
     await form.getByLabel("SEO başlığı").fill("E2E SEO Sulu Sterilizatör — paslanmaz");
     await form.getByRole("button", { name: "Kaydet" }).click();
     await expect(form.getByRole("status")).toContainText("Kaydedildi");
-    const html = await (await request.get(`/urun/${PRODUCT_SLUG}`)).text();
+    const html = await (await request.get(`/tr/urun/${PRODUCT_SLUG}`)).text();
     expect(html).toContain("<title>E2E SEO Sulu Sterilizatör — paslanmaz");
     // history: who changed what
     await page.goto(page.url().replace(/\?.*$/, "") + "?tab=gecmis");
@@ -55,7 +55,7 @@ test.describe("Sprint 6 — catalog editing is real and audited", () => {
     await page.getByRole("form", { name: "Türkçe içerik" }).getByLabel("SEO başlığı").fill("");
     await page.getByRole("form", { name: "Türkçe içerik" }).getByRole("button", { name: "Kaydet" }).click();
     await expect(page.getByRole("form", { name: "Türkçe içerik" }).getByRole("status")).toContainText("Kaydedildi");
-    expect(await (await request.get(`/urun/${PRODUCT_SLUG}`)).text()).not.toContain("E2E SEO");
+    expect(await (await request.get(`/tr/urun/${PRODUCT_SLUG}`)).text()).not.toContain("E2E SEO");
   });
 
   test("#208 stays held: no publish without review permission; storefront keeps the 307", async ({ page, request }) => {
@@ -63,7 +63,7 @@ test.describe("Sprint 6 — catalog editing is real and audited", () => {
     await login(page, admin.email, admin.password);
     await page.goto("/admin/products?durum=inceleme");
     await expect(page.getByRole("link", { name: "İkizray Kurban Kancası" })).toBeVisible();
-    expect((await request.get("/urun/ikizray-kurban-kancasi", { maxRedirects: 0 })).status()).toBe(307);
+    expect((await request.get("/tr/urun/ikizray-kurban-kancasi", { maxRedirects: 0 })).status()).toBe(307);
   });
 });
 
@@ -77,7 +77,7 @@ test.describe("Sprint 6 — permissions are enforced on the server, not only in 
       const product = await prisma.product.findFirstOrThrow({ where: { translations: { some: { locale: "tr", slug: PRODUCT_SLUG } } }, select: { id: true } });
       await sa.page.goto(`/admin/pricing/${product.id}`);
       const pf = sa.page.getByRole("form", { name: "Fiyat önerisi" });
-      await pf.getByLabel("Satış fiyatı (TL)").fill("123.456,00");
+      await pf.getByLabel("Satış fiyatı").fill("123.456,00");
       await pf.locator('select[name="vatMode"]').selectOption("included");
       await pf.getByLabel("KDV oranı (%)").fill("20");
       await pf.getByLabel("Fiyatın kaynağı").fill("E2E test önerisi (silinecek)");
@@ -87,7 +87,7 @@ test.describe("Sprint 6 — permissions are enforced on the server, not only in 
       await expect(sa.page.getByText("dört göz kuralı gereği")).toBeVisible();
       const proposalRow = await prisma.price.findFirstOrThrow({ where: { productId: product.id, source: "ADMIN", status: "UNVERIFIED" }, orderBy: { createdAt: "desc" } });
       // unverified proposal is invisible to customers
-      const shop = await (await request.get(`/urun/${PRODUCT_SLUG}`)).text();
+      const shop = await (await request.get(`/tr/urun/${PRODUCT_SLUG}`)).text();
       expect(shop).not.toContain("123.456");
       expect(shop).not.toMatch(/"@type":"Offer"/);
 
@@ -136,9 +136,9 @@ test.describe("Sprint 6 — quote CRM on a real storefront request", () => {
     const prisma = db();
     try {
       // a real request through the storefront
-      await page.goto(`/urun/${PRODUCT_SLUG}`);
+      await page.goto(`/tr/urun/${PRODUCT_SLUG}`);
       await page.getByRole("button", { name: /^(Teklif listesine ekle|Sepete ekle)$/ }).click();
-      await page.goto("/teklif-listem");
+      await page.goto("/tr/teklif-listem");
       const email = `e2e-crm-${Date.now()}@kornne.test`;
       await page.getByLabel("Ad soyad").fill("E2E CRM");
       await page.getByLabel("E-posta").fill(email);
@@ -223,20 +223,20 @@ test.describe("Sprint 7 — CMS workflow, multilingual and storefront", () => {
     await expect(seo.page.getByRole("button", { name: "Yayınla" })).toHaveCount(0);
     await seo.page.getByRole("button", { name: "İncelemeye gönder" }).click();
     await expect(seo.page.getByText("Yayın onayı bekliyor").first()).toBeVisible();
-    expect((await request.get(`/sayfa/${key}`)).status()).toBe(404);
+    expect((await request.get(`/tr/sayfa/${key}`)).status()).toBe(404);
 
     const sa = await as(browser, readTestAdmin());
     await sa.page.goto(editUrl);
     await confirmSubmit(sa.page, sa.page.getByRole("button", { name: "Yayınla", exact: true }), "Son sürümü yayınla");
     await expect(sa.page.getByRole("button", { name: "Yayından kaldır (taslağa al)" })).toBeVisible();
-    const res = await request.get(`/sayfa/${key}`);
+    const res = await request.get(`/tr/sayfa/${key}`);
     expect(res.status()).toBe(200);
     const html = await res.text();
     expect(html).toContain("Gerçek bilgi metni.");
     expect(html).not.toMatch(/<script>alert\("x"\)|onerror=|javascript:alert/);
     await confirmSubmit(sa.page, sa.page.getByRole("button", { name: "Yayından kaldır (taslağa al)" }));
     await expect(sa.page.getByRole("button", { name: "Yayınla", exact: true })).toBeVisible();
-    expect((await request.get(`/sayfa/${key}`)).status()).toBe(404);
+    expect((await request.get(`/tr/sayfa/${key}`)).status()).toBe(404);
     await seo.ctx.close();
     await sa.ctx.close();
   });
@@ -245,7 +245,7 @@ test.describe("Sprint 7 — CMS workflow, multilingual and storefront", () => {
     test.setTimeout(150_000);
     const admin = readTestAdmin();
     await login(page, admin.email, admin.password);
-    expect((await request.get("/sss")).status()).toBe(404);
+    expect((await request.get("/tr/sss")).status()).toBe(404);
     await page.goto("/admin/content/faq?dil=tr");
     const nf = page.getByRole("form", { name: "Yeni soru" });
     await nf.getByLabel("Soru").fill("E2E Teklif ne kadar sürede hazırlanır?");
@@ -254,19 +254,19 @@ test.describe("Sprint 7 — CMS workflow, multilingual and storefront", () => {
     await nf.getByLabel("Durum").selectOption("PUBLISHED");
     await nf.getByRole("button", { name: "Ekle", exact: true }).click();
     await expect(nf.getByRole("status")).toContainText("yayında");
-    const res = await request.get("/sss");
+    const res = await request.get("/tr/sss");
     expect(res.status()).toBe(200);
     const html = await res.text();
     expect(html).toContain("E2E Teklif ne kadar sürede hazırlanır?");
     expect(html).toContain('"@type":"FAQPage"');
-    const home = await (await request.get("/")).text();
-    expect(home).toMatch(/href="\/sss"/);
+    const home = await (await request.get("/tr")).text();
+    expect(home).toMatch(/href="\/tr\/sss"/);
     const card = page.getByRole("form", { name: "Soru: E2E Teklif ne kadar sürede hazırlanır?" });
     await card.getByLabel("Durum").selectOption("DRAFT");
     await card.getByRole("button", { name: "Kaydet" }).click();
     await expect(card.getByRole("status")).toContainText("Taslak");
-    expect((await request.get("/sss")).status()).toBe(404);
-    expect(await (await request.get("/")).text()).not.toMatch(/href="\/sss"/);
+    expect((await request.get("/tr/sss")).status()).toBe(404);
+    expect(await (await request.get("/tr")).text()).not.toMatch(/href="\/tr\/sss"/);
   });
 
   test("time-boxed banner shows on the home page only while published", async ({ page, request }) => {
@@ -283,22 +283,22 @@ test.describe("Sprint 7 — CMS workflow, multilingual and storefront", () => {
     await f.getByLabel("Bitiş (İstanbul)").fill(end);
     await f.getByRole("button", { name: "Oluştur" }).click();
     await expect(page.getByText("Şu an yayında")).toBeVisible();
-    expect(await (await request.get("/")).text()).toContain("E2E Fuar duyurusu");
-    expect(await (await request.get("/en")).text()).not.toContain("E2E Fuar duyurusu"); // no EN text → not shown in EN
+    expect(await (await request.get("/tr")).text()).toContain("E2E Fuar duyurusu");
+    expect(await (await request.get("/")).text()).not.toContain("E2E Fuar duyurusu"); // no EN text → not shown in EN
     const card = page.getByRole("form", { name: "Duyuru" }).first();
     await card.getByLabel("Durum").selectOption("ARCHIVED");
     await card.getByRole("button", { name: "Kaydet" }).click();
     await expect(card.getByRole("status")).toContainText("Taslak kaydedildi");
-    expect(await (await request.get("/")).text()).not.toContain("E2E Fuar duyurusu");
+    expect(await (await request.get("/tr")).text()).not.toContain("E2E Fuar duyurusu");
   });
 
   test("legacy CMS pages come from the DB with the same URLs; Arabic stays RTL with DB menus; no RU/AR product pages", async ({ request }) => {
-    for (const [path, text] of [["/sayfa/kurumsal", "Kurumsal"], ["/en/page/corporate-information", "Corporate"], ["/sayfa/kisisel-verilenin-korunmasi-kanunu", "Kişisel"]] as const) {
+    for (const [path, text] of [["/tr/sayfa/kurumsal", "Kurumsal"], ["/page/corporate-information", "About us"], ["/tr/sayfa/kisisel-verilenin-korunmasi-kanunu", "Kişisel"]] as const) {
       const r = await request.get(path);
       expect(r.status(), path).toBe(200);
       expect(await r.text(), path).toContain(text);
     }
-    const legal = await (await request.get("/sayfa/mesafeli-satis-sozlesmesi")).text();
+    const legal = await (await request.get("/tr/sayfa/mesafeli-satis-sozlesmesi")).text();
     expect(legal).toContain("hukuki onay sürecindedir");
     expect(legal).toMatch(/<meta name="robots" content="noindex/);
     const ar = await (await request.get("/ar")).text();

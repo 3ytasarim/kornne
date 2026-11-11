@@ -15,6 +15,8 @@ export default defineConfig({
     // integration files share one isolated DB schema → run files one after another
     fileParallelism: false,
     environment: "node",
+    // never contact TCMB from tests (src/lib/fx/rates.ts)
+    env: { FX_FIXTURE: "USD:50.1981,EUR:56.3795" },
     globalSetup: ["tests/integration/global-setup.ts"],
   },
 });

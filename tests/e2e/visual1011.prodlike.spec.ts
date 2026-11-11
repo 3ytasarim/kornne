@@ -20,7 +20,7 @@ test("s1011 consent banner", async ({ page }) => {
   }
   await page.context().clearCookies();
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/urun/dairesel-kesim-hucresi");
+  await page.goto("/tr/urun/dairesel-kesim-hucresi");
   await page.getByRole("button", { name: "Tercihleri ayarla" }).click();
   await page.screenshot({ path: `${DIR}/s1011-consent-preferences-1440.png` });
 });

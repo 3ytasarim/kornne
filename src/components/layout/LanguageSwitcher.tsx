@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { useEffect, useId, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import { cn } from "@/lib/cn";
 import { Flag } from "./Flag";
@@ -88,7 +88,7 @@ export function LanguageSwitcher({ options: initial, label, variant = "header" }
   if (variant === "list") {
     return (
       <nav aria-label={label}>
-        <ul className="grid grid-cols-5 gap-2">
+        <ul className="grid grid-cols-3 gap-2">
           {options.map((o) => (
             <li key={o.locale}>
               <a href={o.href} hrefLang={o.locale} lang={o.locale} aria-current={o.current ? "true" : undefined} className={cn("flex min-h-12 items-center justify-center gap-1.5 rounded-[var(--radius-md)] border text-sm font-semibold", o.current ? "border-brand-700 bg-brand-700 text-white" : "border-line text-ink hover:border-brand-600")}>
@@ -104,9 +104,10 @@ export function LanguageSwitcher({ options: initial, label, variant = "header" }
 
   return (
     <div ref={ref} className="relative">
-      <button ref={btnRef} type="button" aria-expanded={open} aria-controls={menuId} aria-label={`${current?.label ?? ""} — ${label}: ${current?.nativeName ?? ""}`} onClick={() => setOpen((v) => !v)} className="inline-flex min-h-12 items-center gap-1.5 rounded-[var(--radius-md)] px-3 text-sm font-semibold text-ink hover:bg-surface-2">
+      <button ref={btnRef} type="button" aria-expanded={open} aria-controls={menuId} aria-label={`${current?.label ?? ""} — ${label}: ${current?.nativeName ?? ""}`} onClick={() => setOpen((v) => !v)} className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line px-3 text-sm font-semibold text-ink transition-colors hover:border-line-strong hover:bg-surface-2">
         {current ? <Flag locale={current.locale} /> : null}
         {current?.label}
+        <ChevronDown aria-hidden="true" className={cn("size-4 text-steel transition-transform", open && "rotate-180")} />
       </button>
       <ul id={menuId} hidden={!open} className="absolute end-0 top-full z-50 mt-2 w-52 overflow-hidden rounded-[var(--radius-md)] border border-line bg-surface py-1 shadow-[var(--shadow-pop)]">
         {options.map((o) => (

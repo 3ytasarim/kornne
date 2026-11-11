@@ -50,7 +50,8 @@ export type CatalogProduct = {
   /** Locale of the page a card links to: the current locale when translated, otherwise Turkish (controlled fallback) */
   pageLocale: Locale;
   images: CatalogImage[];
-  currency: "TRY";
+  /** ISO code of priceMinor: the stored price currency, converted to the page language's display currency by catalog (index.ts) */
+  currency: string;
   /** Customer-facing price — null unless the price is VERIFIED (VAT/currency/amount confirmed). */
   priceMinor: bigint | null;
   compareAtMinor: bigint | null;

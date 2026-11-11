@@ -31,7 +31,7 @@ export function ProductCard({ card, labels, headingLevel = 3, priority = false }
         {card.titleLang ? <span className="absolute end-2 top-2 rounded-full bg-surface/90 px-2 py-0.5 text-[0.6875rem] font-semibold text-steel uppercase shadow-sm">{card.titleLang}</span> : null}
       </Link>
       <div className="flex flex-1 flex-col gap-3 px-2 pt-3 pb-2">
-        <H className="line-clamp-2 min-h-[2.6em] text-[0.9375rem] leading-snug font-semibold text-ink sm:text-base" lang={card.titleLang ?? undefined} dir={card.titleLang ? "ltr" : undefined}>
+        <H className="line-clamp-2 min-h-[2.6em] text-[0.9375rem] leading-snug font-semibold [overflow-wrap:anywhere] hyphens-auto text-ink sm:text-base" lang={card.titleLang ?? undefined} dir={card.titleLang ? "ltr" : undefined}>
           <Link href={card.href} hrefLang={card.hrefLang ?? undefined} data-analytics-item={item} className="after:absolute after:inset-0 after:rounded-[var(--radius-lg)] focus-visible:outline-none focus-visible:after:outline-3 focus-visible:after:outline-focus">
             {card.title}
           </Link>

@@ -109,7 +109,7 @@ function OrderCard({ locale, s, order, noticeHref }: { locale: Locale; s: Shop; 
               {l.title} <span className="text-steel">× {l.quantity}</span>
             </span>
             <span className="shrink-0 font-medium text-ink tabular-nums" dir="ltr">
-              {money(l.lineTotalMinor, locale)}
+              {money(l.lineTotalMinor, locale, order.currency)}
             </span>
           </li>
         ))}
@@ -117,7 +117,7 @@ function OrderCard({ locale, s, order, noticeHref }: { locale: Locale; s: Shop; 
       <p className="mt-4 flex items-baseline justify-between text-ink">
         <span className="font-semibold">{s.status.total}</span>
         <span className="text-xl font-bold tabular-nums" dir="ltr">
-          {money(order.totalMinor, locale)}
+          {money(order.totalMinor, locale, order.currency)}
         </span>
       </p>
     </article>

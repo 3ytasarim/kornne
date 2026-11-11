@@ -3,6 +3,8 @@ import type { ShopDictionary } from "./tr";
 /** Russian shop strings — draft, native review pending. */
 export const shopRu: ShopDictionary = {
   utility: {
+    fxTitle: "Курсы валют",
+    fxSource: "ЦБ Турции, продажа",
     transfer: "Оплата банковским переводом (EFT / Havale)",
     vat: "Цены указаны с НДС",
   },
@@ -106,6 +108,7 @@ export const shopRu: ShopDictionary = {
     legalDraft: "Тексты договоров проходят юридическое согласование.",
   },
   errors: {
+    noAccount: "Банковский счёт в долларах США для переводов пока не указан. Свяжитесь с нами или запросите предложение по корзине.",
     required: "Это поле обязательно.",
     tooLong: "Введённый текст слишком длинный.",
     invalid: "Недопустимое значение.",
@@ -178,7 +181,7 @@ export const shopRu: ShopDictionary = {
     payerName: "Отправитель (фамилия и имя или компания)",
     bank: "Банк, через который произведена оплата",
     chooseBank: "Выберите банк",
-    amount: "Отправленная сумма (TL)",
+    amount: "Отправленная сумма",
     paidAt: "Дата оплаты",
     note: "Назначение платежа (необязательно)",
     send: "Отправить уведомление",

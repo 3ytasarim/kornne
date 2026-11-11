@@ -185,7 +185,7 @@ test.describe("responsive, languages, RTL", () => {
   test("storefront TR/EN/FR/RU/AR: lang + dir, one H1, noindex here; Arabic is RTL", async ({ browser }) => {
     const ctx = await browser.newContext({ baseURL: BASE, viewport: { width: 320, height: 800 } });
     const page = await ctx.newPage();
-    for (const [path, lang, dir] of [["/", "tr", "ltr"], ["/en", "en", "ltr"], ["/fr", "fr", "ltr"], ["/ru", "ru", "ltr"], ["/ar", "ar", "rtl"]] as const) {
+    for (const [path, lang, dir] of [["/tr", "tr", "ltr"], ["/", "en", "ltr"], ["/de", "de", "ltr"], ["/fr", "fr", "ltr"], ["/ru", "ru", "ltr"], ["/ar", "ar", "rtl"]] as const) {
       await page.goto(path);
       await expect(page.locator("html")).toHaveAttribute("lang", lang);
       await expect(page.locator("html")).toHaveAttribute("dir", dir);

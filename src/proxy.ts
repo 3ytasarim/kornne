@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { SESSION_COOKIE } from "@/lib/auth/cookie";
 import { findRedirect } from "@/lib/redirects";
 import { isEnabledLocale, LOCALE_HEADER } from "@/lib/i18n/config";
-import { localizePath, resolvePublicPath } from "@/lib/i18n/routes";
+import { canonicalRedirectTarget, legacyTurkishPath, localizePath, resolvePublicPath } from "@/lib/i18n/routes";
 
 /**
  * Next 16 proxy (Node runtime). Order:
@@ -10,9 +10,11 @@ import { localizePath, resolvePublicPath } from "@/lib/i18n/routes";
  *  2. /admin: session-cookie gate (convenience only; every admin page/action re-validates the DB session).
  *  3. Legacy 301s: DB Redirect table (imported from docs/audit/redirect-map.csv, updated by Catalog QA approvals),
  *     static src/data/redirects.json as fallback (src/lib/redirects.ts, 60 s memo).
- *  4. Trailing slash → 308; "/tr/..." → 308 to the unprefixed Turkish URL.
- *  5. Locale rewrite: public "/en/product/x" → internal "/en/urun/x" (app/[locale]/...). Turkish URLs keep the
- *     legacy paths and are rewritten to "/tr/...".
+ *  4. Old unprefixed Turkish URLs ("/urun/x", from before English became the default locale in 2026-11) → 301
+ *     "/tr/urun/x". Legacy-redirect targets written in that old scheme are upgraded the same way (one hop).
+ *  5. Trailing slash → 308; "/en/..." → 308 to the unprefixed English URL.
+ *  6. Locale rewrite: public "/de/produkt/x" → internal "/de/urun/x" (app/[locale]/...); English (no prefix) →
+ *     "/en/...".
  * Non-indexable environments get "X-Robots-Tag: noindex" on every response (incl. images and files).
  */
 const INDEXABLE = process.env.SITE_INDEXABLE === "true";
@@ -71,14 +73,18 @@ export async function proxy(request: NextRequest) {
   }
   const legacy = await findRedirect(decodedPath);
   if (legacy && legacy.to !== decodedPath) {
-    const target = new URL(encodeURI(legacy.to), base);
+    // targets were written for the old scheme (bare Turkish, "/en/..." English) → today's URL, still one hop
+    const target = new URL(encodeURI(canonicalRedirectTarget(legacy.to)), base);
     if (search) target.search = search;
     return withRobots(NextResponse.redirect(target, legacy.status));
   }
 
+  const oldTurkish = legacyTurkishPath(decodedPath);
+  if (oldTurkish) return withRobots(NextResponse.redirect(new URL(encodeURI(oldTurkish) + search, base), 301));
+
   const { locale, internalPath } = resolvePublicPath(decodedPath);
   if (!isEnabledLocale(locale)) return withRobots(NextResponse.next());
-  // One public URL per page, reached in ONE hop: trailing "/" removed, "/tr/x" → "/x", "/en/urun/x" → "/en/product/x"
+  // One public URL per page, reached in ONE hop: trailing "/" removed, "/en/x" → "/x", "/de/urun/x" → "/de/produkt/x"
   const canonicalPath = localizePath(locale, internalPath);
   if (canonicalPath !== decodedPath) {
     return withRobots(NextResponse.redirect(new URL(encodeURI(canonicalPath) + search, base), 308));

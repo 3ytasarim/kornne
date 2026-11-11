@@ -5,10 +5,11 @@ import { en } from "./en";
 import { fr } from "./fr";
 import { ru } from "./ru";
 import { ar } from "./ar";
+import { de } from "./de";
 
 export type { Dictionary, DeepPartial };
 
-export const PARTIALS: Record<Exclude<Locale, "tr">, DeepPartial<Dictionary>> = { en, fr, ru, ar };
+export const PARTIALS: Record<Exclude<Locale, "tr">, DeepPartial<Dictionary>> = { en, de, fr, ru, ar };
 
 function merge<T>(base: T, over: DeepPartial<T> | undefined): T {
   if (over === undefined || over === null) return base;
