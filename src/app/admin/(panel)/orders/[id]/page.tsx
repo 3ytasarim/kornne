@@ -164,11 +164,12 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <KeyValues
               rows={[
                 ["Firma", b.company ?? "—"],
-                ["Vergi dairesi / no", `${b.taxOffice ?? "—"} / ${b.taxNumber ?? "—"}`],
+                // foreign orders: no tax office, tax number = company tax / VAT ID, district field = country
+                (b.locale ?? "tr") === "tr" ? ["Vergi dairesi / no", `${b.taxOffice || "—"} / ${b.taxNumber ?? "—"}`] : ["Vergi / VAT no (yurt dışı)", b.taxNumber ?? "—"],
                 ["Yetkili", b.name ?? "—"],
                 ["E-posta", b.email ? <a key="e" href={`mailto:${b.email}`} className="underline">{b.email}</a> : "—"],
                 ["Telefon", b.phone ? <a key="p" href={`tel:${b.phone}`} className="underline">{b.phone}</a> : "—"],
-                ["Adres", `${b.address ?? ""} ${b.district ?? ""} / ${b.city ?? ""}`],
+                (b.locale ?? "tr") === "tr" ? ["Adres", `${b.address ?? ""} ${b.district ?? ""} / ${b.city ?? ""}`] : ["Adres", `${b.address ?? ""}, ${b.city ?? ""} / ${b.district ?? ""} (ülke)`],
                 ["Teslimat", ship.sameAsBilling ? "Fatura adresiyle aynı" : (ship.address ?? "—")],
                 ["Dil", b.locale ?? "tr"],
               ]}

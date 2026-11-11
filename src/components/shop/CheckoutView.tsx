@@ -133,8 +133,9 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
           <legend className="px-1 text-lg font-bold text-ink">{s.checkout.billing}</legend>
           <div className="mt-2 grid gap-4 sm:grid-cols-2">
             <TextField className="sm:col-span-2" label={s.checkout.company} name="company" autoComplete="organization" required maxLength={160} error={err("company")} />
-            <TextField label={s.checkout.taxOffice} name="taxOffice" required maxLength={80} error={err("taxOffice")} />
-            <TextField label={s.checkout.taxNumber} name="taxNumber" inputMode="numeric" dir="ltr" required maxLength={14} hint={s.checkout.taxNumberHint} error={err("taxNumber")} />
+            {/* foreign companies: no Turkish tax office, free-form tax / VAT ID */}
+            {locale === "tr" ? <TextField label={s.checkout.taxOffice} name="taxOffice" required maxLength={80} error={err("taxOffice")} /> : null}
+            <TextField label={s.checkout.taxNumber} name="taxNumber" inputMode={locale === "tr" ? "numeric" : "text"} dir="ltr" required maxLength={locale === "tr" ? 14 : 30} hint={s.checkout.taxNumberHint} error={err("taxNumber")} />
           </div>
         </fieldset>
         <fieldset className="rounded-[var(--radius-lg)] border border-line bg-surface p-5 sm:p-6">
@@ -148,8 +149,9 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
         <fieldset className="rounded-[var(--radius-lg)] border border-line bg-surface p-5 sm:p-6">
           <legend className="px-1 text-lg font-bold text-ink">{s.checkout.address}</legend>
           <div className="mt-2 grid gap-4 sm:grid-cols-2">
-            <TextField label={s.checkout.city} name="city" autoComplete="address-level1" required maxLength={60} error={err("city")} />
-            <TextField label={s.checkout.district} name="district" autoComplete="address-level2" required maxLength={60} error={err("district")} />
+            {/* Turkish pages: province / district; other languages: city / country (same fields, different labels) */}
+            <TextField label={s.checkout.city} name="city" autoComplete={locale === "tr" ? "address-level1" : "address-level2"} required maxLength={60} error={err("city")} />
+            <TextField label={s.checkout.district} name="district" autoComplete={locale === "tr" ? "address-level2" : "country-name"} required maxLength={60} error={err("district")} />
             <TextArea className="sm:col-span-2" label={s.checkout.billingAddress} name="address" autoComplete="street-address" required maxLength={400} rows={3} error={err("address")} />
             <label className="flex min-h-12 cursor-pointer items-center gap-3 text-sm font-medium text-ink sm:col-span-2">
               <input type="checkbox" checked={sameShipping} onChange={(e) => setSameShipping(e.target.checked)} className="size-5 accent-brand-700" />
@@ -218,19 +220,24 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
           })}
         </ul>
         <dl aria-busy={pending} className="mt-2 space-y-2 border-t border-line pt-4 text-sm">
-          <div className="flex justify-between gap-4">
-            <dt className="text-steel">{s.cart.net}</dt>
-            <dd className="text-ink tabular-nums" dir="ltr">
-              {ok ? money(ok.netMinor, locale, cur) : "—"}
-            </dd>
-          </div>
-          <div className="flex justify-between gap-4">
-            <dt className="text-steel">{format(s.cart.vat, { rate: ok?.lines[0] ? ok.lines[0].vatRateBp / 100 : 20 })}</dt>
-            <dd className="text-ink tabular-nums" dir="ltr">
-              {ok ? money(ok.vatMinor, locale, cur) : "—"}
-            </dd>
-          </div>
-          <div className="flex items-baseline justify-between gap-4 border-t border-line pt-3">
+          {/* VAT lines only on Turkish (TRY) pages — foreign orders carry no VAT */}
+          {locale === "tr" ? (
+            <>
+              <div className="flex justify-between gap-4">
+                <dt className="text-steel">{s.cart.net}</dt>
+                <dd className="text-ink tabular-nums" dir="ltr">
+                  {ok ? money(ok.netMinor, locale, cur) : "—"}
+                </dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt className="text-steel">{format(s.cart.vat, { rate: ok?.lines[0] ? ok.lines[0].vatRateBp / 100 : 20 })}</dt>
+                <dd className="text-ink tabular-nums" dir="ltr">
+                  {ok ? money(ok.vatMinor, locale, cur) : "—"}
+                </dd>
+              </div>
+            </>
+          ) : null}
+          <div className={locale === "tr" ? "flex items-baseline justify-between gap-4 border-t border-line pt-3" : "flex items-baseline justify-between gap-4"}>
             <dt className="font-semibold text-ink">{s.cart.total}</dt>
             <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="checkout-total">
               {ok ? money(ok.totalMinor, locale, cur) : s.cart.calculating}

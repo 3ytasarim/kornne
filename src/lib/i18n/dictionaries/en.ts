@@ -79,7 +79,7 @@ export const en: DeepPartial<Dictionary> = {
   error: { title: "Something went wrong", lead: "An unexpected error occurred while loading the page.", retry: "Try again" },
   quote: {
       title: "Price on request",
-      text: "Until current prices, VAT and delivery terms are confirmed, prices are shared by quotation. Send us the product link and our team will reply with price, lead time and installation details.",
+      text: "Until current prices and delivery terms are confirmed, prices are shared by quotation. Send us the product link and our team will reply with price, lead time and installation details.",
       cta: "Request a quote",
       whatsapp: "Request a quote on WhatsApp",
       email: "Request a quote by email",
@@ -138,7 +138,7 @@ export const en: DeepPartial<Dictionary> = {
       items: "{count} products",
       option: "Option",
       chooseOption: "Choose an option",
-      lead: "Send one quote request for the selected products. Price, VAT, lead time and installation details will be sent to you in writing."
+      lead: "Send one quote request for the selected products. Price, lead time and installation details will be sent to you in writing."
   },
   quoteForm: {
       title: "Contact details",
@@ -174,11 +174,11 @@ export const en: DeepPartial<Dictionary> = {
       description: "Product description",
       contact: "Contact us directly",
       leadTime: "Stock and lead time are given in the quotation.",
-      vat: "Price and VAT are confirmed in writing in the quotation.",
+      vat: "The price is confirmed in writing in the quotation.",
       priceTitle: "Price on request",
       priceText: "Until the current price and terms of sale for this product are confirmed, the price is shared by quotation.",
-      vatIncluded: "VAT included",
-      vatExcluded: "excl. VAT",
+      vatIncluded: "",
+      vatExcluded: "",
       sectionNav: "Product sections"
   },
   commerce: {

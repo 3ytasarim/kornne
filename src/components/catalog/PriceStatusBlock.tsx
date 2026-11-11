@@ -29,7 +29,7 @@ export function PriceStatusBlock({
     return (
       <div data-price-status="verified" className="space-y-1.5 rounded-[var(--radius-lg)] border border-line bg-surface-2 p-5">
         <PriceBlock priceMinor={priceMinor} compareAtMinor={compareAtMinor} currency={currency} locale={locale} labels={labels} size="lg" />
-        <p className="text-sm text-steel">{vatIncluded ? labels.vatIncluded : labels.vatExcluded}</p>
+        {(vatIncluded ? labels.vatIncluded : labels.vatExcluded) ? <p className="text-sm text-steel">{vatIncluded ? labels.vatIncluded : labels.vatExcluded}</p> : null}
       </div>
     );
   }

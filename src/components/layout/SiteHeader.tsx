@@ -70,10 +70,12 @@ export async function SiteHeader({ localeParam }: { localeParam: string }) {
               <Landmark aria-hidden="true" className="size-3.5" />
               {d.shop.utility.transfer}
             </li>
-            <li className="hidden items-center gap-1.5 min-[1700px]:inline-flex">
-              <Percent aria-hidden="true" className="size-3.5" />
-              {d.shop.utility.vat}
-            </li>
+            {d.shop.utility.vat ? (
+              <li className="hidden items-center gap-1.5 min-[1700px]:inline-flex">
+                <Percent aria-hidden="true" className="size-3.5" />
+                {d.shop.utility.vat}
+              </li>
+            ) : null}
           </ul>
           <nav aria-label={d.nav.orderStatus} className="hidden shrink-0 items-center gap-1 md:flex">
             {utility.map((u) => (

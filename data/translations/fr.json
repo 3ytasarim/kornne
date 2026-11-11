@@ -416,13 +416,47 @@
     }
   ],
   "menus": [
-    { "id": "cmvjf6wa3000oasp6yb78vyuc", "label": "Entreprise" },
-    { "id": "cmvjf6wa3000pasp668i9y4yu", "label": "Contact" },
-    { "id": "cmvjf6wa3000qasp6degr1u0d", "label": "Blog" },
-    { "id": "cmvjf6wa3000rasp66j7spkw2", "label": "FAQ" },
-    { "id": "cmvjf6wa3000sasp6p8kmh1b3", "label": "Entreprise" },
-    { "id": "cmvjf6wa3000tasp6r2rgoxgl", "label": "Politique de retour et de remboursement" },
-    { "id": "cmvjf6wa3000uasp6sh9v289b", "label": "Contrat de vente à distance" },
-    { "id": "cmvjf6wa3000vasp6uv6zu6uy", "label": "Protection des données personnelles (KVKK)" }
+    {
+      "id": "cmvjf6wa3000oasp6yb78vyuc",
+      "label": "Entreprise"
+    },
+    {
+      "id": "cmvjf6wa3000pasp668i9y4yu",
+      "label": "Contact"
+    },
+    {
+      "id": "cmvjf6wa3000qasp6degr1u0d",
+      "label": "Blog"
+    },
+    {
+      "id": "cmvjf6wa3000rasp66j7spkw2",
+      "label": "FAQ"
+    },
+    {
+      "id": "cmvjf6wa3000sasp6p8kmh1b3",
+      "label": "Entreprise"
+    },
+    {
+      "id": "cmvjf6wa3000tasp6r2rgoxgl",
+      "label": "Politique de retour et de remboursement"
+    },
+    {
+      "id": "cmvjf6wa3000uasp6sh9v289b",
+      "label": "Contrat de vente à distance"
+    },
+    {
+      "id": "cmvjf6wa3000vasp6uv6zu6uy",
+      "label": "Protection des données personnelles (KVKK)"
+    }
+  ],
+  "variants": [
+    {
+      "tr": "6 lı Kanca",
+      "label": "6 crochets"
+    },
+    {
+      "tr": "8 li Kanca",
+      "label": "8 crochets"
+    }
   ]
 }

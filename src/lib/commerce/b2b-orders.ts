@@ -1,5 +1,5 @@
 import { createHash, randomBytes, randomInt } from "node:crypto";
-import { Prisma, type PrismaClient } from "@prisma/client";
+import { Prisma, type Locale as DbLocale, type PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { AdminError } from "@/lib/admin/action-state";
 import { writeAuditLogVia } from "@/lib/audit-log";
@@ -29,12 +29,14 @@ export const ORDER_LIMITS = { maxLines: 50, minFillMs: 3_000, maxFormAgeMs: 24 *
 
 const item = z.object({ productRef: z.string().regex(/^\d{1,8}$/), variantId: z.string().regex(/^[a-z0-9]{10,40}$/).nullable().optional().transform((v) => v ?? null), quantity: z.number().int().min(1).max(MAX_LINE_QTY) });
 
-export const b2bCheckoutSchema = z.object({
+export const b2bCheckoutSchema = z
+  .object({
   locale: z.enum(LOCALES),
   company: text(2, 160),
-  taxOffice: text(2, 80),
-  /** VKN (10) for companies, TCKN (11) for sole proprietors */
-  taxNumber: z.string().transform((v) => v.replace(/\s/g, "")).pipe(z.string().regex(/^\d{10,11}$/, "invalidTaxNumber")),
+  /** required on Turkish orders only — foreign companies have no Turkish tax office */
+  taxOffice: text(0, 80),
+  /** Turkish orders: VKN (10) for companies, TCKN (11) for sole proprietors. Foreign orders: any company tax / VAT ID. */
+  taxNumber: z.string().max(80).transform((v) => v.replace(/\s/g, "").toUpperCase()).pipe(z.string().regex(/^[A-Z0-9][A-Z0-9./-]{3,29}$/, "invalidTaxNumber")),
   contactName: text(2, 120),
   email: z.string().trim().toLowerCase().pipe(z.email("invalidEmail")),
   phone: z.string().transform(clean).refine((v) => /^[+0-9 ()-]{7,25}$/.test(v) && v.replace(/\D/g, "").length >= 10, "invalidPhone"),
@@ -49,7 +51,13 @@ export const b2bCheckoutSchema = z.object({
   idempotencyKey: z.uuid(),
   website: z.string().max(200).optional(),
   startedAt: z.number().int(),
-});
+  })
+  .superRefine((v, ctx) => {
+    if (v.locale === "tr") {
+      if (v.taxOffice.length < 2) ctx.addIssue({ code: "custom", path: ["taxOffice"], message: "required" });
+      if (!/^\d{10,11}$/.test(v.taxNumber)) ctx.addIssue({ code: "custom", path: ["taxNumber"], message: "invalidTaxNumber" });
+    }
+  });
 export type B2BCheckoutInput = z.input<typeof b2bCheckoutSchema>;
 export type PlaceOrderResult = { ok: true; number: string; accessToken: string; totalMinor: bigint; currency: string; duplicate: boolean } | { ok: false; code: "validation"; fields: Record<string, string> } | { ok: false; code: "spam" | "rate" | "closed" | "not_purchasable" | "no_account" | "error" };
 
@@ -85,15 +93,18 @@ export async function resolveCartLines(
   items: CartItemInput[],
   now = new Date(),
   /** display/payment currency of the page language (TRY on Turkish pages, USD elsewhere) and the rates to reach it */
-  target: { currency: string; rates: Pick<Rates, "USD" | "EUR"> | null } = { currency: "TRY", rates: null },
+  target: { currency: string; rates: Pick<Rates, "USD" | "EUR"> | null; locale?: string } = { currency: "TRY", rates: null },
 ): Promise<{ ok: true; lines: ResolvedLine[]; converted: boolean } | { ok: false; code: "not_purchasable" | "variant"; productRef: string }> {
   let converted = false;
+  // VAT applies to Turkish (TRY) sales only; foreign-language orders pay the listed price with no VAT line (client 11.11.2026)
+  const noVat = target.currency !== "TRY";
+  const titleLocale = target.locale && target.locale !== "tr" ? target.locale : "tr";
   const merged = new Map<string, CartItemInput>();
   for (const it of items) {
     const k = `${it.productRef}|${it.variantId ?? ""}`;
     merged.set(k, { ...it, quantity: Math.min(MAX_LINE_QTY, (merged.get(k)?.quantity ?? 0) + it.quantity) });
   }
-  const products = await db.product.findMany({ where: { sourceKey: { in: [...merged.values()].map((l) => `kornne.com:${l.productRef}`) }, status: "PUBLISHED", needsReview: false, saleMode: { not: "QUOTE_ONLY" } }, select: { id: true, sourceKey: true, sku: true, translations: { where: { locale: "tr" }, select: { title: true } }, variants: { where: { active: true }, select: { id: true, labels: true } } } });
+  const products = await db.product.findMany({ where: { sourceKey: { in: [...merged.values()].map((l) => `kornne.com:${l.productRef}`) }, status: "PUBLISHED", needsReview: false, saleMode: { not: "QUOTE_ONLY" } }, select: { id: true, sourceKey: true, sku: true, translations: { where: { locale: { in: [...new Set(["tr", titleLocale])] as DbLocale[] } }, select: { title: true, locale: true } }, variants: { where: { active: true }, select: { id: true, labels: true } } } });
   const lines: ResolvedLine[] = [];
   for (const l of merged.values()) {
     const p = products.find((x) => x.sourceKey === `kornne.com:${l.productRef}`);
@@ -107,8 +118,10 @@ export async function resolveCartLines(
     const unit = convertMinor(price.amountMinor, price.currency, target.currency, target.rates);
     if (unit === null || unit <= 0n) return { ok: false, code: "not_purchasable", productRef: l.productRef };
     if (price.currency !== target.currency) converted = true;
-    const vLabel = variant ? ((variant.labels as Record<string, string>).tr ?? "") : "";
-    lines.push({ productRef: l.productRef, productId: p.id, variantId: variant?.id ?? null, title: `${p.translations[0]?.title ?? p.sourceKey}${vLabel ? ` — ${vLabel}` : ""}`, sku: p.sku, unitPriceMinor: unit, quantity: l.quantity, vatRateBp: price.vatRateBp!, vatIncluded: price.vatIncluded! });
+    const labels = variant ? (variant.labels as Record<string, string>) : {};
+    const vLabel = labels[titleLocale] || labels.tr || "";
+    const title = (p.translations.find((t) => t.locale === titleLocale) ?? p.translations.find((t) => t.locale === "tr"))?.title ?? p.sourceKey;
+    lines.push({ productRef: l.productRef, productId: p.id, variantId: variant?.id ?? null, title: `${title}${vLabel ? ` — ${vLabel}` : ""}`, sku: p.sku, unitPriceMinor: unit, quantity: l.quantity, vatRateBp: noVat ? 0 : price.vatRateBp!, vatIncluded: noVat ? true : price.vatIncluded! });
   }
   return { ok: true, lines, converted };
 }
@@ -140,7 +153,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
     if (!accounts.some((a) => isValidTrIban(a.iban))) return { ok: false, code: "no_account" };
   }
   const rates = ctx.rates !== undefined ? ctx.rates : await getRates(db);
-  const resolved = await resolveCartLines(db, input.items, now, { currency, rates });
+  const resolved = await resolveCartLines(db, input.items, now, { currency, rates, locale: input.locale });
   if (!resolved.ok) return resolved.code === "variant" ? { ok: false, code: "validation", fields: { items: "variantRequired" } } : { ok: false, code: "not_purchasable" };
   const fx = resolved.converted && rates ? { fxCurrency: currency === "TRY" ? "USD" : currency, fxRate4: currency === "EUR" ? rates.EUR : rates.USD } : { fxCurrency: null, fxRate4: null };
   const lines = resolved.lines;

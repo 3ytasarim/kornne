@@ -119,19 +119,24 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
             </p>
           ) : null}
           <dl className="mt-5 space-y-3 text-sm">
-            <div className="flex justify-between gap-4">
-              <dt className="text-steel">{labels.net}</dt>
-              <dd className="font-medium text-ink tabular-nums" dir="ltr">
-                {ok ? money(ok.netMinor, locale, cur) : "—"}
-              </dd>
-            </div>
-            <div className="flex justify-between gap-4">
-              <dt className="text-steel">{format(labels.vat, { rate: vatRate })}</dt>
-              <dd className="font-medium text-ink tabular-nums" dir="ltr">
-                {ok ? money(ok.vatMinor, locale, cur) : "—"}
-              </dd>
-            </div>
-            <div className="flex items-baseline justify-between gap-4 border-t border-line pt-4">
+            {/* VAT lines only on Turkish (TRY) pages — foreign orders carry no VAT */}
+            {locale === "tr" ? (
+              <>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-steel">{labels.net}</dt>
+                  <dd className="font-medium text-ink tabular-nums" dir="ltr">
+                    {ok ? money(ok.netMinor, locale, cur) : "—"}
+                  </dd>
+                </div>
+                <div className="flex justify-between gap-4">
+                  <dt className="text-steel">{format(labels.vat, { rate: vatRate })}</dt>
+                  <dd className="font-medium text-ink tabular-nums" dir="ltr">
+                    {ok ? money(ok.vatMinor, locale, cur) : "—"}
+                  </dd>
+                </div>
+              </>
+            ) : null}
+            <div className={locale === "tr" ? "flex items-baseline justify-between gap-4 border-t border-line pt-4" : "flex items-baseline justify-between gap-4"}>
               <dt className="text-base font-semibold text-ink">{labels.total}</dt>
               <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="cart-total">
                 {ok ? money(ok.totalMinor, locale, cur) : pending ? labels.calculating : "—"}

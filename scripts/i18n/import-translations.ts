@@ -33,6 +33,8 @@ type File = {
   categories: { key: string; name: string; slug: string; description: string | null; seoTitle: string; seoDescription: string }[];
   pages: { key: string; title: string; slug: string; html: string; seoTitle: string; seoDescription: string }[];
   menus: { id: string; label: string }[];
+  /** product option labels, matched by their Turkish text; only empty language labels are filled */
+  variants?: { tr: string; label: string }[];
 };
 
 const arg = (k: string) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3);
@@ -59,12 +61,22 @@ async function main() {
   for (const locale of LOCALES) {
     const f = JSON.parse(readFileSync(`data/translations/${locale}.json`, "utf8")) as File;
     if (f.locale !== locale) throw new Error(`${locale}.json declares locale ${f.locale}`);
-    const stats = { productsCreated: 0, productsUpdated: 0, productsKept: 0, productsMissing: 0, categoriesCreated: 0, categoriesApproved: 0, pagesCreated: 0, menus: 0 };
+    const stats = { productsCreated: 0, productsUpdated: 0, productsKept: 0, productsMissing: 0, categoriesCreated: 0, categoriesApproved: 0, pagesCreated: 0, menus: 0, variants: 0 };
 
     const products = await db.product.findMany({ where: { sourceKey: { in: f.products.map((p) => p.ref) } }, select: { id: true, sourceKey: true, translations: { where: { locale }, select: { id: true, importChecksum: true, title: true, slug: true, shortDescription: true, descriptionHtml: true, seoTitle: true, seoDescription: true } } } });
     const cats = await db.category.findMany({ where: { key: { in: f.categories.map((c) => c.key) } }, select: { id: true, key: true, translations: { where: { locale }, select: { id: true, slug: true, name: true, seoTitle: true } } } });
 
-    const work = async (tx: Pick<PrismaClient, "productTranslation" | "categoryTranslation" | "menuItem">) => {
+    const work = async (tx: Pick<PrismaClient, "productTranslation" | "categoryTranslation" | "menuItem" | "productVariant">) => {
+      if (f.variants?.length) {
+        const rows = await tx.productVariant.findMany({ select: { id: true, labels: true } });
+        for (const r of rows) {
+          const labels = (r.labels ?? {}) as Record<string, string>;
+          const t = f.variants.find((v) => v.tr.trim() === (labels.tr ?? "").trim());
+          if (!t || labels[locale]) continue;
+          if (APPLY) await tx.productVariant.update({ where: { id: r.id }, data: { labels: { ...labels, [locale]: t.label } } });
+          stats.variants++;
+        }
+      }
       for (const p of f.products) {
         const prod = products.find((x) => x.sourceKey === p.ref);
         if (!prod) {

@@ -87,8 +87,8 @@ export function HeroShowcase({ slides, labels, duration = 6 }: { slides: HeroSli
                 <span className="block text-sm text-white/80">
                   <span className="font-bold text-white tabular-nums" dir="ltr">
                     {current.price}
-                  </span>{" "}
-                  · {labels.vatIncluded}
+                  </span>
+                  {labels.vatIncluded ? ` · ${labels.vatIncluded}` : null}
                 </span>
               ) : null}
             </span>

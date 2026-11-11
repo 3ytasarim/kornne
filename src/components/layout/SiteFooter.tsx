@@ -32,7 +32,7 @@ export async function SiteFooter({ localeParam }: { localeParam: string }) {
           <Image src={SITE.wordmark.srcWhite} alt={SITE.name} width={SITE.wordmark.width} height={SITE.wordmark.height} sizes="180px" className="h-12 w-auto" />
           <p className="max-w-xs text-sm leading-relaxed">{d.meta.tagline}</p>
           <ul className="flex flex-wrap gap-2 text-xs">
-            {[d.shop.utility.transfer, d.shop.utility.vat].map((x) => (
+            {[d.shop.utility.transfer, d.shop.utility.vat].filter(Boolean).map((x) => (
               <li key={x} className="rounded-full bg-white/10 px-3 py-1.5 text-white/85">
                 {x}
               </li>

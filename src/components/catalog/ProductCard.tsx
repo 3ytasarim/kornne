@@ -44,7 +44,7 @@ export function ProductCard({ card, labels, headingLevel = 3, priority = false }
               <span className="min-w-0 text-base font-bold tracking-tight [overflow-wrap:anywhere] text-ink tabular-nums sm:text-xl" dir="ltr">
                 {card.price}
               </span>
-              <span className="text-xs font-medium text-steel">{labels.vatIncluded}</span>
+              {labels.vatIncluded ? <span className="text-xs font-medium text-steel">{labels.vatIncluded}</span> : null}
             </p>
           ) : (
             <p className="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-700 dark:text-brand-300">

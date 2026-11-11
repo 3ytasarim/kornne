@@ -78,3 +78,18 @@ dillerde **USD** (kur siparişe kaydedilir).
 
 Canlıya geçiş: `npx prisma migrate deploy` (yeni `FxRate` tablosu + `Order.fxCurrency/fxRate4`, yalnız ekleme).
 Sunucunun dışarıya (www.tcmb.gov.tr, 443) HTTPS erişimi olmalı.
+
+# Sprint 13c — Yabancı dillerde KDV yok, kalan Türkçe metinler (11.11.2026)
+
+- **KDV yalnız Türkçe'de**: EN/DE/FR/RU/AR sayfalarında "KDV dahil" yazıları, üst şerit/altbilgi KDV etiketi ve sepet/ödeme
+  KDV satırları kaldırıldı. Fiyat aynen gösterilir (müşteri kararı: "aynı fiyat, KDV yazısı yok"); yabancı dilden verilen
+  siparişte KDV 0, toplam = listelenen fiyat. Türkçe sipariş KDV dökümüyle aynen devam eder.
+- **Yabancı firma ödeme formu**: vergi dairesi alanı yok, vergi no yerine şirket vergi/VAT numarası (4–30 harf/rakam);
+  "İl / İlçe" yerine "Şehir / Ülke". Admin sipariş detayı bu siparişlerde "Vergi / VAT no (yurt dışı)" ve ülkeyi gösterir.
+- **Ürün seçenekleri** ("6 lı Kanca", "8 li Kanca") 5 dile çevrildi (`variants` bölümü, import betiği yalnız boş etiketi doldurur).
+- **Görsel alt metinleri**: çevrilmiş ürün sayfalarında Türkçe görsel açıklaması yerine çevrilmiş ürün adı.
+- Sipariş satır adları müşterinin dilinde kaydedilir.
+- Tarama: 5 dilde 275 sayfa, Türkçe olarak yalnız firma adresi ve tasarım imzası kaldı (özel isimler).
+
+**Canlıda ürünlerin Türkçe görünmesinin nedeni**: çeviriler veritabanına aktarılmamış (kod değil veri). Sunucuda:
+`npx tsx scripts/i18n/import-translations.ts --apply --confirm-db=<neon-endpoint-id>` çalıştırılmalı.

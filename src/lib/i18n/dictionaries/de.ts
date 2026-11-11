@@ -79,7 +79,7 @@ export const de: DeepPartial<Dictionary> = {
   error: { title: "Etwas ist schiefgelaufen", lead: "Beim Laden der Seite ist ein unerwarteter Fehler aufgetreten.", retry: "Erneut versuchen" },
   quote: {
       title: "Preis auf Anfrage",
-      text: "Bis aktuelle Preise, MwSt. und Lieferbedingungen bestätigt sind, werden Preise per Angebot mitgeteilt. Senden Sie uns den Produktlink; unser Team antwortet mit Preis, Lieferzeit und Installationsdetails.",
+      text: "Bis aktuelle Preise und Lieferbedingungen bestätigt sind, werden Preise per Angebot mitgeteilt. Senden Sie uns den Produktlink; unser Team antwortet mit Preis, Lieferzeit und Installationsdetails.",
       cta: "Angebot anfragen",
       whatsapp: "Angebot per WhatsApp anfragen",
       email: "Angebot per E-Mail anfragen",
@@ -138,7 +138,7 @@ export const de: DeepPartial<Dictionary> = {
       items: "{count} Produkte",
       option: "Option",
       chooseOption: "Option wählen",
-      lead: "Senden Sie eine Angebotsanfrage für die ausgewählten Produkte. Preis, MwSt., Lieferzeit und Installationsdetails erhalten Sie schriftlich."
+      lead: "Senden Sie eine Angebotsanfrage für die ausgewählten Produkte. Preis, Lieferzeit und Installationsdetails erhalten Sie schriftlich."
   },
   quoteForm: {
       title: "Kontaktdaten",
@@ -174,11 +174,11 @@ export const de: DeepPartial<Dictionary> = {
       description: "Produktbeschreibung",
       contact: "Direkt Kontakt aufnehmen",
       leadTime: "Lagerbestand und Lieferzeit werden im Angebot angegeben.",
-      vat: "Preis und MwSt. werden im Angebot schriftlich bestätigt.",
+      vat: "Der Preis wird im Angebot schriftlich bestätigt.",
       priceTitle: "Preis auf Anfrage",
       priceText: "Bis der aktuelle Preis und die Verkaufsbedingungen für dieses Produkt bestätigt sind, wird der Preis per Angebot mitgeteilt.",
-      vatIncluded: "inkl. MwSt.",
-      vatExcluded: "zzgl. MwSt.",
+      vatIncluded: "",
+      vatExcluded: "",
       sectionNav: "Produktabschnitte"
   },
   commerce: {

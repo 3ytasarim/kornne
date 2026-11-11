@@ -71,6 +71,24 @@ describe.skipIf(!hasTestDb)("multi-currency orders (isolated test DB)", () => {
     expect([r.currency, r.totalMinor]).toEqual(["USD", 2000_00n]);
     const o = await db.order.findUniqueOrThrow({ where: { number: r.number } });
     expect([o.currency, o.fxCurrency, o.fxRate4]).toEqual(["USD", null, null]); // no conversion needed
+    // no VAT on foreign orders: the listed price is the whole amount (client 11.11.2026)
+    expect([o.subtotalMinor, o.taxMinor, o.totalMinor]).toEqual([2000_00n, 0n, 2000_00n]);
+  });
+
+  it("foreign orders take a company tax / VAT ID without a Turkish tax office; Turkish orders still need VKN/TCKN", async () => {
+    const foreign = await placeBankTransferOrder(db, gate, input({ locale: "fr", taxOffice: "", taxNumber: "FR 12 345678901", email: "fx-foreign@kornne.test", city: "Lyon", district: "France" }), { ipHash: null, isTest: true, rates });
+    expect(foreign.ok).toBe(true);
+    const badForeign = await placeBankTransferOrder(db, gate, input({ locale: "en", taxOffice: "", taxNumber: "x!", email: "fx-foreign2@kornne.test" }), { ipHash: null, isTest: true, rates });
+    expect(badForeign).toMatchObject({ ok: false, code: "validation", fields: { taxNumber: "invalidTaxNumber" } });
+    const tr = await placeBankTransferOrder(db, gate, input({ taxOffice: "", taxNumber: "FR12345678901", email: "fx-tr@kornne.test" }), { ipHash: null, isTest: true, rates });
+    expect(tr).toMatchObject({ ok: false, code: "validation", fields: { taxOffice: "required", taxNumber: "invalidTaxNumber" } });
+  });
+
+  it("Turkish orders keep the VAT breakdown; foreign carts carry no VAT", async () => {
+    const trCart = await resolveCartLines(db, [{ productRef: usdRef, variantId: null, quantity: 1 }], new Date(), { currency: "TRY", rates });
+    const enCart = await resolveCartLines(db, [{ productRef: usdRef, variantId: null, quantity: 1 }], new Date(), { currency: "USD", rates, locale: "en" });
+    expect(trCart.ok && trCart.lines[0]!.vatRateBp).toBe(2000);
+    expect(enCart.ok && [enCart.lines[0]!.vatRateBp, enCart.lines[0]!.unitPriceMinor]).toEqual([0, 1000_00n]);
   });
 
   it("without any rate a converted price is not purchasable (never a guessed amount)", async () => {

@@ -30,11 +30,14 @@ export function getDictionary(locale: Locale): Dictionary {
 }
 
 /** Dot-paths of keys a locale does not translate itself (falls back). Used by i18n:check and the admin dashboard. */
+/** Labels deliberately empty outside Turkish: VAT applies to Turkish sales only (client 11.11.2026), components hide empty labels. */
+export const INTENTIONALLY_EMPTY = new Set(["productInfo.vatIncluded", "productInfo.vatExcluded", "shop.utility.vat", "shop.buy.vatIncluded"]);
+
 export function missingKeys(locale: Exclude<Locale, "tr">): string[] {
   const out: string[] = [];
   const walk = (base: unknown, over: unknown, path: string) => {
     if (typeof base === "string") {
-      if (typeof over !== "string" || over.length === 0) out.push(path);
+      if (typeof over !== "string" || (over.length === 0 && !INTENTIONALLY_EMPTY.has(path))) out.push(path);
       return;
     }
     if (Array.isArray(base)) {

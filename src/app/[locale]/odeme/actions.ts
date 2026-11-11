@@ -29,8 +29,9 @@ export async function priceCartAction(items: CartItemInput[], locale: string): P
   if (!clean.length) return { ok: false, code: "empty" };
   try {
     // same currency rule as the storefront: TRY on Turkish pages, USD on every other language
-    const currency = displayCurrency(isEnabledLocale(locale) ? locale : "tr");
-    const r = await resolveCartLines(requireDb(), clean, new Date(), { currency, rates: await getRates(requireDb()) });
+    const loc = isEnabledLocale(locale) ? locale : "tr";
+    const currency = displayCurrency(loc);
+    const r = await resolveCartLines(requireDb(), clean, new Date(), { currency, rates: await getRates(requireDb()), locale: loc });
     if (!r.ok) return { ok: false, code: r.code, productRef: r.productRef };
     const t = computeTotals(r.lines);
     return {

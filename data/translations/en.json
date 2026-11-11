@@ -448,5 +448,15 @@
       "id": "cmvjf6wa3000vasp6uv6zu6uy",
       "label": "Personal Data Protection (KVKK)"
     }
+  ],
+  "variants": [
+    {
+      "tr": "6 lı Kanca",
+      "label": "6 hooks"
+    },
+    {
+      "tr": "8 li Kanca",
+      "label": "8 hooks"
+    }
   ]
 }

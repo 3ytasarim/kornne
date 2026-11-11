@@ -79,7 +79,7 @@ export const fr: DeepPartial<Dictionary> = {
   error: { title: "Une erreur est survenue", lead: "Une erreur inattendue s'est produite lors du chargement.", retry: "Réessayer" },
   quote: {
       title: "Prix sur devis",
-      text: "Tant que les prix, la TVA et les conditions de livraison ne sont pas confirmés, les prix sont communiqués sur devis. Envoyez-nous le lien du produit ; notre équipe répond avec le prix, le délai et l'installation.",
+      text: "Tant que les prix et les conditions de livraison ne sont pas confirmés, les prix sont communiqués sur devis. Envoyez-nous le lien du produit ; notre équipe répond avec le prix, le délai et l'installation.",
       cta: "Demander un devis",
       whatsapp: "Devis sur WhatsApp",
       email: "Devis par e-mail",
@@ -138,7 +138,7 @@ export const fr: DeepPartial<Dictionary> = {
       items: "{count} produits",
       option: "Option",
       chooseOption: "Choisissez une option",
-      lead: "Envoyez une seule demande de devis pour les produits choisis. Prix, TVA, délai et installation vous seront communiqués par écrit."
+      lead: "Envoyez une seule demande de devis pour les produits choisis. Prix, délai et installation vous seront communiqués par écrit."
   },
   quoteForm: {
       title: "Coordonnées",
@@ -174,10 +174,10 @@ export const fr: DeepPartial<Dictionary> = {
       description: "Description du produit",
       contact: "Nous contacter directement",
       leadTime: "Le stock et le délai sont indiqués dans le devis.",
-      vat: "Le prix et la TVA sont confirmés par écrit dans le devis.",
+      vat: "Le prix est confirmé par écrit dans le devis.",
       priceTitle: "Prix sur devis",
       priceText: "Tant que le prix et les conditions de vente ne sont pas confirmés, le prix est communiqué sur devis.",
-      vatIncluded: "TVA incluse",
+      vatIncluded: "",
       vatExcluded: "HT",
       sectionNav: "Sections du produit"
   },

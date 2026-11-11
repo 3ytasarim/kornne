@@ -73,8 +73,11 @@ function toProduct(locale: Locale, p: Raw["products"][number]): CatalogProduct {
   const content = translated ? own! : tr;
   const contentStatus: ContentStatus = locale === "tr" ? "source" : translated ? "legacy-translation" : "missing";
   const slugs = Object.fromEntries(LOCALES.filter(hasPage).map((l) => [l, byLocale.get(l)!.slug])) as Partial<Record<Locale, string>>;
-  const images: CatalogImage[] = p.media.map(({ media }) => {
-    const alt = media.translations.find((t) => t.locale === (translated ? locale : "tr"))?.alt ?? media.translations.find((t) => t.locale === "tr")?.alt ?? content.title;
+  const images: CatalogImage[] = p.media.map(({ media }, i) => {
+    // translated pages never fall back to the Turkish alt text: use the translated product title instead
+    const alt = translated
+      ? (media.translations.find((t) => t.locale === locale)?.alt ?? (i === 0 ? content.title : `${content.title} (${i + 1})`))
+      : (media.translations.find((t) => t.locale === "tr")?.alt ?? content.title);
     return { src: imageSrc(media.publicPath), alt, width: media.width, height: media.height };
   });
   const keys = p.categories.map((c) => c.category.key);

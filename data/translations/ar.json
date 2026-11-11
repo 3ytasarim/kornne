@@ -416,13 +416,47 @@
     }
   ],
   "menus": [
-    { "id": "cmvjf6wa3000oasp6yb78vyuc", "label": "من نحن" },
-    { "id": "cmvjf6wa3000pasp668i9y4yu", "label": "اتصل بنا" },
-    { "id": "cmvjf6wa3000qasp6degr1u0d", "label": "المدونة" },
-    { "id": "cmvjf6wa3000rasp66j7spkw2", "label": "الأسئلة الشائعة" },
-    { "id": "cmvjf6wa3000sasp6p8kmh1b3", "label": "من نحن" },
-    { "id": "cmvjf6wa3000tasp6r2rgoxgl", "label": "سياسة الإرجاع والاسترداد" },
-    { "id": "cmvjf6wa3000uasp6sh9v289b", "label": "عقد البيع عن بُعد" },
-    { "id": "cmvjf6wa3000vasp6uv6zu6uy", "label": "حماية البيانات الشخصية (KVKK)" }
+    {
+      "id": "cmvjf6wa3000oasp6yb78vyuc",
+      "label": "من نحن"
+    },
+    {
+      "id": "cmvjf6wa3000pasp668i9y4yu",
+      "label": "اتصل بنا"
+    },
+    {
+      "id": "cmvjf6wa3000qasp6degr1u0d",
+      "label": "المدونة"
+    },
+    {
+      "id": "cmvjf6wa3000rasp66j7spkw2",
+      "label": "الأسئلة الشائعة"
+    },
+    {
+      "id": "cmvjf6wa3000sasp6p8kmh1b3",
+      "label": "من نحن"
+    },
+    {
+      "id": "cmvjf6wa3000tasp6r2rgoxgl",
+      "label": "سياسة الإرجاع والاسترداد"
+    },
+    {
+      "id": "cmvjf6wa3000uasp6sh9v289b",
+      "label": "عقد البيع عن بُعد"
+    },
+    {
+      "id": "cmvjf6wa3000vasp6uv6zu6uy",
+      "label": "حماية البيانات الشخصية (KVKK)"
+    }
+  ],
+  "variants": [
+    {
+      "tr": "6 lı Kanca",
+      "label": "6 خطاطيف"
+    },
+    {
+      "tr": "8 li Kanca",
+      "label": "8 خطاطيف"
+    }
   ]
 }
