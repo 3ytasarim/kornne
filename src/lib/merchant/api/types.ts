@@ -18,6 +18,7 @@ export type ProductAttributes = {
   condition?: "NEW" | "USED" | "REFURBISHED";
   price?: MerchantPrice;
   salePrice?: MerchantPrice;
+  shipping?: { country: string; price: MerchantPrice }[];
   brand?: string;
   gtins?: string[];
   mpn?: string;

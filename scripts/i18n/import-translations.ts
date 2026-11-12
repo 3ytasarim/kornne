@@ -24,14 +24,15 @@ import { PrismaClient, type Locale } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import { sanitizeRichText } from "../../src/lib/catalog/sanitize";
 import { BOUNDARY_STRINGS } from "../../src/lib/i18n/boundary-strings";
-import { publishPage, savePageDraft } from "../../src/lib/cms/service";
+import { createPage, publishPage, savePageDraft } from "../../src/lib/cms/service";
 import { testDatabaseUrl } from "../../tests/test-db-url.mjs";
 
 type File = {
   locale: Locale;
   products: { ref: string; title: string; slug: string; short: string | null; html: string; seoTitle: string; seoDescription: string }[];
   categories: { key: string; name: string; slug: string; description: string | null; seoTitle: string; seoDescription: string }[];
-  pages: { key: string; title: string; slug: string; html: string; seoTitle: string; seoDescription: string }[];
+  /** create: a page that exists only in foreign languages (e.g. the US shipping / privacy pages) is created when missing, with its footer link */
+  pages: { key: string; title: string; slug: string; html: string; seoTitle: string; seoDescription: string; create?: { kind: "LEGAL" | "INFO"; menu: { location: "FOOTER_LEGAL" | "FOOTER_CORPORATE"; sortOrder: number } } }[];
   menus: { id: string; label: string }[];
   /** product option labels, matched by their Turkish text; only empty language labels are filled */
   variants?: { tr: string; label: string }[];
@@ -127,12 +128,26 @@ async function main() {
 
     // corporate page(s): create + publish only where the language version does not exist yet
     for (const pg of f.pages) {
-      const page = await db.page.findUnique({ where: { key: pg.key }, select: { id: true, translations: { where: { locale }, select: { id: true, slug: true, bodyHtml: true, updatedAt: true } } } });
+      let page = await db.page.findUnique({ where: { key: pg.key }, select: { id: true, translations: { where: { locale }, select: { id: true, slug: true, bodyHtml: true, updatedAt: true } } } });
+      const a = { id: (actor?.id ?? null) as string, canPublish: true };
+      let justCreated = false;
+      if (!page && pg.create) {
+        stats.pagesCreated++;
+        justCreated = true;
+        if (!APPLY) continue;
+        // new page that exists in this language only (no Turkish original): created, published, linked in the footer
+        const made = await createPage(db, a, { kind: pg.create.kind, key: pg.key, locale, title: pg.title, slug: pg.slug });
+        page = { id: made.page.id, translations: [{ id: made.translation.id, slug: pg.slug, bodyHtml: "", updatedAt: made.translation.updatedAt }] };
+        if (!(await db.menuItem.findFirst({ where: { kind: "page", pageKey: pg.key } }))) await db.menuItem.create({ data: { location: pg.create.menu.location, kind: "page", pageKey: pg.key, labels: { [locale]: pg.title }, sortOrder: pg.create.menu.sortOrder } });
+      } else if (page && pg.create) {
+        // existing created page: make sure this language's footer label is present
+        const m = await db.menuItem.findFirst({ where: { kind: "page", pageKey: pg.key } });
+        if (APPLY && m && !(m.labels as Record<string, string>)[locale]) await db.menuItem.update({ where: { id: m.id }, data: { labels: { ...(m.labels as Record<string, string>), [locale]: pg.title } } });
+      }
       const existing = page?.translations[0];
       if (!page || (existing && existing.bodyHtml.trim())) continue;
-      stats.pagesCreated++;
+      if (!justCreated) stats.pagesCreated++;
       if (!APPLY) continue;
-      const a = { id: (actor?.id ?? null) as string, canPublish: true };
       await savePageDraft(db, a, { pageId: page.id, locale, title: pg.title, slug: existing?.slug ?? pg.slug, bodyHtml: pg.html, seoTitle: pg.seoTitle, seoDescription: pg.seoDescription, note: "Çeviri içe aktarımı", ...(existing ? { expectedUpdatedAt: existing.updatedAt.toISOString() } : {}) });
       await publishPage(db, a, page.id, locale);
     }

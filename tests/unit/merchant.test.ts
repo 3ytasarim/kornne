@@ -29,7 +29,12 @@ describe("Merchant readiness engine", () => {
     const us = ctx({ targetCountry: "US", contentLanguage: "en", feedLabel: "US", currency: "USD" });
     const usd = good({ price: { amountMinor: 250000n, currency: "USD", status: "VERIFIED", vatIncluded: null, compareAtMinor: null }, pagePriceMinor: 250000n });
     expect(evaluateReadiness(usd, us).status).toBe("READY");
-    expect(toFeedItem(ev(usd, us), us)).toMatchObject({ price: "2500.00 USD", target_country: "US", content_language: "en" });
+    const item = toFeedItem(ev(usd, us), us);
+    expect(item).toMatchObject({ price: "2500.00 USD", target_country: "US", content_language: "en", shipping: { country: "US", price: "100.00 USD" } });
+    expect(feedXml([item], { title: "T", link: "http://x", generatedAt: new Date(0) })).toContain("<g:shipping>\n        <g:country>US</g:country>\n        <g:price>100.00 USD</g:price>");
+    expect(feedTsv([item])).toContain("US:::100.00 USD");
+    expect(toProductInput(item).productAttributes.shipping).toEqual([{ country: "US", price: { amountMicros: "100000000", currencyCode: "USD" } }]);
+    expect(toFeedItem(ev(good()), ctx()).shipping).toBeUndefined(); // TRY feed: no freight line
     const conv = evaluateReadiness(good({ price: { amountMinor: 250000n, currency: "USD", status: "VERIFIED", vatIncluded: true, compareAtMinor: null, converted: true }, pagePriceMinor: 250000n }), us);
     expect([conv.status, conv.reasons.map((r) => r.code)]).toEqual(["READY", ["PRICE_FX_CONVERTED"]]);
     expect(codes(good(), us)).toContain("CURRENCY_MISMATCH"); // a TRY price without a rate never reaches a USD feed

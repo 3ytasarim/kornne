@@ -1,3 +1,4 @@
+import { FOREIGN_FLAT_SHIPPING_MINOR, FOREIGN_SHIPPING_CURRENCY } from "@/lib/commerce/shipping";
 import { toDecimalString } from "@/lib/money";
 import type { Evaluated } from "./facts";
 import type { MerchantContext } from "./readiness";
@@ -18,6 +19,8 @@ export type FeedItem = {
   availability: "in_stock" | "out_of_stock" | "preorder" | "backorder";
   price: string;
   sale_price?: string;
+  /** the flat freight the checkout charges in this country (same amount as the order) */
+  shipping?: { country: string; price: string };
   brand?: string;
   gtin?: string;
   mpn?: string;
@@ -30,9 +33,9 @@ export type FeedItem = {
   feed_label: string;
 };
 
-export const FEED_COLUMNS = ["id", "title", "description", "link", "image_link", "additional_image_link", "availability", "price", "sale_price", "brand", "gtin", "mpn", "identifier_exists", "condition", "google_product_category", "product_type", "content_language", "target_country", "feed_label"] as const;
+export const FEED_COLUMNS = ["id", "title", "description", "link", "image_link", "additional_image_link", "availability", "price", "sale_price", "shipping", "brand", "gtin", "mpn", "identifier_exists", "condition", "google_product_category", "product_type", "content_language", "target_country", "feed_label"] as const;
 
-const AVAIL: Record<string, FeedItem["availability"] | undefined> = { IN_STOCK: "in_stock", OUT_OF_STOCK: "out_of_stock", PREORDER: "preorder", BACKORDER: "backorder", MADE_TO_ORDER: "backorder" };
+const AVAIL: Record<string, FeedItem["availability"] | undefined> = { IN_STOCK: "in_stock", OUT_OF_STOCK: "out_of_stock", PREORDER: "preorder", BACKORDER: "backorder", MADE_TO_ORDER: "in_stock" }; // made to order: Google wants in_stock + handling time (backorder would need availability_date)
 const money = (minor: bigint, cur: string) => `${toDecimalString(minor)} ${cur}`;
 
 export class FeedRefusal extends Error {}
@@ -56,6 +59,7 @@ export function toFeedItem(e: Evaluated, ctx: MerchantContext): FeedItem {
     // with a valid compare-at price: price = regular (compare-at), sale_price = the verified selling price
     price: money(sale ? e.price.compareAtMinor! : e.price.amountMinor, e.price.currency),
     ...(sale ? { sale_price: money(e.price.amountMinor, e.price.currency) } : {}),
+    ...(e.price.currency === FOREIGN_SHIPPING_CURRENCY ? { shipping: { country: ctx.targetCountry, price: money(FOREIGN_FLAT_SHIPPING_MINOR, FOREIGN_SHIPPING_CURRENCY) } } : {}),
     ...(e.brandName ? { brand: e.brandName } : {}),
     ...(e.gtin ? { gtin: e.gtin } : {}),
     ...(e.mpn ? { mpn: e.mpn } : {}),
@@ -91,6 +95,10 @@ export function feedXml(items: FeedItem[], meta: { title: string; link: string; 
       const fields = FEED_COLUMNS.filter((c) => !["content_language", "target_country", "feed_label"].includes(c)).flatMap((c) => {
         const v = it[c as keyof FeedItem];
         if (v === undefined || (Array.isArray(v) && !v.length)) return [];
+        if (c === "shipping") {
+          const sh = v as FeedItem["shipping"] & object;
+          return [`      <g:shipping>\n        <g:country>${xmlEsc(sh.country)}</g:country>\n        <g:price>${xmlEsc(sh.price)}</g:price>\n      </g:shipping>`];
+        }
         const tag = c === "title" || c === "description" || c === "link" ? c : `g:${c}`;
         return (Array.isArray(v) ? v : [v]).map((x) => `      <${tag}>${xmlEsc(String(x))}</${tag}>`);
       });
@@ -102,7 +110,8 @@ export function feedXml(items: FeedItem[], meta: { title: string; link: string; 
 
 function delimited(items: FeedItem[], sep: "\t" | ","): string {
   const cell = (v: unknown) => {
-    let s = Array.isArray(v) ? v.join(",") : String(v ?? "");
+    // shipping uses the Merchant text form country:region:service:price
+    let s = Array.isArray(v) ? v.join(",") : v && typeof v === "object" ? `${(v as { country: string }).country}:::${(v as { price: string }).price}` : String(v ?? "");
     s = s.replace(/[\t\r\n]+/g, " ");
     if (/^[=+\-@]/.test(s)) s = `'${s}`;
     return sep === "," && /[",]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;

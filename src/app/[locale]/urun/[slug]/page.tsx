@@ -25,6 +25,7 @@ import { breadcrumbJsonLd, productJsonLd } from "@/lib/seo/json-ld";
 import { buildMetadata, toMetaDescription } from "@/lib/seo/metadata";
 import { getContact, getFaq } from "@/lib/cms/store";
 import { getSiteUrl } from "@/lib/seo/site";
+import { FOREIGN_FLAT_SHIPPING_MINOR, FOREIGN_SHIPPING_CURRENCY, FOREIGN_TARGET_COUNTRY, RETURN_WINDOW_DAYS } from "@/lib/commerce/shipping";
 
 export const revalidate = 300;
 
@@ -87,6 +88,18 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/urun/
   const variants = product.variants.flatMap((v) => v.options);
   // verified KDV-dahil price → cart mode (Sprint 12); otherwise the quote flow stays
   const purchasable = product.priceVerified && product.priceMinor !== null && product.vatIncluded !== null;
+  const ldAvailability = { IN_STOCK: "InStock", OUT_OF_STOCK: "OutOfStock", PREORDER: "PreOrder", BACKORDER: "BackOrder", MADE_TO_ORDER: "InStock" } as const; // same mapping as the Merchant feed
+  const usd = product.currency === FOREIGN_SHIPPING_CURRENCY;
+  const offer =
+    purchasable && product.priceMinor !== null && product.availability
+      ? {
+          priceMinor: product.priceMinor,
+          currency: product.currency,
+          availability: ldAvailability[product.availability],
+          shipping: usd ? { country: FOREIGN_TARGET_COUNTRY, priceMinor: FOREIGN_FLAT_SHIPPING_MINOR, currency: FOREIGN_SHIPPING_CURRENCY } : null,
+          returns: usd ? { country: FOREIGN_TARGET_COUNTRY, days: RETURN_WINDOW_DAYS, customerPaysFreight: true } : null,
+        }
+      : null;
   const langLinks = Object.fromEntries(
     ENABLED_LOCALES.map((l) => [l, product.slugs[l] ? localizePath(l, `/urun/${product.slugs[l]}`) : primary?.slugs[l] ? localizePath(l, `/kategori/${primary.slugs[l]}`) : localizePath(l, "/")]),
   );
@@ -101,8 +114,8 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/urun/
       <TrackEvent name="view_item" params={{ items: [{ item_id: product.sourceId, item_name: product.title, item_category: primary?.name }] }} />
       <PageLanguageLinks links={langLinks} />
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      {/* Product without Offer/rating: prices are not verified (docs/architecture/commerce-modes.md). */}
-      <JsonLd data={productJsonLd({ name: product.title, description: product.descriptionText.slice(0, 5000) || product.title, path, images: product.images.map((i) => i.src), locale, offer: null })} />
+      {/* Offer only for a VERIFIED, purchasable price with a real stock state — the same amount the page and cart show (Google Shopping). */}
+      <JsonLd data={productJsonLd({ name: product.title, description: product.descriptionText.slice(0, 5000) || product.title, path, images: product.images.map((i) => i.src), locale, sku: product.sourceId, brand: product.brandName, mpn: product.mpn, gtin: product.gtin, offer: offer })} />
       <Breadcrumbs items={crumbs} label={d.a11y.breadcrumb} />
 
       <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:gap-12">

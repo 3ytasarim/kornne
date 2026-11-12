@@ -64,6 +64,7 @@ export const shopTr = {
     net: "Ara toplam (KDV hariç)",
     vat: "KDV (%{rate})",
     total: "Genel toplam",
+    shipping: "Nakliye",
     unitPrice: "Birim fiyat",
     checkout: "Siparişi tamamla",
     quoteThisCart: "Bu sepet için teklif iste",

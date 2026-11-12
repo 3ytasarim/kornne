@@ -59,6 +59,7 @@ describe.skipIf(!hasTestDb)("multi-currency orders (isolated test DB)", () => {
     expect([r.currency, r.totalMinor]).toEqual(["TRY", 100_396_20n]);
     const o = await db.order.findUniqueOrThrow({ where: { number: r.number } });
     expect([o.currency, o.fxCurrency, o.fxRate4]).toEqual(["TRY", "USD", 501981]);
+    expect(o.shippingMinor).toBe(0n); // Turkish orders: no shipping line
   });
 
   it("other languages pay in USD — only once an active USD account exists", async () => {
@@ -68,11 +69,11 @@ describe.skipIf(!hasTestDb)("multi-currency orders (isolated test DB)", () => {
     const r = await placeBankTransferOrder(db, gate, input({ locale: "de" }), { ipHash: null, isTest: true, rates });
     expect(r.ok).toBe(true);
     if (!r.ok) return;
-    expect([r.currency, r.totalMinor]).toEqual(["USD", 2000_00n]);
+    expect([r.currency, r.totalMinor]).toEqual(["USD", 2100_00n]); // + flat USD 100 freight (client 12.11.2026)
     const o = await db.order.findUniqueOrThrow({ where: { number: r.number } });
     expect([o.currency, o.fxCurrency, o.fxRate4]).toEqual(["USD", null, null]); // no conversion needed
     // no VAT on foreign orders: the listed price is the whole amount (client 11.11.2026)
-    expect([o.subtotalMinor, o.taxMinor, o.totalMinor]).toEqual([2000_00n, 0n, 2000_00n]);
+    expect([o.subtotalMinor, o.taxMinor, o.shippingMinor, o.totalMinor]).toEqual([2000_00n, 0n, 100_00n, 2100_00n]);
   });
 
   it("foreign orders take a company tax / VAT ID without a Turkish tax office; Turkish orders still need VKN/TCKN", async () => {

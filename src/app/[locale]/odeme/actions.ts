@@ -3,6 +3,7 @@
 import { requireDb } from "@/lib/db";
 import { commerceGate } from "@/lib/commerce/gate";
 import { lookupOrderStatus, placeBankTransferOrder, resolveCartLines, submitPaymentNotice, type B2BCheckoutInput, type CartItemInput, type PaymentNoticeInput } from "@/lib/commerce/b2b-orders";
+import { shippingFor } from "@/lib/commerce/shipping";
 import { computeTotals, lineTotals } from "@/lib/commerce/totals";
 import { getIpHash } from "@/lib/request-meta";
 import { displayCurrency } from "@/lib/fx/convert";
@@ -21,7 +22,7 @@ const sanitizeItems = (items: unknown): CartItemInput[] =>
   });
 
 export type PricedCart =
-  | { ok: true; checkoutOpen: boolean; currency: string; lines: { productRef: string; variantId: string | null; unitMinor: string; lineMinor: string; quantity: number; vatRateBp: number }[]; netMinor: string; vatMinor: string; totalMinor: string }
+  | { ok: true; checkoutOpen: boolean; currency: string; lines: { productRef: string; variantId: string | null; unitMinor: string; lineMinor: string; quantity: number; vatRateBp: number }[]; netMinor: string; vatMinor: string; shippingMinor: string; totalMinor: string }
   | { ok: false; code: "not_purchasable" | "variant" | "empty" | "error"; productRef?: string };
 
 export async function priceCartAction(items: CartItemInput[], locale: string): Promise<PricedCart> {
@@ -33,7 +34,7 @@ export async function priceCartAction(items: CartItemInput[], locale: string): P
     const currency = displayCurrency(loc);
     const r = await resolveCartLines(requireDb(), clean, new Date(), { currency, rates: await getRates(requireDb()), locale: loc });
     if (!r.ok) return { ok: false, code: r.code, productRef: r.productRef };
-    const t = computeTotals(r.lines);
+    const t = computeTotals(r.lines, shippingFor(currency));
     return {
       ok: true,
       checkoutOpen: commerceGate().enabled,
@@ -41,6 +42,7 @@ export async function priceCartAction(items: CartItemInput[], locale: string): P
       lines: r.lines.map((l) => ({ productRef: l.productRef, variantId: l.variantId, unitMinor: l.unitPriceMinor.toString(), lineMinor: lineTotals(l).gross.toString(), quantity: l.quantity, vatRateBp: l.vatRateBp })),
       netMinor: t.netMinor.toString(),
       vatMinor: t.vatMinor.toString(),
+      shippingMinor: t.shippingMinor.toString(),
       totalMinor: t.totalMinor.toString(),
     };
   } catch {

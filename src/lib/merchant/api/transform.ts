@@ -29,6 +29,7 @@ export function toProductInput(it: FeedItem): ProductInput {
     condition: COND[it.condition],
     price: toMicros(it.price),
     ...(it.sale_price ? { salePrice: toMicros(it.sale_price) } : {}),
+    ...(it.shipping ? { shipping: [{ country: it.shipping.country, price: toMicros(it.shipping.price) }] } : {}),
     ...(it.brand ? { brand: it.brand } : {}),
     ...(it.gtin ? { gtins: [it.gtin] } : {}),
     ...(it.mpn ? { mpn: it.mpn } : {}),

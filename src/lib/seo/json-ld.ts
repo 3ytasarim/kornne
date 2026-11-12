@@ -95,8 +95,21 @@ export type ProductLdInput = {
   images: string[];
   locale: Locale;
   sku?: string | null;
+  /** verified brand and real identifiers only */
+  brand?: string | null;
+  mpn?: string | null;
+  gtin?: string | null;
   /** Only pass when the price is VERIFIED; otherwise the Product is emitted without offers. */
-  offer?: { priceMinor: bigint; currency: string; availability: "InStock" | "OutOfStock" | "PreOrder" | "BackOrder"; priceValidUntil?: string } | null;
+  offer?: {
+    priceMinor: bigint;
+    currency: string;
+    availability: "InStock" | "OutOfStock" | "PreOrder" | "BackOrder";
+    priceValidUntil?: string;
+    /** flat freight the checkout charges in that country (OfferShippingDetails) */
+    shipping?: { country: string; priceMinor: bigint; currency: string } | null;
+    /** return policy (MerchantReturnPolicy): window in days, return freight paid by the customer */
+    returns?: { country: string; days: number; customerPaysFreight: boolean } | null;
+  } | null;
 };
 
 export function productJsonLd(p: ProductLdInput) {
@@ -112,6 +125,9 @@ export function productJsonLd(p: ProductLdInput) {
     inLanguage: p.locale,
     image: p.images.map((i) => new URL(i, url).toString()),
     ...(p.sku ? { sku: p.sku } : {}),
+    ...(p.brand ? { brand: { "@type": "Brand", name: p.brand } } : {}),
+    ...(p.mpn ? { mpn: p.mpn } : {}),
+    ...(p.gtin ? { gtin: p.gtin } : {}),
     ...(p.offer
       ? {
           offers: {
@@ -123,6 +139,27 @@ export function productJsonLd(p: ProductLdInput) {
             itemCondition: "https://schema.org/NewCondition",
             seller: { "@id": orgId() },
             ...(p.offer.priceValidUntil ? { priceValidUntil: p.offer.priceValidUntil } : {}),
+            ...(p.offer.shipping
+              ? {
+                  shippingDetails: {
+                    "@type": "OfferShippingDetails",
+                    shippingRate: { "@type": "MonetaryAmount", value: toDecimalString(p.offer.shipping.priceMinor), currency: p.offer.shipping.currency },
+                    shippingDestination: { "@type": "DefinedRegion", addressCountry: p.offer.shipping.country },
+                  },
+                }
+              : {}),
+            ...(p.offer.returns
+              ? {
+                  hasMerchantReturnPolicy: {
+                    "@type": "MerchantReturnPolicy",
+                    applicableCountry: p.offer.returns.country,
+                    returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+                    merchantReturnDays: p.offer.returns.days,
+                    returnMethod: "https://schema.org/ReturnByMail",
+                    returnFees: p.offer.returns.customerPaysFreight ? "https://schema.org/ReturnFeesCustomerResponsibility" : "https://schema.org/FreeReturn",
+                  },
+                }
+              : {}),
           },
         }
       : {}),

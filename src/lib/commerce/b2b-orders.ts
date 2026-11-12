@@ -9,6 +9,7 @@ import { assertTransition, type Actor, type OrderState } from "./order-state";
 import { convertMinor, displayCurrency, type Rates } from "@/lib/fx/convert";
 import { getRates } from "@/lib/fx/rates";
 import { isValidTrIban } from "./iban";
+import { shippingFor } from "./shipping";
 import { computeTotals, lineTotals, MAX_LINE_QTY } from "./totals";
 
 /**
@@ -157,7 +158,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
   if (!resolved.ok) return resolved.code === "variant" ? { ok: false, code: "validation", fields: { items: "variantRequired" } } : { ok: false, code: "not_purchasable" };
   const fx = resolved.converted && rates ? { fxCurrency: currency === "TRY" ? "USD" : currency, fxRate4: currency === "EUR" ? rates.EUR : rates.USD } : { fxCurrency: null, fxRate4: null };
   const lines = resolved.lines;
-  const totals = computeTotals(lines);
+  const totals = computeTotals(lines, shippingFor(currency));
   const accessToken = randomBytes(24).toString("base64url");
   const billing = { company: input.company, taxOffice: input.taxOffice, taxNumber: input.taxNumber, name: input.contactName, email: input.email, phone: input.phone, city: input.city, district: input.district, address: input.address, locale: input.locale };
   try {
@@ -175,7 +176,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
               ...fx,
               subtotalMinor: totals.netMinor,
               taxMinor: totals.vatMinor,
-              shippingMinor: 0n,
+              shippingMinor: totals.shippingMinor,
               totalMinor: totals.totalMinor,
               billing,
               shipping: input.shippingSame ? { sameAsBilling: true } : { address: input.shippingAddress },

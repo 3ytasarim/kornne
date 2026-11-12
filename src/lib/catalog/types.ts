@@ -56,6 +56,12 @@ export type CatalogProduct = {
   priceMinor: bigint | null;
   compareAtMinor: bigint | null;
   priceVerified: boolean;
+  /** real stock / supply state of the product (Admin › Stok); null = unknown → no Offer is emitted */
+  availability: "IN_STOCK" | "OUT_OF_STOCK" | "PREORDER" | "BACKORDER" | "MADE_TO_ORDER" | null;
+  /** verified brand name and real identifiers only (never invented) — Product structured data */
+  brandName: string | null;
+  mpn: string | null;
+  gtin: string | null;
   /** VAT treatment of the verified price (null = unknown → a verified price always carries it) */
   vatIncluded: boolean | null;
   categoryKeys: string[];

@@ -136,6 +136,14 @@ export function CartView({ locale, labels, list, checkoutHref, quoteHref, browse
                 </div>
               </>
             ) : null}
+            {ok && ok.shippingMinor !== "0" ? (
+              <div className="flex justify-between gap-4">
+                <dt className="text-steel">{labels.shipping}</dt>
+                <dd className="font-medium text-ink tabular-nums" dir="ltr" data-testid="shipping-total">
+                  {money(ok.shippingMinor, locale, cur)}
+                </dd>
+              </div>
+            ) : null}
             <div className={locale === "tr" ? "flex items-baseline justify-between gap-4 border-t border-line pt-4" : "flex items-baseline justify-between gap-4"}>
               <dt className="text-base font-semibold text-ink">{labels.total}</dt>
               <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="cart-total">

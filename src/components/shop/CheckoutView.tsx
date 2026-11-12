@@ -237,6 +237,14 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
               </div>
             </>
           ) : null}
+          {ok && ok.shippingMinor !== "0" ? (
+            <div className="flex justify-between gap-4">
+              <dt className="text-steel">{s.cart.shipping}</dt>
+              <dd className="text-ink tabular-nums" dir="ltr" data-testid="shipping-total">
+                {money(ok.shippingMinor, locale, cur)}
+              </dd>
+            </div>
+          ) : null}
           <div className={locale === "tr" ? "flex items-baseline justify-between gap-4 border-t border-line pt-3" : "flex items-baseline justify-between gap-4"}>
             <dt className="font-semibold text-ink">{s.cart.total}</dt>
             <dd className="text-2xl font-bold tracking-tight text-ink tabular-nums" dir="ltr" data-testid="checkout-total">

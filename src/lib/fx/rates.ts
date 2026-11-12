@@ -29,7 +29,9 @@ function fixture(): Rates | null {
 
 async function fetchTcmb(): Promise<{ USD: number; EUR: number; bulletinDate: string } | null> {
   try {
-    const res = await fetch(TCMB_URL, { signal: AbortSignal.timeout(15_000), cache: "no-store", headers: { "user-agent": "kornne.com fx" } });
+    // revalidating (not no-store) fetch: a no-store fetch inside an ISR page render (e.g. an unknown /page/<slug>) makes
+    // Next abort the render with "static to dynamic" → 500. 300 s matches the memory cache age.
+    const res = await fetch(TCMB_URL, { signal: AbortSignal.timeout(15_000), next: { revalidate: 300 }, headers: { "user-agent": "kornne.com fx" } });
     if (!res.ok) return null;
     return parseTcmbXml(await res.text());
   } catch {
