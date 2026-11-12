@@ -12,7 +12,7 @@ import { MERCHANT_MIN_2027, MERCHANT_MIN_NOW } from "@/lib/seo/image-audit";
 export type Severity = "blocking" | "warning";
 export type ReasonCode =
   | "PRODUCT_NOT_PUBLIC" | "SALE_MODE_QUOTE_ONLY" | "CHECKOUT_CLOSED" | "LANGUAGE_NOT_PUBLISHED" | "LANDING_NOT_INDEXABLE" | "SITE_NOT_LIVE"
-  | "PRICE_MISSING" | "PRICE_UNVERIFIED" | "PRICE_ZERO" | "CURRENCY_MISMATCH" | "VAT_UNKNOWN" | "SALE_PRICE_INVALID" | "PRICE_NOT_ON_PAGE"
+  | "PRICE_MISSING" | "PRICE_UNVERIFIED" | "PRICE_ZERO" | "CURRENCY_MISMATCH" | "VAT_UNKNOWN" | "SALE_PRICE_INVALID" | "PRICE_NOT_ON_PAGE" | "PRICE_FX_CONVERTED"
   | "AVAILABILITY_UNKNOWN" | "IDENTIFIER_MISSING" | "BRAND_UNVERIFIED"
   | "IMAGE_MISSING" | "IMAGE_TOO_SMALL" | "IMAGE_BELOW_2027" | "IMAGE_FORMAT" | "IMAGE_REVIEW"
   | "TITLE_MISSING" | "TITLE_TOO_LONG" | "DESCRIPTION_SHORT" | "DESCRIPTION_POLICY"
@@ -30,7 +30,8 @@ export type ProductFacts = {
   descriptionText: string;
   /** translation of the target language exists and is LEGACY_SOURCE / APPROVED */
   targetTranslationPublished: boolean;
-  price: { amountMinor: bigint; currency: string; status: string; vatIncluded: boolean | null; compareAtMinor: bigint | null } | null;
+  /** in the feed currency; converted = stored in another currency and converted at the TCMB rate */
+  price: { amountMinor: bigint; currency: string; status: string; vatIncluded: boolean | null; compareAtMinor: bigint | null; converted?: boolean } | null;
   /** the live (VERIFIED, currently valid) price, as the storefront renders it */
   pagePriceMinor: bigint | null;
   availability: string | null;
@@ -98,7 +99,9 @@ export function evaluateReadiness(p: ProductFacts, ctx: MerchantContext): { stat
     if (p.price.status !== "VERIFIED") out.push(R("PRICE_UNVERIFIED", "blocking", "price", "Fiyat onaylı değil (eski siteden, KDV/para birimi teyitsiz)", "Admin › Fiyatlar — dört göz onayı (öneren ≠ onaylayan)"));
     if (p.price.amountMinor <= 0n) out.push(R("PRICE_ZERO", "blocking", "price", "Fiyat 0 veya negatif", "Gerçek fiyat"));
     if (p.price.currency !== ctx.currency) out.push(R("CURRENCY_MISMATCH", "blocking", "price", `Para birimi ${p.price.currency} ≠ ${ctx.currency}`, "Hedef ülke para birimi"));
-    if (p.price.vatIncluded !== true) out.push(R("VAT_UNKNOWN", "blocking", "price", p.price.vatIncluded === false ? "Fiyat KDV hariç (TR'de tüketici fiyatı KDV dahil olmalı)" : "KDV durumu bilinmiyor", "Fiyat kaydında KDV dahil + oran"));
+    if (p.price.converted) out.push(R("PRICE_FX_CONVERTED", "warning", "price", `Fiyat ${ctx.currency} değil, TCMB kuruyla çevriliyor — kur her gün değişir, feed ile sayfa fiyatı arada ayrışabilir`, `Bu ürüne doğrudan ${ctx.currency} fiyat girin`));
+    // VAT applies to Turkish sales only (client 11.11.2026); abroad the listed price is the whole amount
+    if (ctx.targetCountry === "TR" && p.price.vatIncluded !== true) out.push(R("VAT_UNKNOWN", "blocking", "price", p.price.vatIncluded === false ? "Fiyat KDV hariç (TR'de tüketici fiyatı KDV dahil olmalı)" : "KDV durumu bilinmiyor", "Fiyat kaydında KDV dahil + oran"));
     if (p.price.compareAtMinor !== null && p.price.compareAtMinor <= p.price.amountMinor) out.push(R("SALE_PRICE_INVALID", "blocking", "price", "Eski fiyat ≤ satış fiyatı (geçersiz indirim)", "Eski fiyatı kaldırın veya düzeltin"));
     if (p.price.status === "VERIFIED" && p.pagePriceMinor !== p.price.amountMinor) out.push(R("PRICE_NOT_ON_PAGE", "blocking", "price", "Açılış sayfasındaki fiyat feed fiyatıyla aynı değil", "Önbellek / geçerlilik tarihleri"));
   }

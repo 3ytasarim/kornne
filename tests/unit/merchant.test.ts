@@ -25,6 +25,16 @@ describe("Merchant readiness engine", () => {
     expect(evaluateReadiness(good(), ctx()).status).toBe("READY");
   });
 
+  it("US target (12.11.2026): USD feed, no VAT gate; a TCMB-converted price is only a warning", () => {
+    const us = ctx({ targetCountry: "US", contentLanguage: "en", feedLabel: "US", currency: "USD" });
+    const usd = good({ price: { amountMinor: 250000n, currency: "USD", status: "VERIFIED", vatIncluded: null, compareAtMinor: null }, pagePriceMinor: 250000n });
+    expect(evaluateReadiness(usd, us).status).toBe("READY");
+    expect(toFeedItem(ev(usd, us), us)).toMatchObject({ price: "2500.00 USD", target_country: "US", content_language: "en" });
+    const conv = evaluateReadiness(good({ price: { amountMinor: 250000n, currency: "USD", status: "VERIFIED", vatIncluded: true, compareAtMinor: null, converted: true }, pagePriceMinor: 250000n }), us);
+    expect([conv.status, conv.reasons.map((r) => r.code)]).toEqual(["READY", ["PRICE_FX_CONVERTED"]]);
+    expect(codes(good(), us)).toContain("CURRENCY_MISMATCH"); // a TRY price without a rate never reaches a USD feed
+  });
+
   it.each([
     ["unverified price", good({ price: { amountMinor: 120000n, currency: "TRY", status: "UNVERIFIED", vatIncluded: true, compareAtMinor: null }, pagePriceMinor: null }), "PRICE_UNVERIFIED"],
     ["no price", good({ price: null, pagePriceMinor: null }), "PRICE_MISSING"],

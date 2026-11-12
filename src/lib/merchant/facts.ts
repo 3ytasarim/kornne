@@ -1,7 +1,9 @@
 import type { PrismaClient } from "@prisma/client";
 import { commerceGate, type CommerceEnv } from "@/lib/commerce/gate";
-import { isEnabledLocale } from "@/lib/i18n/config";
+import { ENABLED_LOCALES, isEnabledLocale, type Locale } from "@/lib/i18n/config";
 import { localizePath } from "@/lib/i18n/routes";
+import { convertMinor, type Rates } from "@/lib/fx/convert";
+import { getRates } from "@/lib/fx/rates";
 import { getSiteUrl } from "@/lib/seo/site";
 import { evaluateReadiness, type MerchantContext, type ProductFacts, type Reason } from "./readiness";
 
@@ -27,14 +29,15 @@ export async function loadMerchantContext(db: PrismaClient, env: CommerceEnv = p
     return v || null;
   };
   const lang = verified("merchant.contentLanguage")?.toLowerCase() ?? null;
+  const country = verified("merchant.targetCountry")?.toUpperCase() ?? null;
   return {
-    targetCountry: verified("merchant.targetCountry")?.toUpperCase() ?? null,
+    targetCountry: country,
     contentLanguage: lang,
     feedLabel: verified("merchant.feedLabel"),
-    currency: "TRY",
+    currency: targetCurrency(country),
     siteIndexable: env.SITE_INDEXABLE === "true",
     catalogVerified: env.CATALOG_DATA_VERIFIED === "true",
-    targetLocaleIsSeo: !!lang && isEnabledLocale(lang) && (env.SEO_LOCALES ?? "tr").split(",").map((x) => x.trim()).includes(lang),
+    targetLocaleIsSeo: !!lang && isEnabledLocale(lang) && (env.SEO_LOCALES?.trim() ? env.SEO_LOCALES.split(",").map((x) => x.trim()) : [...ENABLED_LOCALES]).includes(lang as Locale),
     checkoutOpen: commerceGate(env).enabled,
     shippingVerified: !!verified("commerce.shippingPolicy"),
     returnsVerified: !!returns?.legalApprovedAt,
@@ -43,7 +46,24 @@ export async function loadMerchantContext(db: PrismaClient, env: CommerceEnv = p
   };
 }
 
-export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContext, "contentLanguage" | "feedLabel">, now = new Date()): Promise<FeedSource[]> {
+/**
+ * Feed currency follows the storefront rule (client 11.11.2026): Turkey is sold in TRY, every other country in USD
+ * (target US since 12.11.2026). Prices stored in another currency are converted exactly like the storefront does.
+ */
+export const targetCurrency = (country: string | null): "TRY" | "USD" => (!country || country === "TR" ? "TRY" : "USD");
+
+type PriceRow = { amountMinor: bigint; currency: string; status: string; vatIncluded: boolean | null; compareAtMinor: bigint | null };
+/** Price in the feed currency, converted at the same TCMB rate the landing page uses; null rate → left as is (CURRENCY_MISMATCH). */
+function inCurrency(p: PriceRow, to: string, rates: Pick<Rates, "USD" | "EUR"> | null): ProductFacts["price"] {
+  if (p.currency === to) return { ...p, converted: false };
+  const amount = convertMinor(p.amountMinor, p.currency, to, rates);
+  if (amount === null) return { ...p, converted: false };
+  const compareAt = p.compareAtMinor === null ? null : convertMinor(p.compareAtMinor, p.currency, to, rates);
+  return { ...p, amountMinor: amount, compareAtMinor: compareAt, currency: to, converted: true };
+}
+
+export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContext, "contentLanguage" | "feedLabel"> & { currency?: string }, now = new Date(), rates: Pick<Rates, "USD" | "EUR"> | null = null): Promise<FeedSource[]> {
+  const currency = ctx.currency ?? "TRY";
   const locale = ctx.contentLanguage && isEnabledLocale(ctx.contentLanguage) ? ctx.contentLanguage : "tr";
   const site = getSiteUrl();
   const products = await db.product.findMany({
@@ -66,7 +86,9 @@ export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContex
     // the price the storefront renders: newest VERIFIED and currently valid
     const live = p.prices.find((x) => x.status === "VERIFIED" && x.validFrom <= now && (!x.validTo || x.validTo > now)) ?? null;
     // the price a feed item would carry: the live one, else the newest record (to report WHY it is not usable)
-    const price = live ?? p.prices[0] ?? null;
+    const raw = live ?? p.prices[0] ?? null;
+    const price = raw ? inCurrency(raw, currency, rates) : null;
+    const pagePrice = live ? inCurrency(live, currency, rates) : null;
     const main = p.media[0]?.media ?? null;
     const ref = (p.sourceKey ?? p.id).split(":").pop()!;
     const mapped = p.merchantItems.find((m) => m.contentLanguage === locale && (!ctx.feedLabel || m.feedLabel === ctx.feedLabel)) ?? null;
@@ -80,8 +102,8 @@ export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContex
       descriptionText: (t?.descriptionHtml ?? "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim(),
       descriptionHtml: t?.descriptionHtml ?? "",
       targetTranslationPublished: published,
-      price: price ? { amountMinor: price.amountMinor, currency: price.currency, status: price.status, vatIncluded: price.vatIncluded, compareAtMinor: price.compareAtMinor } : null,
-      pagePriceMinor: live?.amountMinor ?? null,
+      price: price ? { amountMinor: price.amountMinor, currency: price.currency, status: price.status, vatIncluded: price.vatIncluded, compareAtMinor: price.compareAtMinor, converted: price.converted } : null,
+      pagePriceMinor: pagePrice?.amountMinor ?? null,
       availability: p.inventory[0]?.availability ?? null,
       gtin: p.gtin,
       mpn: p.mpn,
@@ -103,9 +125,11 @@ export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContex
   });
 }
 
-export async function evaluateCatalog(db: PrismaClient, env: CommerceEnv = process.env, now = new Date()) {
+export async function evaluateCatalog(db: PrismaClient, env: CommerceEnv = process.env, now = new Date(), rates?: Pick<Rates, "USD" | "EUR"> | null) {
   const ctx = await loadMerchantContext(db, env, now);
-  const sources = await loadFeedSources(db, ctx, now);
+  // rates are only needed (and fetched) when some price is stored in another currency than the feed's
+  const needsFx = rates === undefined && (await db.price.count({ where: { variantId: null, currency: { not: ctx.currency } } })) > 0;
+  const sources = await loadFeedSources(db, ctx, now, rates ?? (needsFx ? await getRates(db) : null));
   // only storefront-public products are feed candidates; held/draft ones are reported separately
   const evaluated: Evaluated[] = sources.map((s) => ({ ...s, ...evaluateReadiness(s, ctx) }));
   const candidates = evaluated.filter((e) => e.status !== "BLOCKED" || !e.reasons.some((r) => r.code === "PRODUCT_NOT_PUBLIC"));

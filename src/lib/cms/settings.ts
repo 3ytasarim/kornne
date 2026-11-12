@@ -29,9 +29,9 @@ export const SETTING_DEFS = {
   // Sprint 9 — Google Merchant target (from the EXISTING account; nothing is created or changed on Google's side)
   "merchant.accountId": { label: "Merchant Center hesap no", group: "merchant", kind: "text", publicWhen: "never", hint: "Mevcut hesaptan salt-okunur teyit edilecek. Kayıt bağlantı KURMAZ." },
   "merchant.dataSourceId": { label: "Merchant API veri kaynağı (dataSource) no", group: "merchant", kind: "text", publicWhen: "never", hint: "Mevcut feed'i bozmamak için ayrı bir API veri kaynağı önerilir — müşteri kararı." },
-  "merchant.targetCountry": { label: "Hedef ülke (ISO 3166, ör. TR)", group: "merchant", kind: "text", publicWhen: "never" },
-  "merchant.contentLanguage": { label: "İçerik dili (ISO 639-1, ör. tr)", group: "merchant", kind: "text", publicWhen: "never" },
-  "merchant.feedLabel": { label: "feedLabel (ör. TR)", group: "merchant", kind: "text", publicWhen: "never", hint: "Mevcut ürünlerle aynı offerId/feedLabel/dil üçlüsü kullanılmazsa yinelenen ürün oluşur." },
+  "merchant.targetCountry": { label: "Hedef ülke (ISO 3166, ör. US)", group: "merchant", kind: "text", publicWhen: "never", hint: "TR → feed TRY + KDV dahil; diğer ülkeler (US) → feed USD, KDV yok." },
+  "merchant.contentLanguage": { label: "İçerik dili (ISO 639-1, ör. en)", group: "merchant", kind: "text", publicWhen: "never" },
+  "merchant.feedLabel": { label: "feedLabel (ör. US)", group: "merchant", kind: "text", publicWhen: "never", hint: "Mevcut ürünlerle aynı offerId/feedLabel/dil üçlüsü kullanılmazsa yinelenen ürün oluşur." },
   "operations.quoteNotificationEmail": { label: "Teklif bildirimi alıcı e-postası", group: "operations", kind: "email", publicWhen: "never", hint: "E-posta sağlayıcısı tanımlanana kadar gönderim yapılmaz; bildirimler 'Bekliyor' kalır." },
   "operations.quoteRetentionDays": { label: "Teklif saklama süresi (gün) — TASLAK", group: "operations", kind: "number", publicWhen: "never", seed: "730", hint: "Hukuki onay olmadan otomatik silme/anonimleştirme çalışmaz." },
 } as const satisfies Record<string, SettingDef>;
