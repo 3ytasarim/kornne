@@ -13,7 +13,7 @@ import { evaluateReadiness, validGtin, type MerchantContext, type ProductFacts }
 /** A product that satisfies every gate — TEST FIXTURE values, never real catalog data. */
 const good = (o: Partial<ProductFacts> = {}): ProductFacts => ({
   id: "p1", ref: "9900001", status: "PUBLISHED", needsReview: false, saleMode: "CART_AND_QUOTE", title: "TEST Ürün", descriptionText: "TEST açıklama ".repeat(20), targetTranslationPublished: true,
-  price: { amountMinor: 120000n, currency: "TRY", status: "VERIFIED", vatIncluded: true, compareAtMinor: null }, pagePriceMinor: 120000n, availability: "IN_STOCK",
+  price: { amountMinor: 120000n, currency: "TRY", status: "VERIFIED", vatIncluded: true, compareAtMinor: null }, pagePriceMinor: 120000n, availability: "IN_STOCK", leadTimeDays: null,
   gtin: "4006381333931", mpn: null, identifierExists: null, brandVerified: true, googleProductCategory: "5", mainImage: { width: 1600, height: 1600, mime: "image/jpeg", suspect: false }, offerIdMapped: true, ...o,
 });
 const ctx = (o: Partial<MerchantContext> = {}): MerchantContext => ({ targetCountry: "TR", contentLanguage: "tr", feedLabel: "TR", currency: "TRY", siteIndexable: true, catalogVerified: true, targetLocaleIsSeo: true, checkoutOpen: true, shippingVerified: true, returnsVerified: true, businessVerified: true, now: new Date("2026-10-22T00:00:00Z"), ...o });
@@ -23,6 +23,25 @@ const ev = (p: ProductFacts, c = ctx()): Evaluated => ({ ...p, ...evaluateReadin
 describe("Merchant readiness engine", () => {
   it("READY only when every gate passes with verified data", () => {
     expect(evaluateReadiness(good(), ctx()).status).toBe("READY");
+  });
+
+  it("an empty description blocks (Google required); a short one only warns", () => {
+    expect(codes(good({ descriptionText: "" }))).toContain("DESCRIPTION_MISSING");
+    const short = evaluateReadiness(good({ descriptionText: "Saw Band" }), ctx());
+    expect(short.status).toBe("READY");
+    expect(short.reasons.map((r) => r.code)).toContain("DESCRIPTION_SHORT");
+  });
+
+  it("made to order is in_stock + max_handling_time ONLY with a real lead time — never a guess", () => {
+    expect(codes(good({ availability: "MADE_TO_ORDER", leadTimeDays: null }))).toContain("LEAD_TIME_UNKNOWN");
+    expect(codes(good({ availability: "MADE_TO_ORDER", leadTimeDays: 0 }))).toContain("LEAD_TIME_UNKNOWN");
+    const blocked = { ...ev(good({ availability: "MADE_TO_ORDER", leadTimeDays: null })), status: "READY" as const };
+    expect(() => toFeedItem(blocked, ctx())).toThrow(FeedRefusal);
+    const ok = toFeedItem(ev(good({ availability: "MADE_TO_ORDER", leadTimeDays: 21 })), ctx());
+    expect(ok.availability).toBe("in_stock");
+    expect(ok.max_handling_time).toBe(21);
+    expect(feedXml([ok], { title: "t", link: "l", generatedAt: new Date(0) })).toContain("<g:max_handling_time>21</g:max_handling_time>");
+    expect(toFeedItem(ev(good()), ctx()).max_handling_time).toBeUndefined();
   });
 
   it("US target (12.11.2026): USD feed, no VAT gate; a TCMB-converted price is only a warning", () => {

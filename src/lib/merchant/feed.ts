@@ -21,6 +21,8 @@ export type FeedItem = {
   sale_price?: string;
   /** the flat freight the checkout charges in this country (same amount as the order) */
   shipping?: { country: string; price: string };
+  /** business days between order and dispatch — only for made-to-order items, from the admin-entered lead time */
+  max_handling_time?: number;
   brand?: string;
   gtin?: string;
   mpn?: string;
@@ -33,9 +35,9 @@ export type FeedItem = {
   feed_label: string;
 };
 
-export const FEED_COLUMNS = ["id", "title", "description", "link", "image_link", "additional_image_link", "availability", "price", "sale_price", "shipping", "brand", "gtin", "mpn", "identifier_exists", "condition", "google_product_category", "product_type", "content_language", "target_country", "feed_label"] as const;
+export const FEED_COLUMNS = ["id", "title", "description", "link", "image_link", "additional_image_link", "availability", "price", "sale_price", "shipping", "max_handling_time", "brand", "gtin", "mpn", "identifier_exists", "condition", "google_product_category", "product_type", "content_language", "target_country", "feed_label"] as const;
 
-const AVAIL: Record<string, FeedItem["availability"] | undefined> = { IN_STOCK: "in_stock", OUT_OF_STOCK: "out_of_stock", PREORDER: "preorder", BACKORDER: "backorder", MADE_TO_ORDER: "in_stock" }; // made to order: Google wants in_stock + handling time (backorder would need availability_date)
+const AVAIL: Record<string, FeedItem["availability"] | undefined> = { IN_STOCK: "in_stock", OUT_OF_STOCK: "out_of_stock", PREORDER: "preorder", BACKORDER: "backorder", MADE_TO_ORDER: "in_stock" }; // made to order: in_stock + max_handling_time (backorder would need availability_date); never without a real lead time
 const money = (minor: bigint, cur: string) => `${toDecimalString(minor)} ${cur}`;
 
 export class FeedRefusal extends Error {}
@@ -46,6 +48,8 @@ export function toFeedItem(e: Evaluated, ctx: MerchantContext): FeedItem {
   if (!e.price || e.price.status !== "VERIFIED" || e.price.amountMinor <= 0n) throw new FeedRefusal(`${e.offerId}: price not verified`);
   const availability = e.availability ? AVAIL[e.availability] : undefined;
   if (!availability) throw new FeedRefusal(`${e.offerId}: availability unknown`);
+  const mto = e.availability === "MADE_TO_ORDER";
+  if (mto && !(e.leadTimeDays && e.leadTimeDays > 0)) throw new FeedRefusal(`${e.offerId}: made to order without a lead time`);
   if (!e.link || !e.imageLink || !e.title || !ctx.contentLanguage || !ctx.targetCountry || !ctx.feedLabel) throw new FeedRefusal(`${e.offerId}: incomplete`);
   const sale = e.price.compareAtMinor && e.price.compareAtMinor > e.price.amountMinor;
   return {
@@ -60,6 +64,7 @@ export function toFeedItem(e: Evaluated, ctx: MerchantContext): FeedItem {
     price: money(sale ? e.price.compareAtMinor! : e.price.amountMinor, e.price.currency),
     ...(sale ? { sale_price: money(e.price.amountMinor, e.price.currency) } : {}),
     ...(e.price.currency === FOREIGN_SHIPPING_CURRENCY ? { shipping: { country: ctx.targetCountry, price: money(FOREIGN_FLAT_SHIPPING_MINOR, FOREIGN_SHIPPING_CURRENCY) } } : {}),
+    ...(mto ? { max_handling_time: e.leadTimeDays! } : {}),
     ...(e.brandName ? { brand: e.brandName } : {}),
     ...(e.gtin ? { gtin: e.gtin } : {}),
     ...(e.mpn ? { mpn: e.mpn } : {}),

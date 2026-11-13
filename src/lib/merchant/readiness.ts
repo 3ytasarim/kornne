@@ -13,9 +13,9 @@ export type Severity = "blocking" | "warning";
 export type ReasonCode =
   | "PRODUCT_NOT_PUBLIC" | "SALE_MODE_QUOTE_ONLY" | "CHECKOUT_CLOSED" | "LANGUAGE_NOT_PUBLISHED" | "LANDING_NOT_INDEXABLE" | "SITE_NOT_LIVE"
   | "PRICE_MISSING" | "PRICE_UNVERIFIED" | "PRICE_ZERO" | "CURRENCY_MISMATCH" | "VAT_UNKNOWN" | "SALE_PRICE_INVALID" | "PRICE_NOT_ON_PAGE" | "PRICE_FX_CONVERTED"
-  | "AVAILABILITY_UNKNOWN" | "IDENTIFIER_MISSING" | "BRAND_UNVERIFIED"
+  | "AVAILABILITY_UNKNOWN" | "LEAD_TIME_UNKNOWN" | "IDENTIFIER_MISSING" | "BRAND_UNVERIFIED"
   | "IMAGE_MISSING" | "IMAGE_TOO_SMALL" | "IMAGE_BELOW_2027" | "IMAGE_FORMAT" | "IMAGE_REVIEW"
-  | "TITLE_MISSING" | "TITLE_TOO_LONG" | "DESCRIPTION_SHORT" | "DESCRIPTION_POLICY"
+  | "TITLE_MISSING" | "TITLE_TOO_LONG" | "DESCRIPTION_MISSING" | "DESCRIPTION_SHORT" | "DESCRIPTION_POLICY"
   | "TARGET_UNSET" | "SHIPPING_UNVERIFIED" | "RETURNS_UNVERIFIED" | "BUSINESS_IDENTITY_UNVERIFIED"
   | "GOOGLE_CATEGORY_MISSING" | "OFFER_ID_UNMAPPED";
 export type Reason = { code: ReasonCode; severity: Severity; message: string; fix: string; area: "product" | "price" | "stock" | "media" | "content" | "translation" | "settings" | "site" };
@@ -35,6 +35,8 @@ export type ProductFacts = {
   /** the live (VERIFIED, currently valid) price, as the storefront renders it */
   pagePriceMinor: bigint | null;
   availability: string | null;
+  /** production / dispatch lead time entered by an admin (Inventory.leadTimeDays); required for MADE_TO_ORDER */
+  leadTimeDays: number | null;
   gtin: string | null;
   mpn: string | null;
   identifierExists: boolean | null;
@@ -64,6 +66,39 @@ const R = (code: ReasonCode, severity: Severity, area: Reason["area"], message: 
 const GTIN_RE = /^(\d{8}|\d{12}|\d{13}|\d{14})$/;
 const POLICY_RE = /(https?:\/\/|www\.|\+?90\s?\d{3}|0\s?5\d{2}\s?\d{3}|whatsapp|ücretsiz kargo|indirim(?:li)?!|kampanya|en ucuz)/i;
 
+/**
+ * Which codes enforce a Google Merchant requirement (product data spec, landing page, shipping/returns/business policies)
+ * and which are KORNNE's own stricter internal controls (four-eyes price approval, verified settings, mapping ...).
+ * Used by the admin and the readiness report to show the two groups apart.
+ */
+export const GOOGLE_REQUIRED: ReadonlySet<ReasonCode> = new Set<ReasonCode>([
+  "PRODUCT_NOT_PUBLIC", "SALE_MODE_QUOTE_ONLY", "CHECKOUT_CLOSED", "LANGUAGE_NOT_PUBLISHED", "LANDING_NOT_INDEXABLE", "SITE_NOT_LIVE",
+  "PRICE_MISSING", "PRICE_ZERO", "CURRENCY_MISMATCH", "VAT_UNKNOWN", "SALE_PRICE_INVALID", "PRICE_NOT_ON_PAGE",
+  "AVAILABILITY_UNKNOWN", "LEAD_TIME_UNKNOWN", "IDENTIFIER_MISSING", "BRAND_UNVERIFIED",
+  "IMAGE_MISSING", "IMAGE_TOO_SMALL", "IMAGE_BELOW_2027", "IMAGE_FORMAT", "TITLE_MISSING", "TITLE_TOO_LONG", "DESCRIPTION_MISSING", "DESCRIPTION_POLICY",
+  "SHIPPING_UNVERIFIED", "RETURNS_UNVERIFIED", "BUSINESS_IDENTITY_UNVERIFIED",
+]);
+/** One-line explanation per code: what Google requires, or why KORNNE checks it in addition. */
+export const RULE_SOURCE: Partial<Record<ReasonCode, string>> = {
+  PRICE_UNVERIFIED: "Kornne: fiyat yetkili kişi onayından geçmeden gönderilmez (Google yalnız doğru fiyat ister)",
+  TARGET_UNSET: "Kornne: hedef ülke/dil/feed etiketi süper yönetici teyidi ister",
+  PRICE_FX_CONVERTED: "Kornne: kurla çevrilen fiyat sayfa ile feed arasında kayabilir",
+  OFFER_ID_UNMAPPED: "Kornne: eski hesaptaki item_id korunmalı (yinelenen ürün riski)",
+  IMAGE_REVIEW: "Kornne: filigran/yazı riski manuel kontrol",
+  DESCRIPTION_SHORT: "Kornne: kalite uyarısı (Google zorunlu tutmaz)",
+  GOOGLE_CATEGORY_MISSING: "İsteğe bağlı (Google otomatik atar)",
+  SHIPPING_UNVERIFIED: "Google: hedef ülke için kargo ücreti/süresi tanımlı olmalı (Kornne ayrıca yetkili teyidi ister)",
+  RETURNS_UNVERIFIED: "Google: iade politikası tanımlı ve sitedekiyle aynı olmalı (Kornne ayrıca hukuki onay ister)",
+  BUSINESS_IDENTITY_UNVERIFIED: "Google: işletme bilgisi sitedekiyle aynı olmalı (Kornne ayrıca yetkili teyidi ister)",
+  CHECKOUT_CLOSED: "Google: ürün açılış sayfasında satın alınabilir olmalı",
+  BRAND_UNVERIFIED: "Google: yeni ürünlerde marka zorunlu (Kornne yalnız doğrulanmış markayı yollar)",
+  IDENTIFIER_MISSING: "Google: GTIN varsa zorunlu, yoksa marka+MPN veya identifier_exists=no",
+  AVAILABILITY_UNKNOWN: "Google: availability zorunlu ve sayfayla aynı olmalı",
+  LEAD_TIME_UNKNOWN: "Google: siparişe üretim stokta + gerçek hazırlık süresi (max_handling_time) ile gösterilir",
+  PRICE_NOT_ON_PAGE: "Google: feed fiyatı açılış sayfasındakiyle aynı olmalı",
+  LANDING_NOT_INDEXABLE: "Google: açılış sayfası Googlebot/Storebot tarafından erişilebilir olmalı",
+};
+
 /** GS1 mod-10 check digit — a GTIN that fails it is rejected (never "fixed"). */
 export function validGtin(g: string): boolean {
   if (!GTIN_RE.test(g)) return false;
@@ -87,11 +122,12 @@ export function evaluateReadiness(p: ProductFacts, ctx: MerchantContext): { stat
   if (p.status !== "PUBLISHED" || p.needsReview) out.push(R("PRODUCT_NOT_PUBLIC", "blocking", "product", p.needsReview ? "Ürün incelemede (vitrinde yok)" : `Ürün durumu ${p.status}`, "Ürün kararı (ör. #208 müşteri onayı)"));
   if (p.saleMode === "QUOTE_ONLY") out.push(R("SALE_MODE_QUOTE_ONLY", "blocking", "product", "Yalnız teklif ile satılıyor — fiyatlı ürün ilanı olamaz", "Satış modu müşteri kararı"));
   if (!p.targetTranslationPublished) out.push(R("LANGUAGE_NOT_PUBLISHED", "blocking", "translation", `Hedef dilde (${ctx.contentLanguage ?? "?"}) yayımlanmış çeviri yok`, "Admin › Çeviriler"));
-  else if (!ctx.targetLocaleIsSeo) out.push(R("LANDING_NOT_INDEXABLE", "blocking", "site", "Hedef dil SEO dillerinde değil (açılış sayfası noindex)", "SEO_LOCALES ayarı (çeviri onayından sonra)"));
+  else if (ctx.contentLanguage && !ctx.targetLocaleIsSeo) out.push(R("LANDING_NOT_INDEXABLE", "blocking", "site", "Hedef dil SEO dillerinde değil (açılış sayfası noindex)", "SEO_LOCALES ayarı (çeviri onayından sonra)"));
   if (!p.title?.trim()) out.push(R("TITLE_MISSING", "blocking", "content", "Başlık yok", "Ürün içeriği"));
   else if (p.title.length > 150) out.push(R("TITLE_TOO_LONG", "blocking", "content", `Başlık ${p.title.length} karakter (> 150)`, "Ürün başlığı"));
   const desc = p.descriptionText.trim();
-  if (desc.length < 150) out.push(R("DESCRIPTION_SHORT", "warning", "content", `Açıklama ${desc.length} karakter`, "Ürün açıklaması (bilgi müşteriden)"));
+  if (!desc) out.push(R("DESCRIPTION_MISSING", "blocking", "content", "Hedef dilde açıklama yok", "Ürün açıklaması (bilgi müşteriden; uydurulmaz)"));
+  else if (desc.length < 150) out.push(R("DESCRIPTION_SHORT", "warning", "content", `Açıklama ${desc.length} karakter`, "Ürün açıklaması (bilgi müşteriden)"));
   if (POLICY_RE.test(desc)) out.push(R("DESCRIPTION_POLICY", "blocking", "content", "Açıklamada telefon/URL/promosyon ifadesi var (Merchant politikası)", "Açıklamadan iletişim/promosyon metnini kaldırın"));
   // price
   if (!p.price) out.push(R("PRICE_MISSING", "blocking", "price", "Fiyat kaydı yok", "Admin › Fiyatlar"));
@@ -107,6 +143,8 @@ export function evaluateReadiness(p: ProductFacts, ctx: MerchantContext): { stat
   }
   // stock
   if (!p.availability || p.availability === "UNKNOWN") out.push(R("AVAILABILITY_UNKNOWN", "blocking", "stock", "Stok / temin durumu bilinmiyor", "Admin › Stok — gerçek durum (tahmin yok)"));
+  // made to order is sent as in_stock + max_handling_time — only with a real lead time, never on a guess
+  else if (p.availability === "MADE_TO_ORDER" && !(p.leadTimeDays && p.leadTimeDays > 0)) out.push(R("LEAD_TIME_UNKNOWN", "blocking", "stock", "Siparişe üretilen ürün: temin (üretim + sevke hazırlık) süresi girilmemiş", "Admin › Stok — gerçek temin süresi (gün)"));
   // identifiers
   const gtinOk = !!p.gtin && validGtin(p.gtin);
   if (!gtinOk && !(p.mpn && p.brandVerified) && p.identifierExists !== false) out.push(R("IDENTIFIER_MISSING", "blocking", "product", p.gtin && !gtinOk ? "GTIN geçersiz (kontrol hanesi)" : "GTIN yok; MPN+marka yok; identifier_exists=no da işaretlenmedi", "Üretici kodu varsa MPN, yoksa müşteri teyidiyle identifier_exists=no (barkod üretilmez)"));

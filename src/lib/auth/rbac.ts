@@ -86,6 +86,8 @@ export const ACTIONS = {
   "merchant.preview": [SA, A],
   /** MOCK/SIMULATED sync run and old item_id mapping preview — never contacts Google */
   "merchant.simulate": [SA, A],
+  /** bulk confirmation of REAL stock / lead time / brand / MPN for Merchant (Admin › Merchant › Toplu onay) */
+  "merchant.approve": [SA, A],
 } as const satisfies Record<string, readonly Role[]>;
 export type AdminAction = keyof typeof ACTIONS;
 

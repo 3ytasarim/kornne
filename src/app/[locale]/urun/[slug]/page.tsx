@@ -91,7 +91,8 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/urun/
   const ldAvailability = { IN_STOCK: "InStock", OUT_OF_STOCK: "OutOfStock", PREORDER: "PreOrder", BACKORDER: "BackOrder", MADE_TO_ORDER: "InStock" } as const; // same mapping as the Merchant feed
   const usd = product.currency === FOREIGN_SHIPPING_CURRENCY;
   const offer =
-    purchasable && product.priceMinor !== null && product.availability
+    // made to order only with a real lead time (same rule as the Merchant feed) — never an "in stock" guess
+    purchasable && product.priceMinor !== null && product.availability && (product.availability !== "MADE_TO_ORDER" || (product.leadTimeDays ?? 0) > 0)
       ? {
           priceMinor: product.priceMinor,
           currency: product.currency,

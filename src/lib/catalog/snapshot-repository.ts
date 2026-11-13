@@ -64,6 +64,7 @@ function build(locale: Locale, p: SnapshotProduct): CatalogProduct {
     priceVerified: false,
     vatIncluded: null,
     availability: null,
+    leadTimeDays: null,
     brandName: null,
     mpn: null,
     gtin: null,

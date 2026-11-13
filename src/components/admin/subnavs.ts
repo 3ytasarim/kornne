@@ -20,6 +20,7 @@ export const SEO_NAV = [
 
 export const MERCHANT_NAV = [
   { href: "/admin/merchant", label: "Hazırlık panosu" },
+  { href: "/admin/merchant/onay", label: "Toplu inceleme ve onay" },
   { href: "/admin/merchant/feed", label: "Feed önizleme" },
   { href: "/admin/merchant/eslesme", label: "Eski item_id eşleme" },
   { href: "/admin/merchant/baglanti", label: "API bağlantısı" },

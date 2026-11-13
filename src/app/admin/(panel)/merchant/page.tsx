@@ -10,6 +10,7 @@ import { requireDb } from "@/lib/db";
 import { LOCALE_META, LOCALES } from "@/lib/i18n/config";
 import { evaluateCatalog } from "@/lib/merchant/facts";
 import { fixHref, GLOBAL_REASONS, REASON_LABEL } from "@/lib/merchant/labels";
+import { GOOGLE_REQUIRED, RULE_SOURCE, type ReasonCode } from "@/lib/merchant/readiness";
 
 export const metadata = { title: "Merchant Center" };
 export const dynamic = "force-dynamic";
@@ -47,7 +48,7 @@ export default async function MerchantPage({ searchParams }: PageProps<"/admin/m
         <StatCard label="Son kuru çalıştırma" value={lastRun ? lastRun.status ?? "—" : "yok"} hint={lastRun ? `${lastRun.mode} · ${lastRun.startedAt.toLocaleString("tr-TR")}` : "API bağlantısı sekmesi"} />
       </div>
       <div className="mb-6 grid gap-6 lg:grid-cols-2">
-        <Card title="Engel nedenleri (ürün sayısı)" description="Tüm ürünleri etkileyen genel engeller ve ürün bazlı engeller.">
+        <Card title="Engel nedenleri (ürün sayısı)" description="Genel engeller tüm ürünleri durdurur. “Google” = Merchant zorunluluğu; “iç kural” = KORNNE’nin ek kontrolü (fareyle üzerine gelince açıklama).">
           <ul className="space-y-1 text-sm">
             {sortedReasons.map(([code, n]) => (
               <li key={code} className="flex items-center justify-between gap-3">
@@ -56,6 +57,9 @@ export default async function MerchantPage({ searchParams }: PageProps<"/admin/m
                 </Link>
                 <span className="flex items-center gap-2">
                   {globalCodes.has(code) ? <Badge tone="outline">genel</Badge> : null}
+                  <span title={RULE_SOURCE[code as ReasonCode] ?? ""}>
+                    <Badge tone={GOOGLE_REQUIRED.has(code as ReasonCode) ? "warning" : "neutral"}>{GOOGLE_REQUIRED.has(code as ReasonCode) ? "Google" : "iç kural"}</Badge>
+                  </span>
                   <strong>{n}</strong>
                 </span>
               </li>
