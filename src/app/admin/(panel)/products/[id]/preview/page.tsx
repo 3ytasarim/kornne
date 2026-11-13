@@ -49,7 +49,7 @@ export default async function ProductPreview({ params, searchParams }: PageProps
         <div>{images.length ? <ProductGallery images={images} title={t.title} labels={{ gallery: d.product.gallery, prev: d.product.prevImage, next: d.product.nextImage, zoom: d.product.openZoom, close: d.a11y.close, imageOf: d.product.imageOf, noImage: d.product.noImage }} /> : <p className="text-steel">Görsel yok.</p>}</div>
         <div className="space-y-5">
           <h1 className="font-display text-h2 font-bold text-ink">{t.title}</h1>
-          <PriceStatusBlock verified={!!live} priceMinor={live?.amountMinor ?? null} compareAtMinor={live?.compareAtMinor ?? null} vatIncluded={live?.vatIncluded ?? null} currency="TRY" locale={locale} labels={{ priceTitle: d.productInfo.priceTitle, priceText: d.productInfo.priceText, vatIncluded: d.productInfo.vatIncluded, vatExcluded: d.productInfo.vatExcluded, price: d.product.price, oldPrice: d.product.oldPrice, discount: d.product.discount }} />
+          <PriceStatusBlock verified={!!live} priceMinor={live?.amountMinor ?? null} compareAtMinor={live?.compareAtMinor ?? null} vatIncluded={live?.vatIncluded ?? null} currency={live?.currency ?? "TRY"} locale={locale} labels={{ priceTitle: d.productInfo.priceTitle, priceText: d.productInfo.priceText, vatIncluded: d.productInfo.vatIncluded, vatExcluded: d.productInfo.vatExcluded, price: d.product.price, oldPrice: d.product.oldPrice, discount: d.product.discount }} />
           {p.variants.length ? (
             <p className="text-sm text-steel">
               {d.productInfo.options}: {p.variants.map((v) => (v.labels as Record<string, string>)[locale] ?? (v.labels as Record<string, string>).tr).join(" · ")}
