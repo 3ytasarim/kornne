@@ -167,6 +167,8 @@ export const de: DeepPartial<Dictionary> = {
   productInfo: {
       title: "Produktinformationen",
       ref: "Produktnr.",
+      brand: "Marke",
+      mpn: "Artikelnummer (MPN)",
       categories: "Kategorien",
       options: "Optionen",
       specsTitle: "Technische Daten",

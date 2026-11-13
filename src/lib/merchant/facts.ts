@@ -15,7 +15,7 @@ const PAGE_STATUSES = new Set(["LEGACY_SOURCE", "APPROVED"]);
 const SUSPECT = /(whatsapp|img[-_]\d{6,}|screenshot|ekran|logo|banner)/i;
 export const RETURNS_PAGE_KEY = "iade-ve-geri-odeme-politikalari";
 
-export type FeedSource = ProductFacts & { link: string | null; imageLink: string | null; additionalImageLinks: string[]; descriptionHtml: string; condition: "new" | "refurbished" | "used"; brandName: string | null; productType: string | null; offerId: string; mappedOfferId: string | null };
+export type FeedSource = ProductFacts & { quantity?: number | null; link: string | null; imageLink: string | null; additionalImageLinks: string[]; descriptionHtml: string; condition: "new" | "refurbished" | "used"; brandName: string | null; productType: string | null; offerId: string; mappedOfferId: string | null };
 export type Evaluated = FeedSource & { status: "READY" | "BLOCKED"; reasons: Reason[] };
 
 export async function loadMerchantContext(db: PrismaClient, env: CommerceEnv = process.env, now = new Date()): Promise<MerchantContext> {
@@ -74,7 +74,7 @@ export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContex
       brand: { select: { name: true, status: true } },
       translations: { select: { locale: true, status: true, title: true, slug: true, descriptionHtml: true } },
       prices: { where: { variantId: null }, orderBy: { validFrom: "desc" }, select: { amountMinor: true, currency: true, status: true, vatIncluded: true, compareAtMinor: true, validFrom: true, validTo: true } },
-      inventory: { where: { variantId: null }, select: { availability: true, leadTimeDays: true } },
+      inventory: { where: { variantId: null }, select: { availability: true, leadTimeDays: true, quantity: true } },
       media: { orderBy: [{ isPrimary: "desc" }, { sortOrder: "asc" }], select: { media: { select: { publicPath: true, width: true, height: true, mime: true } } } },
       merchantItems: { where: { variantId: null }, select: { offerId: true, contentLanguage: true, feedLabel: true } },
     },
@@ -106,6 +106,7 @@ export async function loadFeedSources(db: PrismaClient, ctx: Pick<MerchantContex
       pagePriceMinor: pagePrice?.amountMinor ?? null,
       availability: p.inventory[0]?.availability ?? null,
       leadTimeDays: p.inventory[0]?.leadTimeDays ?? null,
+      quantity: p.inventory[0]?.quantity ?? null,
       gtin: p.gtin,
       mpn: p.mpn,
       identifierExists: p.identifierExists,

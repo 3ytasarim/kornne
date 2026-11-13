@@ -67,13 +67,22 @@ describe.skipIf(!hasTestDb)("Merchant bulk review (isolated test DB)", () => {
     expect(fa).toMatchObject({ availability: "MADE_TO_ORDER", leadTimeDays: 21, brandVerified: true, mpn: "KRN-TEST-01" });
   });
 
+  it("records units on hand with In stock; 0 units + In stock is refused", async () => {
+    await expect(applyMerchantReview(db, actor, base({ availability: "IN_STOCK", quantity: 0 }))).rejects.toThrow(/Adet 0/);
+    const r = await applyMerchantReview(db, actor, base({ availability: "IN_STOCK", quantity: "15" as unknown as number }));
+    expect(r.changed).toBe(2);
+    const inv = await db.inventory.findMany({ where: { productId: { in: [a, b] } } });
+    expect(inv.every((i) => i.availability === "IN_STOCK" && i.quantity === 15)).toBe(true);
+    expect(JSON.stringify((await db.auditLog.findFirstOrThrow({ where: { action: "merchant.data_reviewed", entityId: a }, orderBy: { createdAt: "desc" } })).after)).toContain('"quantity":15');
+  });
+
   it("empty fields leave values unchanged; an invalid MPN is refused", async () => {
     await expect(applyMerchantReview(db, actor, base())).rejects.toThrow(/Değiştirilecek/);
     await expect(applyMerchantReview(db, actor, base({ mpn: { [a]: "<script>" } }))).rejects.toThrow(/Geçersiz MPN/);
-    const r = await applyMerchantReview(db, actor, base({ productIds: [b], availability: "IN_STOCK" }));
+    const r = await applyMerchantReview(db, actor, base({ productIds: [b], availability: "OUT_OF_STOCK" }));
     expect(r.changed).toBe(1);
     const inv = await db.inventory.findFirstOrThrow({ where: { productId: b } });
-    expect(inv).toMatchObject({ availability: "IN_STOCK", leadTimeDays: 21 });
+    expect(inv).toMatchObject({ availability: "OUT_OF_STOCK", leadTimeDays: 21, quantity: 15 });
     expect((await db.product.findUniqueOrThrow({ where: { id: a } })).mpn).toBe("KRN-TEST-01");
   });
 });

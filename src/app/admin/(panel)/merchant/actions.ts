@@ -49,6 +49,7 @@ export async function merchantReviewAction(_p: ActionState, f: FormData): Promis
       productIds: f.getAll("productId").map(String),
       availability: String(f.get("availability") ?? ""),
       leadTimeDays: String(f.get("leadTimeDays") ?? ""),
+      quantity: String(f.get("quantity") ?? ""),
       brand: String(f.get("brand") ?? ""),
       identifierNone: f.get("identifierNone") === "on",
       mpn,

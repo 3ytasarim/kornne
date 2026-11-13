@@ -23,12 +23,15 @@ export const AVAILABILITY_LABEL: Record<(typeof AVAILABILITY_CHOICES)[number], s
 
 const MPN_RE = /^[A-Za-z0-9][A-Za-z0-9 ._/-]{0,69}$/;
 const optInt = z.preprocess((v) => (v === "" || v == null ? undefined : Number(v)), z.number({ error: "Sayı girin" }).int("Tam gün girin").min(1, "En az 1 gün").max(365, "En fazla 365 gün").optional());
+const optQty = z.preprocess((v) => (v === "" || v == null ? undefined : Number(v)), z.number({ error: "Sayı girin" }).int("Tam sayı girin").min(0, "0 veya daha büyük").max(1_000_000).optional());
 const optStr = z.preprocess((v) => (typeof v === "string" && v.trim() ? v.trim() : undefined), z.string().optional());
 
 export const reviewSchema = z.object({
   productIds: z.array(z.string().min(1)).min(1, "En az bir ürün seçin").max(200),
   availability: z.preprocess((v) => (v === "" ? undefined : v), z.enum(AVAILABILITY_CHOICES).optional()),
   leadTimeDays: optInt,
+  /** units on hand (informational; Google gets the availability state, not the count) */
+  quantity: optQty,
   brand: z.preprocess((v) => (typeof v === "string" && v.trim() ? v.trim() : undefined), z.string().min(2, "En az 2 karakter").max(70, "En fazla 70 karakter").optional()),
   identifierNone: z.boolean().default(false),
   /** per-product manufacturer part number typed by the approver (empty = unchanged) */
@@ -57,11 +60,12 @@ export async function applyMerchantReview(db: PrismaClient, actor: { id: string 
     if (!MPN_RE.test(s)) throw new AdminError(`Geçersiz MPN: "${s.slice(0, 40)}" (harf, rakam, boşluk . _ / - ; en fazla 70 karakter)`, { mpn: "Geçersiz MPN" });
     mpn[id] = s;
   }
-  if (v.availability === undefined && v.leadTimeDays === undefined && !v.brand && !v.identifierNone && !Object.keys(mpn).length) throw new AdminError("Değiştirilecek bir alan seçin.");
+  if (v.quantity === 0 && v.availability === "IN_STOCK") throw new AdminError("Adet 0 iken “Stokta” seçilemez.", { quantity: "Stokta için en az 1" });
+  if (v.availability === undefined && v.leadTimeDays === undefined && v.quantity === undefined && !v.brand && !v.identifierNone && !Object.keys(mpn).length) throw new AdminError("Değiştirilecek bir alan seçin.");
 
   const products = await db.product.findMany({
     where: { id: { in: v.productIds }, archivedAt: null },
-    select: { id: true, sourceKey: true, gtin: true, mpn: true, identifierExists: true, brandId: true, inventory: { where: { variantId: null }, select: { id: true, availability: true, leadTimeDays: true } } },
+    select: { id: true, sourceKey: true, gtin: true, mpn: true, identifierExists: true, brandId: true, inventory: { where: { variantId: null }, select: { id: true, availability: true, leadTimeDays: true, quantity: true } } },
   });
   if (products.length !== new Set(v.productIds).size) throw new AdminError("Seçilen ürünlerden biri bulunamadı (arşivlenmiş olabilir).");
 
@@ -86,10 +90,11 @@ export async function applyMerchantReview(db: PrismaClient, actor: { id: string 
     const changed: string[] = [];
     for (const p of products) {
       const inv = p.inventory[0] ?? null;
-      const before = { availability: inv?.availability ?? null, leadTimeDays: inv?.leadTimeDays ?? null, brandId: p.brandId, mpn: p.mpn, identifierExists: p.identifierExists };
+      const before = { availability: inv?.availability ?? null, leadTimeDays: inv?.leadTimeDays ?? null, quantity: inv?.quantity ?? null, brandId: p.brandId, mpn: p.mpn, identifierExists: p.identifierExists };
       const after = { ...before };
-      if (v.availability !== undefined || v.leadTimeDays !== undefined) {
-        const data: { availability?: Availability; leadTimeDays?: number | null } = {};
+      if (v.availability !== undefined || v.leadTimeDays !== undefined || v.quantity !== undefined) {
+        const data: { availability?: Availability; leadTimeDays?: number | null; quantity?: number } = {};
+        if (v.quantity !== undefined) data.quantity = v.quantity;
         if (v.availability !== undefined) data.availability = v.availability;
         if (v.leadTimeDays !== undefined) data.leadTimeDays = v.leadTimeDays;
         if (inv) await tx.inventory.update({ where: { id: inv.id }, data });

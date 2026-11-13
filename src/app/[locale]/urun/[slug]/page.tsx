@@ -234,6 +234,18 @@ export default async function ProductPage({ params }: PageProps<"/[locale]/urun/
               <dt className="text-steel">{d.productInfo.ref}</dt>
               <dd className="font-semibold text-ink tabular-nums">{product.sourceId}</dd>
             </div>
+            {product.brandName ? (
+              <div className="flex justify-between gap-4 py-2.5">
+                <dt className="text-steel">{d.productInfo.brand}</dt>
+                <dd className="font-semibold text-ink">{product.brandName}</dd>
+              </div>
+            ) : null}
+            {product.mpn ? (
+              <div className="flex justify-between gap-4 py-2.5">
+                <dt className="text-steel">{d.productInfo.mpn}</dt>
+                <dd className="font-semibold text-ink tabular-nums" dir="ltr">{product.mpn}</dd>
+              </div>
+            ) : null}
             <div className="flex justify-between gap-4 py-2.5">
               <dt className="text-steel">{d.productInfo.categories}</dt>
               <dd className="text-end">

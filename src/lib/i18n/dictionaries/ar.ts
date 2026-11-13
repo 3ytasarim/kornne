@@ -167,6 +167,8 @@ export const ar: DeepPartial<Dictionary> = {
   productInfo: {
       title: "معلومات المنتج",
       ref: "رقم المنتج",
+      brand: "العلامة التجارية",
+      mpn: "رقم القطعة (MPN)",
       categories: "الفئات",
       options: "الخيارات",
       specsTitle: "المواصفات الفنية",

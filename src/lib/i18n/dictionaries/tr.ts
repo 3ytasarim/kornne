@@ -226,6 +226,8 @@ export const tr = {
   productInfo: {
       title: "Ürün bilgileri",
       ref: "Ürün no",
+      brand: "Marka",
+      mpn: "Ürün kodu (MPN)",
       categories: "Kategoriler",
       options: "Seçenekler",
       specsTitle: "Teknik özellikler",

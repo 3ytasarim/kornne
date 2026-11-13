@@ -68,7 +68,7 @@ export default async function MerchantReviewPage({ searchParams }: { searchParam
 
       <ActionForm action={merchantReviewAction} id={FORM_ID} className="space-y-6" aria-label="Toplu Merchant onayı">
         <Card title="1 · Seçili ürünlere uygulanacak değerler" description={`Hedef: ${ctx.targetCountry ?? "teyitsiz"} · ${ctx.currency}. Boş bırakılan alan değişmez.`}>
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
             <Select name="availability" label="Stok / temin durumu" defaultValue="" disabled={!editable}>
               <option value="">— değiştirme —</option>
               {AVAILABILITY_CHOICES.map((a) => (
@@ -77,6 +77,7 @@ export default async function MerchantReviewPage({ searchParams }: { searchParam
                 </option>
               ))}
             </Select>
+            <Input name="quantity" label="Adet (eldeki stok)" hint="Bilgi amaçlı kaydedilir; Google’a stok durumu gider, adet gitmez." type="number" min={0} inputMode="numeric" disabled={!editable} />
             <Input name="leadTimeDays" label="Temin süresi (iş günü)" hint="Sipariş → sevke hazır. Siparişe üretimde zorunlu; Google’a max_handling_time olarak gider." type="number" min={1} max={365} inputMode="numeric" disabled={!editable} />
             <Input name="brand" label="Marka" hint={brands.length ? `Kayıtlı: ${brands.map((b) => `${b.name}${b.status === "VERIFIED" ? " ✓" : ""}`).join(", ")}` : "Ürünü kim üretiyorsa onun markası (ör. kendi üretiminizse KORNNE)"} maxLength={70} disabled={!editable} />
           </div>
@@ -126,6 +127,7 @@ export default async function MerchantReviewPage({ searchParams }: { searchParam
                       </td>
                       <td className="px-3 py-2 text-xs">
                         {e.availability && e.availability !== "UNKNOWN" ? AVAILABILITY_LABEL[e.availability as keyof typeof AVAILABILITY_LABEL] : <Badge tone="warning">bilinmiyor</Badge>}
+                        {e.quantity != null ? <span className="block text-steel">{e.quantity} adet</span> : null}
                         {e.leadTimeDays ? <span className="block text-steel">{e.leadTimeDays} gün</span> : null}
                       </td>
                       <td className="px-3 py-2 text-xs">{e.brandName ?? <Badge tone="warning">teyitsiz</Badge>}</td>
