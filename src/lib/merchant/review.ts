@@ -1,4 +1,4 @@
-import type { Availability, PrismaClient } from "@prisma/client";
+import type { Availability, Prisma, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { AdminError } from "@/lib/admin/action-state";
 
@@ -87,35 +87,54 @@ export async function applyMerchantReview(db: PrismaClient, actor: { id: string 
       brandId = brand.id;
       await tx.auditLog.create({ data: { actorId: actor.id, action: "merchant.brand_verified", entityType: "Brand", entityId: brand.id, before: existing ? { name: existing.name, status: existing.status } : undefined, after: { name: v.brand, status: "VERIFIED", note: v.note } } });
     }
-    const changed: string[] = [];
+    // Bulk writes (a handful of statements for any number of rows): row-by-row writes of 41 products against the remote
+    // production database exceeded the interactive transaction timeout.
+    const invData: { availability?: Availability; leadTimeDays?: number | null; quantity?: number } = {};
+    if (v.quantity !== undefined) invData.quantity = v.quantity;
+    if (v.availability !== undefined) invData.availability = v.availability;
+    if (v.leadTimeDays !== undefined) invData.leadTimeDays = v.leadTimeDays;
+    const touchInv = Object.keys(invData).length > 0;
+
+    const audits: { before: Prisma.InputJsonObject; after: Prisma.InputJsonObject; id: string }[] = [];
+    const noIdentifier: string[] = [];
+    const clearIdentifierFlag: string[] = [];
     for (const p of products) {
       const inv = p.inventory[0] ?? null;
       const before = { availability: inv?.availability ?? null, leadTimeDays: inv?.leadTimeDays ?? null, quantity: inv?.quantity ?? null, brandId: p.brandId, mpn: p.mpn, identifierExists: p.identifierExists };
       const after = { ...before };
-      if (v.availability !== undefined || v.leadTimeDays !== undefined || v.quantity !== undefined) {
-        const data: { availability?: Availability; leadTimeDays?: number | null; quantity?: number } = {};
-        if (v.quantity !== undefined) data.quantity = v.quantity;
-        if (v.availability !== undefined) data.availability = v.availability;
-        if (v.leadTimeDays !== undefined) data.leadTimeDays = v.leadTimeDays;
-        if (inv) await tx.inventory.update({ where: { id: inv.id }, data });
-        else await tx.inventory.create({ data: { productId: p.id, variantId: null, ...data } });
-        Object.assign(after, data);
-      }
-      const productData: { brandId?: string; mpn?: string; identifierExists?: boolean | null } = {};
-      if (brandId) productData.brandId = after.brandId = brandId;
+      if (touchInv) Object.assign(after, invData);
+      if (brandId) after.brandId = brandId;
       if (mpn[p.id]) {
-        productData.mpn = after.mpn = mpn[p.id]!;
-        if (p.identifierExists === false) productData.identifierExists = after.identifierExists = null;
+        after.mpn = mpn[p.id]!;
+        if (p.identifierExists === false) {
+          after.identifierExists = null;
+          clearIdentifierFlag.push(p.id);
+        }
       } else if (v.identifierNone && !p.gtin && !p.mpn) {
-        productData.identifierExists = after.identifierExists = false;
+        after.identifierExists = false;
+        noIdentifier.push(p.id);
       }
-      if (Object.keys(productData).length) await tx.product.update({ where: { id: p.id }, data: productData });
-      if (JSON.stringify(before) !== JSON.stringify(after)) {
-        changed.push(p.id);
-        await tx.auditLog.create({ data: { actorId: actor.id, action: "merchant.data_reviewed", entityType: "Product", entityId: p.id, before, after: { ...after, note: v.note } } });
-      }
+      if (JSON.stringify(before) !== JSON.stringify(after)) audits.push({ id: p.id, before, after: { ...after, note: v.note } });
     }
-    return { changed: changed.length, selected: products.length, brandVerified: !!brandId, mpnSet: Object.keys(mpn).length };
+
+    if (touchInv) {
+      const withInv = products.filter((p) => p.inventory[0]).map((p) => p.inventory[0]!.id);
+      const withoutInv = products.filter((p) => !p.inventory[0]).map((p) => p.id);
+      if (withInv.length) await tx.inventory.updateMany({ where: { id: { in: withInv } }, data: invData });
+      if (withoutInv.length) await tx.inventory.createMany({ data: withoutInv.map((productId) => ({ productId, variantId: null, ...invData })) });
+    }
+    if (brandId) await tx.product.updateMany({ where: { id: { in: products.map((p) => p.id) } }, data: { brandId } });
+    if (noIdentifier.length) await tx.product.updateMany({ where: { id: { in: noIdentifier } }, data: { identifierExists: false } });
+    if (clearIdentifierFlag.length) await tx.product.updateMany({ where: { id: { in: clearIdentifierFlag } }, data: { identifierExists: null } });
+    // MPNs differ per product: one statement for all of them
+    const mpnRows = Object.entries(mpn);
+    if (mpnRows.length) {
+      const ids = mpnRows.map(([id]) => id);
+      const vals = mpnRows.map(([, m]) => m);
+      await tx.$executeRaw`UPDATE "Product" AS p SET "mpn" = v.mpn FROM unnest(${ids}::text[], ${vals}::text[]) AS v(id, mpn) WHERE p."id" = v.id`;
+    }
+    if (audits.length) await tx.auditLog.createMany({ data: audits.map((a) => ({ actorId: actor.id, action: "merchant.data_reviewed", entityType: "Product", entityId: a.id, before: a.before, after: a.after })) });
+    return { changed: audits.length, selected: products.length, brandVerified: !!brandId, mpnSet: mpnRows.length };
   });
 }
 
