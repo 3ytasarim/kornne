@@ -2,7 +2,9 @@ import { notFound } from "next/navigation";
 import { Breadcrumbs } from "@/components/catalog/Breadcrumbs";
 import { PageLanguageLinks } from "@/components/layout/PageLanguageLinks";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { AboutView } from "@/components/sections/AboutView";
 import { Notice } from "@/components/ui/States";
+import { catalog } from "@/lib/catalog";
 import { getPublishedPage, listPublishedPaths } from "@/lib/cms/store";
 import { entityAlternates } from "@/lib/i18n/alternates";
 import { ENABLED_LOCALES, LOCALE_META, type Locale } from "@/lib/i18n/config";
@@ -49,6 +51,16 @@ export default async function CmsPageRoute({ params }: PageProps<"/[locale]/sayf
   ];
   const langLinks = Object.fromEntries(Object.entries(page.slugs).map(([l, s]) => [l, localizePath(l as Locale, `/sayfa/${s}`)]));
   const fallback = page.contentStatus === "fallback";
+
+  if (page.key === "kurumsal" && !fallback) {
+    return (
+      <>
+        <PageLanguageLinks links={langLinks} />
+        <JsonLd data={breadcrumbJsonLd(crumbs)} />
+        <AboutView locale={locale} d={d} href={href} t={t} title={page.title} bodyHtml={page.bodyHtml} categories={await catalog.listCategories(locale)} breadcrumbs={<Breadcrumbs items={crumbs} label={d.a11y.breadcrumb} />} />
+      </>
+    );
+  }
 
   return (
     <div className="container-site max-w-4xl py-8 md:py-12">

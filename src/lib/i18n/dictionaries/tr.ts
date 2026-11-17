@@ -102,6 +102,8 @@ export const tr = {
     lead: "KORNNE hakkında",
     sourceNotice: "Bu metin mevcut kornne.com sayfasından aktarılmıştır; yeni site yayına alınmadan önce firma tarafından onaylanacaktır.",
   },
+  about: {"storyTitle":"Biz kimiz","rangeTitle":"Ürün gruplarımız","products":"{count} ürün","valuesTitle":"Çalışma prensiplerimiz","valuesLead":"Her projede aynı ilkelerle çalışıyoruz.","values":[{"title":"Müşteriye özel tasarım","text":"Mezbaha ve et işleme sistemlerini tesisinizin ihtiyacına göre tasarlıyor, üretiyor ve geliştiriyoruz."},{"title":"Otomasyon teknolojisi","text":"Büyükbaş ve küçükbaş kesim, et işleme ve soğuk oda sistemlerini otomasyonla birleştiriyoruz."},{"title":"Hayvan refahı ve hijyen","text":"Tasarımlarımızda hayvan refahı, kalite, güvenlik, hijyen ve ergonomiye öncelik veriyoruz."},{"title":"Kalite ve güven","text":"Uzman bilgi, güven ve ürün kalitesi hizmet anlayışımızın temelidir."},{"title":"Sürekli gelişim","text":"Sistemlerimizi kullanan müşterilerden gelen geri bildirimlerle ürünlerimizi geliştiriyoruz."},{"title":"Satış sonrası hizmet","text":"Devreye almadan sonra da yanınızdayız; satış sonrası hizmet işimizin parçasıdır."}],"ctaPrimary":"Bize ulaşın","ctaSecondary":"Ürünleri inceleyin"},
+  footerCta: {"title":"Tesisiniz için doğru ekipmanı birlikte seçelim","text":"Fiyat, teslim süresi ve teknik detaylar için bize yazın."},
   contact: {
     title: "İletişim",
     lead: "Ürün, teklif ve sipariş için bize ulaşın.",

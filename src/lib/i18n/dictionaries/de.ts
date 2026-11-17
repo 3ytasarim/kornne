@@ -59,6 +59,8 @@ export const de: DeepPartial<Dictionary> = {
     translationMissing: "Die Übersetzung dieses Produkts ins {language} ist noch nicht fertig; es werden die türkischen Inhalte angezeigt.",
   },
   corporate: { title: "Über uns", lead: "Über KORNNE", sourceNotice: "Dieser Text wurde von der aktuellen Seite kornne.com übernommen und wird vor dem Livegang vom Unternehmen freigegeben." },
+  about: {"storyTitle":"Wer wir sind","rangeTitle":"Unsere Produktgruppen","products":"{count} Produkte","valuesTitle":"Wie wir arbeiten","valuesLead":"Jedes Projekt folgt denselben Grundsätzen.","values":[{"title":"Kundenspezifisches Design","text":"Wir entwickeln, fertigen und verbessern Schlacht- und Fleischverarbeitungsanlagen nach den Anforderungen Ihres Betriebs."},{"title":"Automatisierungstechnik","text":"Wir verbinden Schlachtung von Rindern und Schafen, Fleischverarbeitung und Kühlräume mit Automatisierung."},{"title":"Tierwohl und Hygiene","text":"Tierwohl, Qualität, Sicherheit, Hygiene und Ergonomie stehen bei unseren Konstruktionen an erster Stelle."},{"title":"Qualität und Vertrauen","text":"Fachwissen, Vertrauen und Produktqualität bilden die Grundlage unseres Service."},{"title":"Ständige Weiterentwicklung","text":"Das Feedback von Kunden, die unsere Anlagen nutzen, treibt die Entwicklung unserer Produkte voran."},{"title":"Kundendienst","text":"Unsere Unterstützung endet nicht mit der Inbetriebnahme; der Kundendienst gehört dazu."}],"ctaPrimary":"Kontakt aufnehmen","ctaSecondary":"Produkte ansehen"},
+  footerCta: {"title":"Finden wir gemeinsam die richtige Ausrüstung für Ihren Betrieb","text":"Schreiben Sie uns zu Preisen, Lieferzeiten und technischen Details."},
   contact: {
     whatsapp: "WhatsApp",
     title: "Kontakt",

@@ -229,6 +229,28 @@
     padding: 0.5rem 0.75rem;
     text-align: start;
   }
+  /* About page story: larger reading size, section titles with an accent bar */
+  .about-rich {
+    font-size: 1.0625rem;
+  }
+  .about-rich :where(p:first-child) {
+    margin-block-start: 0;
+  }
+  .about-rich :where(h2) {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.25rem;
+    margin-block: 2em 0.5em;
+  }
+  .about-rich :where(h2)::before {
+    content: "";
+    inline-size: 1.5rem;
+    block-size: 2px;
+    border-radius: 2px;
+    background: var(--brand-600);
+    flex-shrink: 0;
+  }
 }
 
 /*

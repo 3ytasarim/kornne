@@ -59,6 +59,8 @@ export const en: DeepPartial<Dictionary> = {
     translationMissing: "The {language} translation of this product is not ready yet; Turkish content is shown.",
   },
   corporate: { title: "About us", lead: "About KORNNE", sourceNotice: "This text was carried over from the current kornne.com page and will be approved by the company before launch." },
+  about: {"storyTitle":"Who we are","rangeTitle":"What we build","products":"{count} products","valuesTitle":"How we work","valuesLead":"The same principles guide every project.","values":[{"title":"Customer-specific design","text":"We design, manufacture and develop abattoir and meat processing systems around the needs of your plant."},{"title":"Automation technology","text":"We combine cattle and sheep slaughter, meat processing and cold room systems with automation."},{"title":"Animal welfare and hygiene","text":"Animal welfare, quality, safety, hygiene and ergonomics come first in our designs."},{"title":"Quality and trust","text":"Expert knowledge, trust and product quality are at the core of our service."},{"title":"Continuous development","text":"Feedback from customers using our systems drives how we develop our products."},{"title":"After-sales service","text":"Our support continues after commissioning; after-sales service is part of the job."}],"ctaPrimary":"Contact us","ctaSecondary":"Browse products"},
+  footerCta: {"title":"Let's choose the right equipment for your plant","text":"Write to us about prices, delivery times and technical details."},
   contact: {
     whatsapp: "WhatsApp",
     title: "Contact",
