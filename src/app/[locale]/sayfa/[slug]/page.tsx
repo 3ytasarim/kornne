@@ -3,7 +3,6 @@ import { Breadcrumbs } from "@/components/catalog/Breadcrumbs";
 import { PageLanguageLinks } from "@/components/layout/PageLanguageLinks";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Notice } from "@/components/ui/States";
-import { CMS_PAGES } from "@/lib/content/pages";
 import { getPublishedPage, listPublishedPaths } from "@/lib/cms/store";
 import { entityAlternates } from "@/lib/i18n/alternates";
 import { ENABLED_LOCALES, LOCALE_META, type Locale } from "@/lib/i18n/config";
@@ -13,7 +12,6 @@ import { breadcrumbJsonLd } from "@/lib/seo/json-ld";
 import { buildMetadata, toMetaDescription } from "@/lib/seo/metadata";
 
 export const revalidate = 300;
-const LEGACY_KEYS = new Set(Object.keys(CMS_PAGES));
 const textOf = (html: string) => html.replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/\s+/g, " ").trim();
 
 /**
@@ -60,8 +58,6 @@ export default async function CmsPageRoute({ params }: PageProps<"/[locale]/sayf
       <h1 className="mt-6 font-display text-h1 font-bold text-ink">{page.title}</h1>
       <div className="mt-6 space-y-3">
         {fallback ? <Notice tone="warning">{t(d.product.translationMissing, { language: LOCALE_META[locale].nativeName })}</Notice> : null}
-        {page.kind === "LEGAL" && !page.legalApproved ? <Notice tone="warning">{d.cms.legalPending}</Notice> : null}
-        {LEGACY_KEYS.has(page.key) && !page.legalApproved ? <Notice>{d.corporate.sourceNotice}</Notice> : null}
       </div>
       <div lang={fallback ? "tr" : undefined} dir={fallback ? "ltr" : undefined} className="rich mt-8" dangerouslySetInnerHTML={{ __html: page.bodyHtml }} />
     </div>

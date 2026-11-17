@@ -112,7 +112,7 @@ export const tr = {
     hours: "Çalışma saatleri",
     openMap: "Haritada aç",
     formTitle: "Mesaj gönderin",
-    formNotice: "Web formu güvenlik ve KVKK onayı tamamlandıktan sonra açılacak. Şimdilik telefon, WhatsApp veya e-posta kullanın.",
+    formNotice: "Fiyat, teslim süresi ve teknik detaylar için bize WhatsApp veya e-posta ile yazın.",
     name: "Ad soyad",
     message: "Mesajınız",
     send: "Gönder",
@@ -139,7 +139,7 @@ export const tr = {
   },
   quote: {
       title: "Fiyat teklif ile verilir",
-      text: "Güncel fiyat, KDV ve teslim koşulları doğrulanana kadar fiyatlar teklif ile paylaşılır. Ürün bağlantısıyla yazın; ekibimiz fiyat, teslim süresi ve kurulum bilgisini iletsin.",
+      text: "Ürün bağlantısıyla yazın; ekibimiz fiyat, teslim süresi ve kurulum bilgisini iletsin.",
       cta: "Teklif al",
       whatsapp: "WhatsApp ile teklif iste",
       email: "E-posta ile teklif iste",
@@ -232,13 +232,13 @@ export const tr = {
       categories: "Kategoriler",
       options: "Seçenekler",
       specsTitle: "Teknik özellikler",
-      specsEmpty: "Doğrulanmış teknik tablo henüz yayınlanmadı. Teklif talebinizde teknik föy isteyebilirsiniz.",
+      specsEmpty: "Teknik föyü teklif talebinizle birlikte isteyebilirsiniz.",
       description: "Ürün açıklaması",
       contact: "Doğrudan iletişim",
       leadTime: "Stok ve teslim süresi teklifte bildirilir.",
       vat: "Fiyat ve KDV bilgisi teklifte yazılı olarak iletilir.",
       priceTitle: "Fiyat için teklif alın",
-      priceText: "Bu ürünün güncel fiyatı ve satış koşulları doğrulanana kadar fiyat teklif ile paylaşılır.",
+      priceText: "Bu ürünün fiyatı teklif ile paylaşılır.",
       vatIncluded: "KDV dahil",
       vatExcluded: "KDV hariç",
       sectionNav: "Ürün bölümleri"
@@ -246,7 +246,7 @@ export const tr = {
   commerce: {
       cartTitle: "Sepetim",
       cartLocked: "Online sepet ve ödeme şu an kapalı",
-      cartLockedText: "Fiyatlar ve satış koşulları onaylandığında online sipariş açılacak. Şimdilik ürünleri teklif listenize ekleyerek tek seferde fiyat isteyebilirsiniz.",
+      cartLockedText: "Ürünleri teklif listenize ekleyerek tek seferde fiyat isteyebilirsiniz.",
       goToQuote: "Teklif listesine git",
       checkoutTitle: "Ödeme"
   },

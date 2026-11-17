@@ -1,11 +1,9 @@
-import { Clock, Mail, MapPin, Phone } from "lucide-react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Breadcrumbs } from "@/components/catalog/Breadcrumbs";
 import { PageLanguageLinks } from "@/components/layout/PageLanguageLinks";
 import { whatsappHref, WhatsAppIcon } from "@/components/layout/WhatsAppCta";
 import { JsonLd } from "@/components/seo/JsonLd";
-import { Button, ButtonAnchor } from "@/components/ui/Button";
-import { TextArea, TextField } from "@/components/ui/Field";
-import { Notice } from "@/components/ui/States";
+import { ButtonAnchor } from "@/components/ui/Button";
 import { SITE } from "@/config/site";
 import { staticAlternates } from "@/lib/i18n/alternates";
 import { getI18n } from "@/lib/i18n/server";
@@ -89,27 +87,8 @@ export default async function ContactPage({ params }: PageProps<"/[locale]/ileti
           <h2 id="contact-form" className="text-h3 font-bold text-ink">
             {d.contact.formTitle}
           </h2>
-          <Notice tone="warning" className="mt-4">
-            <span className="inline-flex items-start gap-2">
-              <Clock aria-hidden="true" className="mt-0.5 size-4 shrink-0" />
-              {d.contact.formNotice}
-            </span>
-          </Notice>
-          {/* Visual template only: the form is disabled until the backend (Zod, rate limit, KVKK consent, SMTP) is approved */}
-          <form className="mt-6 space-y-4">
-            <fieldset disabled className="space-y-4">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <TextField label={d.contact.name} name="name" autoComplete="name" required />
-                <TextField label={d.contact.phone} name="phone" type="tel" autoComplete="tel" dir="ltr" />
-              </div>
-              <TextField label={d.contact.email} name="email" type="email" autoComplete="email" required dir="ltr" />
-              <TextArea label={d.contact.message} name="message" required />
-              <Button type="submit" size="lg" className="w-full sm:w-auto">
-                {d.contact.send}
-              </Button>
-            </fieldset>
-          </form>
-          <div className="mt-6 flex flex-wrap gap-3 border-t border-line pt-6">
+          <p className="mt-2 text-ink-2">{d.contact.formNotice}</p>
+          <div className="mt-6 flex flex-wrap gap-3">
             <ButtonAnchor href={whatsappHref(t(d.product.whatsappMessage, { url: SITE.name }), contact.whatsapp)} variant="whatsapp" icon={<WhatsAppIcon className="size-5" />}>
               {d.contact.whatsapp}
             </ButtonAnchor>

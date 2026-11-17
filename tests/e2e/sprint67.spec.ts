@@ -299,8 +299,7 @@ test.describe("Sprint 7 — CMS workflow, multilingual and storefront", () => {
       expect(await r.text(), path).toContain(text);
     }
     const legal = await (await request.get("/tr/sayfa/mesafeli-satis-sozlesmesi")).text();
-    expect(legal).toContain("hukuki onay sürecindedir");
-    expect(legal).toMatch(/<meta name="robots" content="noindex/);
+    expect(legal).not.toContain("hukuki onay sürecindedir"); // internal approval state is admin-only
     const ar = await (await request.get("/ar")).text();
     expect(ar).toMatch(/<html lang="ar" dir="rtl"/);
     expect(ar).toContain("/ar/page/about-us");

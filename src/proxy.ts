@@ -100,5 +100,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|brand/|upload/|robots.txt|sitemap.xml|llms.txt).*)"],
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|icon.png|apple-icon.png|brand/|payments/|upload/|robots.txt|sitemap.xml|llms.txt).*)"],
 };

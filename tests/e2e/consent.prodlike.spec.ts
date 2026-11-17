@@ -29,7 +29,7 @@ test.describe("consent banner (Consent Mode v2, basic mode)", () => {
     const banner = page.getByTestId("consent-banner");
     await expect(banner).toBeVisible();
     await expect(banner.getByRole("heading", { name: "Çerez tercihleri" })).toBeVisible();
-    await expect(banner.getByText("Bu metin hukuki onay sürecindedir.")).toBeVisible();
+    await expect(banner.getByText("hukuki onay", { exact: false })).toHaveCount(0); // no internal approval notes for visitors
     await expect(page.getByRole("button", { name: "Yalnız zorunlu" })).toBeFocused();
     await page.waitForTimeout(500);
     expect(hits).toEqual([]);

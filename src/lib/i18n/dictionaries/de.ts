@@ -69,7 +69,7 @@ export const de: DeepPartial<Dictionary> = {
     hours: "Öffnungszeiten",
     openMap: "In Karten öffnen",
     formTitle: "Nachricht senden",
-    formNotice: "Das Webformular wird freigeschaltet, sobald die Freigabe für Sicherheit und Datenschutz (KVKK) abgeschlossen ist. Bitte nutzen Sie vorerst Telefon, WhatsApp oder E-Mail.",
+    formNotice: "Schreiben Sie uns per WhatsApp oder E-Mail zu Preisen, Lieferzeiten und technischen Details.",
     name: "Vor- und Nachname",
     message: "Ihre Nachricht",
     send: "Senden",
@@ -79,7 +79,7 @@ export const de: DeepPartial<Dictionary> = {
   error: { title: "Etwas ist schiefgelaufen", lead: "Beim Laden der Seite ist ein unerwarteter Fehler aufgetreten.", retry: "Erneut versuchen" },
   quote: {
       title: "Preis auf Anfrage",
-      text: "Bis aktuelle Preise und Lieferbedingungen bestätigt sind, werden Preise per Angebot mitgeteilt. Senden Sie uns den Produktlink; unser Team antwortet mit Preis, Lieferzeit und Installationsdetails.",
+      text: "Senden Sie uns den Produktlink, und unser Team nennt Ihnen Preis, Lieferzeit und Installationsdetails.",
       cta: "Angebot anfragen",
       whatsapp: "Angebot per WhatsApp anfragen",
       email: "Angebot per E-Mail anfragen",
@@ -172,13 +172,13 @@ export const de: DeepPartial<Dictionary> = {
       categories: "Kategorien",
       options: "Optionen",
       specsTitle: "Technische Daten",
-      specsEmpty: "Eine geprüfte Datentabelle wurde noch nicht veröffentlicht. Das Datenblatt können Sie in Ihrer Angebotsanfrage anfordern.",
+      specsEmpty: "Das technische Datenblatt können Sie mit Ihrer Angebotsanfrage anfordern.",
       description: "Produktbeschreibung",
       contact: "Direkt Kontakt aufnehmen",
       leadTime: "Lagerbestand und Lieferzeit werden im Angebot angegeben.",
       vat: "Der Preis wird im Angebot schriftlich bestätigt.",
       priceTitle: "Preis auf Anfrage",
-      priceText: "Bis der aktuelle Preis und die Verkaufsbedingungen für dieses Produkt bestätigt sind, wird der Preis per Angebot mitgeteilt.",
+      priceText: "Den Preis für dieses Produkt erhalten Sie mit einem Angebot.",
       vatIncluded: "",
       vatExcluded: "",
       sectionNav: "Produktabschnitte"
@@ -186,7 +186,7 @@ export const de: DeepPartial<Dictionary> = {
   commerce: {
       cartTitle: "Warenkorb",
       cartLocked: "Online-Warenkorb und Zahlung sind derzeit geschlossen",
-      cartLockedText: "Die Online-Bestellung wird geöffnet, sobald Preise und Verkaufsbedingungen bestätigt sind. Legen Sie in der Zwischenzeit Produkte in Ihre Angebotsliste, um Preise gesammelt anzufragen.",
+      cartLockedText: "Legen Sie Produkte auf Ihre Angebotsliste und fragen Sie die Preise für alle auf einmal an.",
       goToQuote: "Zur Angebotsliste",
       checkoutTitle: "Kasse"
   },

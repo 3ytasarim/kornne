@@ -40,9 +40,9 @@ IYZICO_SECRET_KEY=...
 IYZICO_BASE_URL=https://sandbox-api.iyzipay.com   # önce sandbox; canlıda https://api.iyzipay.com
 ```
 
-Kart ödemesinin çalışması için ödeme kapısının da açık olması gerekir (`ENABLE_PAID_CHECKOUT` ve diğerleri, docs/architecture/commerce-modes.md). Değişkenleri girdikten sonra **build + `pm2 restart`** gerekir (footer logoları derleme sırasında üretilir; yalnız restart yetmez).
+Kart ödemesinin çalışması için ödeme kapısının da açık olması gerekir (`ENABLE_PAID_CHECKOUT` ve diğerleri, docs/architecture/commerce-modes.md). Değişkenleri girdikten sonra **build + `pm2 restart`** gerekir.
 
-Footer'daki iyzico / kart logoları **yalnız** kart ödemesi ve ödeme kapısı ikisi birden açıkken görünür. Kabul edilmeyen kartın logosu gösterilmez.
+Footer'daki iyzico / kart logo bandı **her zaman** görünür: iyzico üye işyeri başvurusunu onaylamadan önce bandı sitede görmek istiyor.
 
 ## iyzico panelinde
 

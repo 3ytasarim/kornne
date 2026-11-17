@@ -69,7 +69,7 @@ export const fr: DeepPartial<Dictionary> = {
     hours: "Horaires",
     openMap: "Ouvrir dans Maps",
     formTitle: "Envoyer un message",
-    formNotice: "Le formulaire web ouvrira après validation de la sécurité et de la protection des données (KVKK). Utilisez le téléphone, WhatsApp ou l'e-mail pour l'instant.",
+    formNotice: "Écrivez-nous sur WhatsApp ou par e-mail pour les prix, les délais de livraison et les détails techniques.",
     name: "Nom complet",
     message: "Votre message",
     send: "Envoyer",
@@ -79,7 +79,7 @@ export const fr: DeepPartial<Dictionary> = {
   error: { title: "Une erreur est survenue", lead: "Une erreur inattendue s'est produite lors du chargement.", retry: "Réessayer" },
   quote: {
       title: "Prix sur devis",
-      text: "Tant que les prix et les conditions de livraison ne sont pas confirmés, les prix sont communiqués sur devis. Envoyez-nous le lien du produit ; notre équipe répond avec le prix, le délai et l'installation.",
+      text: "Envoyez-nous le lien du produit : notre équipe vous communiquera le prix, le délai de livraison et les détails d'installation.",
       cta: "Demander un devis",
       whatsapp: "Devis sur WhatsApp",
       email: "Devis par e-mail",
@@ -172,13 +172,13 @@ export const fr: DeepPartial<Dictionary> = {
       categories: "Catégories",
       options: "Options",
       specsTitle: "Caractéristiques techniques",
-      specsEmpty: "Aucun tableau technique vérifié n'est encore publié. Vous pouvez demander la fiche technique dans votre demande de devis.",
+      specsEmpty: "Vous pouvez demander la fiche technique avec votre demande de devis.",
       description: "Description du produit",
       contact: "Nous contacter directement",
       leadTime: "Le stock et le délai sont indiqués dans le devis.",
       vat: "Le prix est confirmé par écrit dans le devis.",
       priceTitle: "Prix sur devis",
-      priceText: "Tant que le prix et les conditions de vente ne sont pas confirmés, le prix est communiqué sur devis.",
+      priceText: "Le prix de ce produit est communiqué sur devis.",
       vatIncluded: "",
       vatExcluded: "HT",
       sectionNav: "Sections du produit"
@@ -186,7 +186,7 @@ export const fr: DeepPartial<Dictionary> = {
   commerce: {
       cartTitle: "Panier",
       cartLocked: "Le panier et le paiement en ligne sont actuellement fermés",
-      cartLockedText: "La commande en ligne ouvrira lorsque les prix et conditions de vente seront confirmés. En attendant, ajoutez des produits à votre liste de devis.",
+      cartLockedText: "Ajoutez des produits à votre liste de devis et demandez les prix de tous en une seule fois.",
       goToQuote: "Aller à la liste de devis",
       checkoutTitle: "Paiement"
   },
