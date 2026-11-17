@@ -52,7 +52,8 @@ export async function proxy(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
   const base = siteBase(request);
 
-  if (pathname !== "/api/health" && !basicAuthOk(request)) {
+  // iyzico calls the payment callback / webhook without our staging password; both verify the result with iyzico itself
+  if (pathname !== "/api/health" && !pathname.startsWith("/api/v1/payments/iyzico/") && !basicAuthOk(request)) {
     return new NextResponse("Authentication required", { status: 401, headers: { "WWW-Authenticate": 'Basic realm="KORNNE staging", charset="UTF-8"', "X-Robots-Tag": "noindex, nofollow" } });
   }
 

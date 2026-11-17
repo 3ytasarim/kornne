@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { themeInitScript } from "@/components/layout/ThemeToggle";
 import { TopAnnouncement } from "@/components/layout/Announcements";
 import { WhatsAppFab } from "@/components/layout/WhatsAppCta";
-import { getContact } from "@/lib/cms/store";
+import { getContact, privacyHref } from "@/lib/cms/store";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RevealObserver } from "@/components/ui/RevealObserver";
 import { ToastProvider } from "@/components/ui/Toast";
@@ -68,7 +68,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
           {d.a11y.skipToContent}
         </a>
         <ToastProvider closeLabel={d.a11y.close}>
-          {analytics.enabled ? <AnalyticsRoot mode={analytics.mode!} id={analytics.id!} labels={d.consent} policyHref="/tr/sayfa/kisisel-verilenin-korunmasi-kanunu" legalApproved={analytics.legalApproved} /> : null}
+          {analytics.enabled ? <AnalyticsRoot mode={analytics.mode!} id={analytics.id!} labels={d.consent} policyHref={await privacyHref(locale)} legalApproved={analytics.legalApproved} /> : null}
           <TopAnnouncement locale={locale} label={d.cms.announcement} />
           <SiteHeader localeParam={locale} />
           <main id="main" tabIndex={-1} className="flex-1 focus:outline-none">

@@ -3,8 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, useSyncExternalStore, useTransition } from "react";
-import { ArrowLeft, Check, CheckCircle2, Copy, Landmark, Loader2, Lock, PackageSearch, ReceiptText, ShoppingCart } from "lucide-react";
-import { placeOrderAction, priceCartAction, type PlaceOrderState, type PricedCart } from "@/app/[locale]/odeme/actions";
+import { ArrowLeft, Check, CheckCircle2, Clock, Copy, CreditCard, Landmark, Loader2, Lock, PackageSearch, ReceiptText, ShoppingCart, XCircle } from "lucide-react";
+import { placeOrderAction, priceCartAction, retryCardPaymentAction, type PlaceOrderState, type PricedCart } from "@/app/[locale]/odeme/actions";
 import { BankAccountList } from "@/components/shop/BankAccountList";
 import { CheckoutSteps } from "@/components/shop/CheckoutSteps";
 import { Button, ButtonLink } from "@/components/ui/Button";
@@ -22,11 +22,15 @@ type Shop = Dictionary["shop"];
 const noop = () => () => {};
 const useHydrated = () => useSyncExternalStore(noop, () => true, () => false);
 
+export type CardResult = { status: "ok" | "review" | "fail" | "start"; number: string | null };
+
 /**
- * B2B checkout (EFT / Havale). Billing form → placeOrderAction (server re-prices, idempotency key, honeypot, min fill time)
- * → success view with the order number, amount due and the company bank accounts. No card data is ever requested.
+ * B2B checkout. Billing form → placeOrderAction (server re-prices, idempotency key, honeypot, min fill time), then
+ *  - EFT / Havale: success view with the order number, amount due and the company bank accounts
+ *  - card (only when iyzico is configured): redirect to iyzico's hosted payment page; the result comes back as
+ *    ?sonuc=ok|review|fail&no=… (settled server-side). No card data is ever requested on this site.
  */
-export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: Shop; banks: PublicBankAccount[]; hrefs: { cart: string; notice: string; status: string; terms: string; privacy: string; browse: string } }) {
+export function CheckoutView({ locale, s, banks, hrefs, cardEnabled = false, result = null }: { locale: Locale; s: Shop; banks: PublicBankAccount[]; hrefs: { cart: string; notice: string; status: string; terms: string; privacy: string; browse: string }; cardEnabled?: boolean; result?: CardResult | null }) {
   const hydrated = useHydrated();
   const lines = useQuoteList();
   const [priced, setPriced] = useState<PricedCart | null>(null);
@@ -36,6 +40,9 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
   const [formError, setFormError] = useState<string | null>(null);
   const [done, setDone] = useState<{ number: string; totalMinor: string; currency: string } | null>(null);
   const [sameShipping, setSameShipping] = useState(true);
+  const [method, setMethod] = useState<"CARD" | "BANK_TRANSFER">(cardEnabled ? "CARD" : "BANK_TRANSFER");
+  const [redirecting, setRedirecting] = useState(false);
+  const [cardResult, setCardResult] = useState<CardResult | null>(result);
   const keyRef = useRef<string | null>(null);
   const startedRef = useRef<number | null>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -47,15 +54,16 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
     // eslint-disable-next-line react-hooks/exhaustive-deps -- re-price only when refs/quantities change
   }, [key]);
 
-  const header = (step: number) => (
+  const header = (step: number, lead = true) => (
     <header className="mt-6 mb-8 flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
       <div className="max-w-2xl">
         <h1 className="font-display text-h1 font-bold text-ink">{step === 2 ? s.success.title : s.checkout.title}</h1>
-        <p className="mt-2 text-steel">{step === 2 ? s.success.lead : s.checkout.lead}</p>
+        {lead ? <p className="mt-2 text-steel">{step === 2 ? s.success.lead : s.checkout.lead}</p> : null}
       </div>
       <CheckoutSteps steps={s.checkout.steps} current={step} label={s.checkout.title} />
     </header>
   );
+  if (cardResult) return <>{header(2, false)}<CardPaymentResult s={s} result={cardResult} hrefs={hrefs} cardEnabled={cardEnabled} /></>;
   if (!hydrated) return <>{header(1)}<Skeleton className="h-96" /></>;
   if (done) return <>{header(2)}<OrderPlaced locale={locale} s={s} banks={banks} order={done} hrefs={hrefs} /></>;
   if (!lines.length) return <EmptyState icon={<ShoppingCart aria-hidden="true" className="size-7" />} title={s.cart.empty} text={s.cart.emptyText} action={<ButtonLink href={hrefs.browse}>{s.cart.browse}</ButtonLink>} />;
@@ -63,7 +71,7 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
   const ok = priced?.ok ? priced : null;
   const cur = ok?.currency ?? displayCurrency(locale);
   // foreign-language orders are paid in USD → only possible once a USD account is published (Admin › Banka hesapları)
-  const noAccount = cur !== "TRY" && !banks.some((b) => b.currency === cur);
+  const noAccount = method === "BANK_TRANSFER" && cur !== "TRY" && !banks.some((b) => b.currency === cur);
   const err = (k: string) => (errors[k] ? ((s.errors as Record<string, string>)[errors[k]!] ?? s.errors.invalid) : undefined);
   const touch = () => {
     startedRef.current ??= Date.now();
@@ -96,7 +104,20 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
         idempotencyKey: keyRef.current!,
         website: str("website"),
         startedAt: startedRef.current!,
+        paymentMethod: method,
       }).catch((): PlaceOrderState => ({ ok: false, code: "error" }));
+      if (res.ok && res.redirectUrl) {
+        quoteList.clear();
+        setRedirecting(true);
+        window.location.assign(res.redirectUrl);
+        return;
+      }
+      if (res.ok && res.paymentStartFailed) {
+        quoteList.clear();
+        setCardResult({ status: "start", number: res.number });
+        window.scrollTo({ top: 0 });
+        return;
+      }
       if (res.ok) {
         quoteList.clear();
         setDone({ number: res.number, totalMinor: res.totalMinor, currency: res.currency });
@@ -166,16 +187,40 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
           <label htmlFor="checkout-website">Website</label>
           <input id="checkout-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
         </div>
+        {cardEnabled ? (
+          <fieldset className="rounded-[var(--radius-lg)] border border-line bg-surface p-5 sm:p-6">
+            <legend className="px-1 text-lg font-bold text-ink">{s.payment.methodTitle}</legend>
+            <div className="mt-2 grid gap-3 sm:grid-cols-2">
+              {(
+                [
+                  { v: "CARD", icon: <CreditCard aria-hidden="true" className="size-5" />, label: s.payment.card, hint: s.payment.cardHint },
+                  { v: "BANK_TRANSFER", icon: <Landmark aria-hidden="true" className="size-5" />, label: s.payment.transfer, hint: s.payment.transferHint },
+                ] as const
+              ).map((o) => (
+                <label key={o.v} className={`flex min-h-12 cursor-pointer gap-3 rounded-[var(--radius-md)] border p-4 transition-colors ${method === o.v ? "border-brand-600 bg-brand-50 dark:bg-brand-950/40" : "border-line hover:border-brand-400"}`}>
+                  <input type="radio" name="paymentMethod" value={o.v} checked={method === o.v} onChange={() => setMethod(o.v)} className="mt-0.5 size-5 shrink-0 accent-brand-700" />
+                  <span className="min-w-0">
+                    <span className="flex items-center gap-2 font-semibold text-ink">
+                      {o.icon}
+                      {o.label}
+                    </span>
+                    <span className="mt-1 block text-xs text-steel">{o.hint}</span>
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+        ) : null}
         <div className="space-y-2">
           <label className="flex cursor-pointer items-start gap-3 text-sm text-ink-2">
             <input type="checkbox" name="acceptTerms" aria-invalid={errors.acceptTerms ? true : undefined} aria-describedby={errors.acceptTerms ? "accept-error" : undefined} className="mt-0.5 size-5 shrink-0 accent-brand-700" />
             <span>
               {s.checkout.accept}{" "}
-              <a href={hrefs.terms} hrefLang="tr" target="_blank" className="font-semibold text-brand-700 underline underline-offset-2 dark:text-brand-300">
+              <a href={hrefs.terms} target="_blank" className="font-semibold text-brand-700 underline underline-offset-2 dark:text-brand-300">
                 {s.checkout.termsLink}
               </a>
               {" · "}
-              <a href={hrefs.privacy} hrefLang="tr" target="_blank" className="font-semibold text-brand-700 underline underline-offset-2 dark:text-brand-300">
+              <a href={hrefs.privacy} target="_blank" className="font-semibold text-brand-700 underline underline-offset-2 dark:text-brand-300">
                 {s.checkout.privacyLink}
               </a>
             </span>
@@ -192,8 +237,8 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
             <ArrowLeft aria-hidden="true" className="size-4 rtl:-scale-x-100" />
             {s.checkout.backToCart}
           </Link>
-          <Button type="submit" size="lg" disabled={placing || !ok || noAccount} icon={placing ? <Loader2 aria-hidden="true" className="size-5 animate-spin" /> : <Lock aria-hidden="true" className="size-4" />}>
-            {placing ? s.checkout.placing : s.checkout.place}
+          <Button type="submit" size="lg" disabled={placing || redirecting || !ok || noAccount} icon={placing || redirecting ? <Loader2 aria-hidden="true" className="size-5 animate-spin" /> : <Lock aria-hidden="true" className="size-4" />}>
+            {redirecting ? s.payment.redirecting : placing ? s.checkout.placing : method === "CARD" ? s.payment.payCard : s.checkout.place}
           </Button>
         </div>
       </form>
@@ -258,8 +303,8 @@ export function CheckoutView({ locale, s, banks, hrefs }: { locale: Locale; s: S
           </p>
         ) : null}
         <p className="mt-5 flex gap-2 rounded-[var(--radius-md)] bg-surface p-3 text-sm text-ink-2">
-          <Landmark aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand-700 dark:text-brand-300" />
-          {s.cart.secure}
+          {method === "CARD" ? <Lock aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand-700 dark:text-brand-300" /> : <Landmark aria-hidden="true" className="mt-0.5 size-4 shrink-0 text-brand-700 dark:text-brand-300" />}
+          {method === "CARD" ? s.payment.securedBy : s.cart.secure}
         </p>
       </aside>
     </div>
@@ -327,6 +372,70 @@ function OrderPlaced({ locale, s, banks, order, hrefs }: { locale: Locale; s: Sh
             {s.success.track}
           </ButtonLink>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/** Outcome of a card payment (iyzico) — settled on the server before the customer lands here. */
+function CardPaymentResult({ s, result, hrefs, cardEnabled }: { s: Shop; result: CardResult; hrefs: { status: string; notice: string }; cardEnabled: boolean }) {
+  const [email, setEmail] = useState("");
+  const [busy, startBusy] = useTransition();
+  const [error, setError] = useState<string | null>(null);
+  const ok = result.status === "ok";
+  const review = result.status === "review";
+  const canRetry = cardEnabled && !ok && !review && !!result.number;
+  const tone = ok ? "border-success/30 bg-success-50" : review ? "border-warning/40 bg-warning-50" : "border-signal/30 bg-signal-50";
+  const Icon = ok ? CheckCircle2 : review ? Clock : XCircle;
+  const retry = (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    startBusy(async () => {
+      const r = await retryCardPaymentAction({ number: result.number!, email }).catch(() => ({ ok: false as const, code: "error" as const }));
+      if (r.ok) window.location.assign(r.redirectUrl);
+      else setError(r.code === "rate" ? s.errors.rate : r.code === "not_found" || r.code === "validation" ? s.errors.invalid : s.errors.generic);
+    });
+  };
+  return (
+    <div className="mx-auto max-w-3xl space-y-6" data-testid="card-result" data-status={result.status}>
+      <div role="status" className={`rounded-[var(--radius-xl)] border p-6 text-center sm:p-10 ${tone}`}>
+        <Icon aria-hidden="true" className={`mx-auto size-12 ${ok ? "text-success" : review ? "text-warning" : "text-signal"}`} />
+        <p className="mt-3 text-xl font-bold text-ink">{ok ? s.payment.okTitle : review ? s.payment.reviewTitle : s.payment.failTitle}</p>
+        <p className="mx-auto mt-2 max-w-xl text-ink-2">{ok ? s.payment.okText : review ? s.payment.reviewText : result.status === "start" ? s.payment.startFailed : s.payment.failText}</p>
+        {result.number ? (
+          <p className="mt-6 text-sm text-steel">
+            {s.payment.orderNumber}:{" "}
+            <span className="font-mono text-lg font-bold text-ink select-all" dir="ltr" data-testid="order-number">
+              {result.number}
+            </span>
+          </p>
+        ) : null}
+      </div>
+      {canRetry ? (
+        <form onSubmit={retry} className="rounded-[var(--radius-lg)] border border-line bg-surface p-6">
+          <h2 className="mb-4 text-lg font-bold text-ink">{s.payment.retryTitle}</h2>
+          {error ? (
+            <p role="alert" className="mb-4 rounded-[var(--radius-md)] border border-signal/30 bg-signal-50 px-4 py-3 text-sm text-signal-ink">
+              {error}
+            </p>
+          ) : null}
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end">
+            <TextField className="flex-1" label={s.payment.retryEmail} name="email" type="email" autoComplete="email" dir="ltr" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Button type="submit" size="lg" disabled={busy || !email} icon={busy ? <Loader2 aria-hidden="true" className="size-5 animate-spin" /> : <CreditCard aria-hidden="true" className="size-5" />}>
+              {busy ? s.payment.retrying : s.payment.retry}
+            </Button>
+          </div>
+        </form>
+      ) : null}
+      <div className="flex flex-wrap justify-center gap-3">
+        <ButtonLink href={hrefs.status} variant="outline" icon={<PackageSearch aria-hidden="true" className="size-5" />}>
+          {s.success.track}
+        </ButtonLink>
+        {!ok && !review ? (
+          <ButtonLink href={hrefs.notice} variant="outline" icon={<ReceiptText aria-hidden="true" className="size-5" />}>
+            {s.success.notify}
+          </ButtonLink>
+        ) : null}
       </div>
     </div>
   );

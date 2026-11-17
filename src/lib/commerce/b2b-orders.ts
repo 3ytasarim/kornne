@@ -52,6 +52,8 @@ export const b2bCheckoutSchema = z
   idempotencyKey: z.uuid(),
   website: z.string().max(200).optional(),
   startedAt: z.number().int(),
+  /** EFT/Havale (default) or card on the iyzico hosted payment page (only when card payment is configured) */
+  paymentMethod: z.enum(["BANK_TRANSFER", "CARD"]).default("BANK_TRANSFER"),
   })
   .superRefine((v, ctx) => {
     if (v.locale === "tr") {
@@ -60,7 +62,7 @@ export const b2bCheckoutSchema = z
     }
   });
 export type B2BCheckoutInput = z.input<typeof b2bCheckoutSchema>;
-export type PlaceOrderResult = { ok: true; number: string; accessToken: string; totalMinor: bigint; currency: string; duplicate: boolean } | { ok: false; code: "validation"; fields: Record<string, string> } | { ok: false; code: "spam" | "rate" | "closed" | "not_purchasable" | "no_account" | "error" };
+export type PlaceOrderResult = { ok: true; orderId: string; number: string; accessToken: string; totalMinor: bigint; currency: string; paymentMethod: string; duplicate: boolean } | { ok: false; code: "validation"; fields: Record<string, string> } | { ok: false; code: "spam" | "rate" | "closed" | "not_purchasable" | "no_account" | "error" };
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 export function newOrderNumber(now = new Date()): string {
@@ -70,7 +72,7 @@ export function newOrderNumber(now = new Date()): string {
   return `KRN-${d}-${r}`;
 }
 
-async function limited(db: Db, key: string, max: number, windowMs: number) {
+export async function limited(db: Db, key: string, max: number, windowMs: number) {
   const n = await db.loginAttempt.count({ where: { key, createdAt: { gte: new Date(Date.now() - windowMs) } } });
   if (n >= max) return true;
   await db.loginAttempt.create({ data: { key } });
@@ -127,7 +129,7 @@ export async function resolveCartLines(
   return { ok: true, lines, converted };
 }
 
-export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BCheckoutInput, ctx: { ipHash: string | null; now?: Date; isTest?: boolean; rates?: Pick<Rates, "USD" | "EUR"> | null }): Promise<PlaceOrderResult> {
+export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BCheckoutInput, ctx: { ipHash: string | null; now?: Date; isTest?: boolean; rates?: Pick<Rates, "USD" | "EUR"> | null; cardEnabled?: boolean }): Promise<PlaceOrderResult> {
   if (!gate.enabled) return { ok: false, code: "closed" };
   const now = ctx.now ?? new Date();
   const parsed = b2bCheckoutSchema.safeParse(raw);
@@ -143,13 +145,16 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
   const age = now.getTime() - input.startedAt;
   if (input.website || age < ORDER_LIMITS.minFillMs || age > ORDER_LIMITS.maxFormAgeMs) return { ok: false, code: "spam" };
 
-  const existing = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true, currency: true } });
-  if (existing) return { ok: true, number: existing.number, accessToken: "", totalMinor: existing.totalMinor, currency: existing.currency, duplicate: true };
+  const existing = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { id: true, number: true, totalMinor: true, currency: true, paymentMethod: true } });
+  if (existing) return { ok: true, orderId: existing.id, number: existing.number, accessToken: "", totalMinor: existing.totalMinor, currency: existing.currency, paymentMethod: existing.paymentMethod ?? "BANK_TRANSFER", duplicate: true };
   if ((ctx.ipHash && (await limited(db, `order:ip:${ctx.ipHash}`, ORDER_LIMITS.perIpPerHour, 3_600_000))) || (await limited(db, `order:email:${sha(input.email)}`, ORDER_LIMITS.perEmailPerHour, 3_600_000))) return { ok: false, code: "rate" };
 
   // Turkish pages order and pay in TRY, every other language in USD (client decision 11.11.2026)
   const currency = displayCurrency(input.locale);
-  if (currency !== "TRY") {
+  const card = input.paymentMethod === "CARD";
+  if (card && !ctx.cardEnabled) return { ok: false, code: "closed" };
+  // bank details are needed only for EFT/Havale; a card payment is collected by iyzico in the order currency
+  if (!card && currency !== "TRY") {
     const accounts = await db.bankAccount.findMany({ where: { active: true, currency }, select: { iban: true } });
     if (!accounts.some((a) => isValidTrIban(a.iban))) return { ok: false, code: "no_account" };
   }
@@ -170,7 +175,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
               number: `${ctx.isTest ? "TEST-" : ""}${newOrderNumber(now)}`,
               status: "AWAITING_PAYMENT",
               paymentStatus: "UNPAID",
-              paymentMethod: "BANK_TRANSFER",
+              paymentMethod: card ? "CARD" : "BANK_TRANSFER",
               channel: "WEB",
               currency,
               ...fx,
@@ -185,7 +190,7 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
               accessTokenHash: sha(accessToken),
               isTest: !!ctx.isTest,
               items: { create: lines.map((l) => ({ productId: l.productId, variantId: l.variantId, titleSnapshot: l.title, skuSnapshot: l.sku, unitPriceMinor: l.unitPriceMinor, quantity: l.quantity, lineTotalMinor: lineTotals(l).gross })) },
-              statusEvents: { create: [{ toStatus: "DRAFT", actor: "customer" }, { fromStatus: "DRAFT", toStatus: "AWAITING_PAYMENT", actor: "customer", reason: "EFT/Havale" }] },
+              statusEvents: { create: [{ toStatus: "DRAFT", actor: "customer" }, { fromStatus: "DRAFT", toStatus: "AWAITING_PAYMENT", actor: "customer", reason: card ? "Kart (iyzico)" : "EFT/Havale" }] },
             },
           });
         } catch (e) {
@@ -197,22 +202,22 @@ export async function placeBankTransferOrder(db: Db, gate: GateResult, raw: B2BC
     });
     // transactional outbox: sales notification (reference + total only; customer data stays in the admin)
     await db.notificationOutbox.create({ data: { kind: "order.created", channel: "email", entityType: "Order", entityId: order.id, payload: { number: order.number, total: order.totalMinor.toString(), lines: lines.length }, status: "BLOCKED", lastError: "Bildirim sağlayıcısı ve alıcı adresi tanımlı değil" } }).catch(() => {});
-    return { ok: true, number: order.number, accessToken, totalMinor: order.totalMinor, currency: order.currency, duplicate: false };
+    return { ok: true, orderId: order.id, number: order.number, accessToken, totalMinor: order.totalMinor, currency: order.currency, paymentMethod: order.paymentMethod ?? "BANK_TRANSFER", duplicate: false };
   } catch (e) {
     if (e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002") {
-      const again = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { number: true, totalMinor: true, currency: true } });
-      if (again) return { ok: true, number: again.number, accessToken: "", totalMinor: again.totalMinor, currency: again.currency, duplicate: true };
+      const again = await db.order.findUnique({ where: { idempotencyKey: input.idempotencyKey }, select: { id: true, number: true, totalMinor: true, currency: true, paymentMethod: true } });
+      if (again) return { ok: true, orderId: again.id, number: again.number, accessToken: "", totalMinor: again.totalMinor, currency: again.currency, paymentMethod: again.paymentMethod ?? "BANK_TRANSFER", duplicate: true };
     }
     return { ok: false, code: "error" };
   }
 }
 
 // ── public lookups (number + e-mail) ───────────────────────────────────────────────────────────────────────────────
-const lookupSchema = z.object({ number: z.string().trim().toUpperCase().regex(/^(TEST-)?KRN-\d{6}-[A-Z0-9]{5}$/, "invalidNumber"), email: z.string().trim().toLowerCase().pipe(z.email("invalidEmail")) });
+export const lookupSchema = z.object({ number: z.string().trim().toUpperCase().regex(/^(TEST-)?KRN-\d{6}-[A-Z0-9]{5}$/, "invalidNumber"), email: z.string().trim().toLowerCase().pipe(z.email("invalidEmail")) });
 
 export type PublicOrderStatus = { number: string; placedAt: Date; status: string; paymentStatus: string; totalMinor: bigint; currency: string; itemCount: number; notified: boolean; lines: { title: string; quantity: number; lineTotalMinor: bigint }[] };
 
-async function findByNumberAndEmail(db: Db, number: string, email: string) {
+export async function findByNumberAndEmail(db: Db, number: string, email: string) {
   const order = await db.order.findUnique({ where: { number }, include: { items: { select: { titleSnapshot: true, quantity: true, lineTotalMinor: true } }, paymentNotices: { select: { id: true } } } });
   const billingEmail = ((order?.billing ?? {}) as { email?: string }).email?.toLowerCase();
   return order && billingEmail === email ? order : null;
@@ -279,9 +284,11 @@ async function move(db: Db, orderId: string, from: OrderState, to: OrderState, a
 
 /** Admin confirms the incoming EFT/Havale (bank statement checked). Matches the open notices of the order. */
 export async function confirmBankTransfer(db: Db, actor: { id: string }, orderId: string, note: string) {
-  const o = await db.order.findUnique({ where: { id: orderId }, select: { status: true, paymentMethod: true, totalMinor: true } });
+  const o = await db.order.findUnique({ where: { id: orderId }, select: { status: true, paymentMethod: true, totalMinor: true, payments: { where: { status: { in: ["SUCCEEDED", "PENDING"] } }, select: { status: true, failureReason: true } } } });
   if (!o) throw new OrderAdminError("Sipariş bulunamadı.");
-  if (o.paymentMethod !== "BANK_TRANSFER") throw new OrderAdminError("Yalnız EFT/Havale siparişleri elle onaylanır.");
+  // a card order may still be paid by transfer (card declined / customer switched) — but never next to a card payment
+  if (o.paymentMethod !== "BANK_TRANSFER" && o.paymentMethod !== "CARD") throw new OrderAdminError("Yalnız EFT/Havale siparişleri elle onaylanır.");
+  if (o.payments.some((p) => p.status === "SUCCEEDED" || p.failureReason?.startsWith("fraud_review"))) throw new OrderAdminError("Bu siparişin iyzico kart ödemesi var veya incelemede; havale onayı verilemez. iyzico panelinden kontrol edin.");
   if (o.status !== "AWAITING_PAYMENT") throw new OrderAdminError("Sipariş ödeme beklemiyor.");
   if (clean(note).length < 3) throw new OrderAdminError("Kontrol notu gerekli (ör. dekont / hesap hareketi).");
   await move(db, orderId, "AWAITING_PAYMENT", "PAID", "admin", `EFT/Havale onayı: ${clean(note).slice(0, 200)}`);

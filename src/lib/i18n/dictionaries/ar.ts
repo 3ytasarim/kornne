@@ -74,7 +74,7 @@ export const ar: DeepPartial<Dictionary> = {
     message: "رسالتك",
     send: "إرسال",
   },
-  footer: { rights: "جميع الحقوق محفوظة.", legal: "قانوني", follow: "تابعنا", returns: "سياسة الإرجاع والاسترداد", distanceSales: "عقد البيع عن بُعد", kvkk: "حماية البيانات الشخصية (KVKK)" },
+  footer: { paymentLogos: "الدفع عبر iyzico: Mastercard وVisa وAmerican Express وTroy", rights: "جميع الحقوق محفوظة.", legal: "قانوني", follow: "تابعنا", returns: "سياسة الإرجاع والاسترداد", distanceSales: "عقد البيع عن بُعد", kvkk: "حماية البيانات الشخصية (KVKK)" },
   notFound: { title: "الصفحة غير موجودة", lead: "ربما نُقلت الصفحة التي تبحث عنها أو حُذفت.", home: "العودة إلى الرئيسية", products: "تصفّح المنتجات" },
   error: { title: "حدث خطأ ما", lead: "حدث خطأ غير متوقع أثناء تحميل الصفحة.", retry: "إعادة المحاولة" },
   quote: {

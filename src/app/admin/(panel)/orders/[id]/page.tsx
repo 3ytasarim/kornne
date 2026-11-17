@@ -37,7 +37,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   if (!o) notFound();
   const b = (o.billing ?? {}) as Billing;
   const ship = (o.shipping ?? {}) as { sameAsBilling?: boolean; address?: string };
-  const canConfirm = allowed(user.role, "order.confirm_payment") && o.status === "AWAITING_PAYMENT" && o.paymentMethod === "BANK_TRANSFER";
+  const canConfirm = allowed(user.role, "order.confirm_payment") && o.status === "AWAITING_PAYMENT" && (o.paymentMethod === "BANK_TRANSFER" || o.paymentMethod === "CARD");
   const steps = allowed(user.role, "order.manage") ? (NEXT_STEPS[o.status] ?? []) : [];
   const total = formatMoney(o.totalMinor, o.currency);
 
@@ -45,7 +45,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
     <>
       <PageHeader
         title={`Sipariş ${o.number}`}
-        description={`${fmtDateTime(o.placedAt)} · ${o.paymentMethod === "BANK_TRANSFER" ? "EFT / Havale" : (o.paymentMethod ?? "—")}`}
+        description={`${fmtDateTime(o.placedAt)} · ${o.paymentMethod === "BANK_TRANSFER" ? "EFT / Havale" : o.paymentMethod === "CARD" ? "Kart (iyzico)" : (o.paymentMethod ?? "—")}`}
         actions={
           <span className="flex flex-wrap gap-2">
             <Badge tone={orderTone(o.status)}>{ORDER_STATUS_TR[o.status] ?? o.status}</Badge>

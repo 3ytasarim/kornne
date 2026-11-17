@@ -70,7 +70,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
                   </span>
                 ),
               },
-              { key: "p", header: "Ödeme", cell: (o) => `${PAYMENT_STATUS_TR[o.paymentStatus] ?? o.paymentStatus}${o.paymentMethod === "BANK_TRANSFER" ? " · EFT/Havale" : ""}` },
+              { key: "p", header: "Ödeme", cell: (o) => `${PAYMENT_STATUS_TR[o.paymentStatus] ?? o.paymentStatus}${o.paymentMethod === "BANK_TRANSFER" ? " · EFT/Havale" : o.paymentMethod === "CARD" ? " · Kart (iyzico)" : ""}` },
               { key: "t", header: "Tutar", align: "end", cell: (o) => formatMoney(o.totalMinor, o.currency) },
               { key: "d", header: "Tarih", cell: (o) => fmtDateTime(o.placedAt) },
               { key: "x", header: "İşlemler", align: "end", cell: (o) => <RowActions id={String(o.id)} editHref={`/admin/orders/${o.id}`} editLabel="Görüntüle" /> },

@@ -7,12 +7,16 @@ import { SITE } from "@/config/site";
 import { catalog } from "@/lib/catalog";
 import { getContact, getMenu, hasMenus, type MenuLink } from "@/lib/cms/store";
 import { getI18n } from "@/lib/i18n/server";
+import { commerceGate } from "@/lib/commerce/gate";
+import { iyzicoConfig } from "@/lib/commerce/payments/iyzico";
 
 export async function SiteFooter({ localeParam }: { localeParam: string }) {
   const { locale, d, href } = getI18n(localeParam);
   const contact = await getContact();
   const categories = await catalog.listCategories(locale);
   const year = new Date().getFullYear();
+  // card logos only while card payment can really be used (iyzico configured + checkout open) — no false claims
+  const cardLogos = !!iyzicoConfig() && commerceGate().enabled;
   // Legal texts exist only in Turkish on the source site and are pending legal approval (Sprint 7)
   // Admin › İçerik › Menü (FOOTER_CORPORATE + FOOTER_LEGAL); static fallback only while no menu rows exist
   const categorySlugs = Object.fromEntries(categories.map((c) => [c.key, c.slug]));
@@ -118,6 +122,14 @@ export async function SiteFooter({ localeParam }: { localeParam: string }) {
           </p>
         </address>
       </div>
+      {cardLogos ? (
+        <div className="container-site flex justify-center pb-8">
+          {/* the logos are dark on a transparent background, so they sit on a light strip to stay legible on the dark footer */}
+          <div className="rounded-full bg-white px-5 py-2.5 shadow-sm">
+            <Image src="/payments/iyzico-logo-band.png" alt={d.footer.paymentLogos} width={429} height={32} sizes="(max-width: 480px) 80vw, 429px" className="h-auto w-full max-w-[429px]" />
+          </div>
+        </div>
+      ) : null}
       <div className="border-t border-white/10">
         {/* bottom/end padding keeps the floating WhatsApp button (fixed, bottom-right) from covering the credit */}
         <div className="container-site flex flex-col items-center gap-3 pt-5 pb-24 text-center sm:flex-row sm:justify-between sm:pb-5 sm:text-start sm:pe-24 lg:pe-28">

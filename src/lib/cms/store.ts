@@ -146,11 +146,11 @@ export async function getMenu(locale: Locale, location: MenuLocation, categorySl
     if (!label) continue;
     if (m.kind === "page") {
       const rows = raw.pages.filter((p) => p.page.key === m.pageKey);
+      // missing language → the English version first (default language), then Turkish
       const own = rows.find((p) => p.locale === locale);
-      const tr = rows.find((p) => p.locale === "tr");
-      const target = own ?? tr;
+      const target = own ?? rows.find((p) => p.locale === "en") ?? rows.find((p) => p.locale === "tr");
       if (!target) continue;
-      out.push({ label, href: localizePath(target.locale, `/${sectionOf(target.page.kind) === "blog" ? "blog" : "sayfa"}/${target.publishedSlug}`), hrefLang: own ? undefined : "tr" });
+      out.push({ label, href: localizePath(target.locale, `/${sectionOf(target.page.kind) === "blog" ? "blog" : "sayfa"}/${target.publishedSlug}`), hrefLang: own ? undefined : target.locale });
     } else if (m.kind === "category") {
       const slug = categorySlugs[m.categoryKey ?? ""];
       if (slug) out.push({ label, href: localizePath(locale, `/kategori/${slug}`) });
@@ -199,4 +199,16 @@ export async function getContact() {
     /** null until verified */
     legalName: legalName ?? null,
   };
+}
+
+/** Public URL of a CMS page in `locale`; a missing language falls back to English, then Turkish (same rule as menus). */
+export async function pageHrefByKey(locale: Locale, key: string): Promise<string | null> {
+  const rows = (await load()).pages.filter((p) => p.page.key === key);
+  const target = rows.find((p) => p.locale === locale) ?? rows.find((p) => p.locale === "en") ?? rows.find((p) => p.locale === "tr");
+  return target ? localizePath(target.locale, `/${sectionOf(target.page.kind) === "blog" ? "blog" : "sayfa"}/${target.publishedSlug}`) : null;
+}
+
+/** Privacy link for forms / cookie banner: KVKK information notice in Turkish, the privacy policy in other languages. */
+export async function privacyHref(locale: Locale): Promise<string> {
+  return (await pageHrefByKey(locale, locale === "tr" ? "kisisel-verilenin-korunmasi-kanunu" : "privacy-policy")) ?? "/tr/sayfa/kisisel-verilenin-korunmasi-kanunu";
 }

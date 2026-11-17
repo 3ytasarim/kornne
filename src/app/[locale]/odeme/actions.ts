@@ -2,10 +2,13 @@
 
 import { requireDb } from "@/lib/db";
 import { commerceGate } from "@/lib/commerce/gate";
-import { lookupOrderStatus, placeBankTransferOrder, resolveCartLines, submitPaymentNotice, type B2BCheckoutInput, type CartItemInput, type PaymentNoticeInput } from "@/lib/commerce/b2b-orders";
+import { findByNumberAndEmail, limited, lookupOrderStatus, lookupSchema, placeBankTransferOrder, resolveCartLines, submitPaymentNotice, type B2BCheckoutInput, type CartItemInput, type PaymentNoticeInput } from "@/lib/commerce/b2b-orders";
 import { shippingFor } from "@/lib/commerce/shipping";
 import { computeTotals, lineTotals } from "@/lib/commerce/totals";
-import { getIpHash } from "@/lib/request-meta";
+import { getClientIp, getIpHash } from "@/lib/request-meta";
+import { startCardPayment } from "@/lib/commerce/card-payments";
+import { iyzicoConfig } from "@/lib/commerce/payments/iyzico";
+import { getSiteUrl } from "@/lib/seo/site";
 import { displayCurrency } from "@/lib/fx/convert";
 import { getRates } from "@/lib/fx/rates";
 import { isEnabledLocale } from "@/lib/i18n/config";
@@ -50,12 +53,19 @@ export async function priceCartAction(items: CartItemInput[], locale: string): P
   }
 }
 
-export type PlaceOrderState = { ok: true; number: string; totalMinor: string; currency: string } | { ok: false; code: string; fields?: Record<string, string> };
+/** card orders: `redirectUrl` = iyzico payment page; `paymentStartFailed` = order saved but the payment page could not be opened */
+export type PlaceOrderState = { ok: true; number: string; totalMinor: string; currency: string; paymentMethod: string; redirectUrl?: string; paymentStartFailed?: boolean } | { ok: false; code: string; fields?: Record<string, string> };
 
 export async function placeOrderAction(input: B2BCheckoutInput): Promise<PlaceOrderState> {
   try {
-    const r = await placeBankTransferOrder(requireDb(), commerceGate(), { ...input, items: sanitizeItems(input.items) }, { ipHash: await getIpHash(), isTest: isTest() });
-    if (r.ok) return { ok: true, number: r.number, totalMinor: r.totalMinor.toString(), currency: r.currency };
+    const cfg = iyzicoConfig();
+    const db = requireDb();
+    const r = await placeBankTransferOrder(db, commerceGate(), { ...input, items: sanitizeItems(input.items) }, { ipHash: await getIpHash(), isTest: isTest(), cardEnabled: !!cfg });
+    if (r.ok && r.paymentMethod === "CARD" && cfg) {
+      const start = await startCardPayment(db, cfg, r.orderId, { siteUrl: getSiteUrl(), ip: await getClientIp() });
+      return { ok: true, number: r.number, totalMinor: r.totalMinor.toString(), currency: r.currency, paymentMethod: r.paymentMethod, ...(start.ok ? { redirectUrl: start.url } : { paymentStartFailed: true }) };
+    }
+    if (r.ok) return { ok: true, number: r.number, totalMinor: r.totalMinor.toString(), currency: r.currency, paymentMethod: r.paymentMethod };
     return { ok: false, code: r.code, fields: "fields" in r ? r.fields : undefined };
   } catch {
     return { ok: false, code: "error" };
@@ -80,6 +90,25 @@ export async function lookupOrderAction(input: { number: string; email: string }
 export async function paymentNoticeAction(input: PaymentNoticeInput): Promise<{ ok: true } | { ok: false; code: string; fields?: Record<string, string> }> {
   try {
     return await submitPaymentNotice(requireDb(), input, { ipHash: await getIpHash() });
+  } catch {
+    return { ok: false, code: "error" };
+  }
+}
+
+/** Another card attempt for an open card order (order number + the e-mail used at checkout, rate-limited). */
+export async function retryCardPaymentAction(input: { number: string; email: string }): Promise<{ ok: true; redirectUrl: string } | { ok: false; code: "validation" | "not_found" | "rate" | "state" | "limit" | "provider" | "closed" | "error" }> {
+  try {
+    const cfg = iyzicoConfig();
+    if (!cfg) return { ok: false, code: "closed" };
+    const p = lookupSchema.safeParse({ number: String(input.number ?? ""), email: String(input.email ?? "") });
+    if (!p.success) return { ok: false, code: "validation" };
+    const db = requireDb();
+    const ipHash = await getIpHash();
+    if (await limited(db, `card-retry:ip:${ipHash}`, 10, 3_600_000)) return { ok: false, code: "rate" };
+    const order = await findByNumberAndEmail(db, p.data.number, p.data.email);
+    if (!order) return { ok: false, code: "not_found" };
+    const r = await startCardPayment(db, cfg, order.id, { siteUrl: getSiteUrl(), ip: await getClientIp() });
+    return r.ok ? { ok: true, redirectUrl: r.url } : { ok: false, code: r.code === "not_found" ? "not_found" : r.code };
   } catch {
     return { ok: false, code: "error" };
   }

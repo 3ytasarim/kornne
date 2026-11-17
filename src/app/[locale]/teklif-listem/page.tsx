@@ -2,6 +2,7 @@ import { Breadcrumbs } from "@/components/catalog/Breadcrumbs";
 import { PageLanguageLinks } from "@/components/layout/PageLanguageLinks";
 import { QuoteListView } from "@/components/quote/QuoteListView";
 import { catalog } from "@/lib/catalog";
+import { privacyHref } from "@/lib/cms/store";
 import { staticAlternates } from "@/lib/i18n/alternates";
 import { ENABLED_LOCALES } from "@/lib/i18n/config";
 import { getI18n } from "@/lib/i18n/server";
@@ -36,8 +37,7 @@ export default async function QuoteListPage({ params }: PageProps<"/[locale]/tek
         locale={locale}
         list={d.quoteList}
         form={d.quoteForm}
-        // the privacy notice exists only in Turkish (legal approval pending)
-        privacyHref="/tr/sayfa/kisisel-verilenin-korunmasi-kanunu"
+        privacyHref={await privacyHref(locale)}
         browseHref={all ? href(`/kategori/${all.slug}`) : href("/")}
       />
     </div>

@@ -118,6 +118,7 @@ export const tr = {
     send: "Gönder",
   },
   footer: {
+    paymentLogos: "iyzico ile öde: Mastercard, Visa, American Express, Troy",
     rights: "Tüm hakları saklıdır.",
     legal: "Yasal",
     follow: "Bizi takip edin",

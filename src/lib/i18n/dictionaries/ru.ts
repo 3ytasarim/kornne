@@ -74,7 +74,7 @@ export const ru: DeepPartial<Dictionary> = {
     message: "Сообщение",
     send: "Отправить",
   },
-  footer: { rights: "Все права защищены.", legal: "Правовая информация", follow: "Мы в соцсетях", returns: "Политика возврата", distanceSales: "Договор дистанционной продажи", kvkk: "Защита персональных данных (KVKK)" },
+  footer: { paymentLogos: "Оплата через iyzico: Mastercard, Visa, American Express, Troy", rights: "Все права защищены.", legal: "Правовая информация", follow: "Мы в соцсетях", returns: "Политика возврата", distanceSales: "Договор дистанционной продажи", kvkk: "Защита персональных данных (KVKK)" },
   notFound: { title: "Страница не найдена", lead: "Возможно, страница была перемещена или удалена.", home: "На главную", products: "К продукции" },
   error: { title: "Что-то пошло не так", lead: "При загрузке страницы произошла непредвиденная ошибка.", retry: "Повторить" },
   quote: {

@@ -74,7 +74,7 @@ export const de: DeepPartial<Dictionary> = {
     message: "Ihre Nachricht",
     send: "Senden",
   },
-  footer: { rights: "Alle Rechte vorbehalten.", legal: "Rechtliches", follow: "Folgen Sie uns", returns: "Rückgabe- und Erstattungsbedingungen", distanceSales: "Fernabsatzvertrag", kvkk: "Datenschutz (KVKK)" },
+  footer: { paymentLogos: "Bezahlen mit iyzico: Mastercard, Visa, American Express, Troy", rights: "Alle Rechte vorbehalten.", legal: "Rechtliches", follow: "Folgen Sie uns", returns: "Rückgabe- und Erstattungsbedingungen", distanceSales: "Fernabsatzvertrag", kvkk: "Datenschutz (KVKK)" },
   notFound: { title: "Seite nicht gefunden", lead: "Die gesuchte Seite wurde möglicherweise verschoben oder entfernt.", home: "Zurück zur Startseite", products: "Produkte ansehen" },
   error: { title: "Etwas ist schiefgelaufen", lead: "Beim Laden der Seite ist ein unerwarteter Fehler aufgetreten.", retry: "Erneut versuchen" },
   quote: {

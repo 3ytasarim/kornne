@@ -74,7 +74,7 @@ export const en: DeepPartial<Dictionary> = {
     message: "Your message",
     send: "Send",
   },
-  footer: { rights: "All rights reserved.", legal: "Legal", follow: "Follow us", returns: "Return and Refund Policy", distanceSales: "Distance Sales Agreement", kvkk: "Personal Data Protection (KVKK)" },
+  footer: { paymentLogos: "Pay with iyzico: Mastercard, Visa, American Express, Troy", rights: "All rights reserved.", legal: "Legal", follow: "Follow us", returns: "Return and Refund Policy", distanceSales: "Distance Sales Agreement", kvkk: "Personal Data Protection (KVKK)" },
   notFound: { title: "Page not found", lead: "The page you are looking for may have been moved or removed.", home: "Back to home", products: "Browse products" },
   error: { title: "Something went wrong", lead: "An unexpected error occurred while loading the page.", retry: "Try again" },
   quote: {
